@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class SignInPage extends StatelessWidget {
 
-  TextEditingController _realnameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _repeatPasswordController = TextEditingController();
@@ -56,7 +56,7 @@ class SignInPage extends StatelessWidget {
                 TextField(
                   controller: _usernameController,
                   decoration: InputDecoration(
-                    hintText: ' Nume și Prenume',
+                    hintText: ' Nume Utilizator',
                     hintStyle: TextStyle(color: Colors.black,
                         fontWeight: FontWeight.w500,
                         fontStyle: FontStyle.italic),
@@ -72,9 +72,9 @@ class SignInPage extends StatelessWidget {
                 ),
                 SizedBox(height: 20,),
                 TextField(
-                  controller: _usernameController,
+                  controller: _emailController,
                   decoration: InputDecoration(
-                    hintText: ' Nume Utilizator',
+                    hintText: ' Email',
                     hintStyle: TextStyle(color: Colors.black,
                         fontWeight: FontWeight.w500,
                         fontStyle: FontStyle.italic),

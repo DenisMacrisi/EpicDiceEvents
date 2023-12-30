@@ -1,16 +1,15 @@
-# epic_dice_events
+# EpicDiceEvents
 
-BoardGame Events App
+Aplicație pentru organizarea evenimentelor legate de jocuri de societate.
 
-## Getting Started
+## Descriere
 
-This project is a starting point for a Flutter application.
+EpicDiceEvents este o aplicație dedicată organizării evenimentelor pentru pasionații de jocuri de societate. Cu această aplicație, poți crea și gestiona evenimente, invita participanți, ține evidența jocurilor și multe altele.
 
-A few resources to get you started if this is your first Flutter project:
+## Cum să începi
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+1. Clonează acest repository.
+2. Deschide proiectul într-un mediu de dezvoltare Flutter.
+3. Rulează aplicația pe emulator sau dispozitiv.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Pentru detalii suplimentare despre dezvoltarea în Flutter, consultă [documentația online](https://docs.flutter.dev/).
