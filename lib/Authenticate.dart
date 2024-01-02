@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'LogInPage.dart';
 import 'SignInPage.dart';
 
-class MyHomePage extends StatelessWidget {
+class Authenticate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

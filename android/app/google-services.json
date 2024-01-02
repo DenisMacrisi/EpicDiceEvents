@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "401916273392",
+    "project_id": "epicdiceevents-b7754",
+    "storage_bucket": "epicdiceevents-b7754.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:401916273392:android:450f477d30735c29401835",
+        "android_client_info": {
+          "package_name": "com.example.epic_dice_events"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArOR36a93sLWW_U4uai-aLmi41u9ULpgM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
