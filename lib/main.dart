@@ -18,7 +18,7 @@ void main() async {
       projectId: "epicdiceevents-b7754",
     ),
   )
-  :await Firebase.initializeApp(); // Inițializează Firebase
+      :await Firebase.initializeApp(); // Inițializează Firebase
 
 /*
   // Obține o referință la colecția "users"
@@ -39,7 +39,6 @@ void main() async {
   */
   runApp(MyApp());
 }
-
 
 
 

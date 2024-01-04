@@ -181,8 +181,8 @@ class _SignInPageState extends State<SignInPage> {
                         }
                         else{
 
-                          String userId = await _auth.getNextUserId();
-                          _auth.addNewUserToDatabase(userId , username, email, city);
+                          //String userId = await _auth.getNextUserId();
+                          _auth.addNewUserToDatabase(username, email, city);
 
                           Navigator.push(
                             context,

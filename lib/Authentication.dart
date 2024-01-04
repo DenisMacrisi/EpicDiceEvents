@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:ffi';
+//import 'dart:ffi';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,6 +12,11 @@ class AuthenticationService {
   CustomUser? _customUserFromFirebase(User? user) {
     return user != null ? CustomUser(uid: user.uid) : null;
   }
+
+  Future<User?> _getCurrentUser() async{
+    return _auth.currentUser;
+  }
+
 /*
   Future <Int> getNextUserId(String uid) async{
       CollectionReference userCollection = FirebaseFirestore.instance.collection('users');
@@ -20,15 +25,27 @@ class AuthenticationService {
   }
 */
 
-  Future <void> addNewUserToDatabase(String userId, String username, String email, String location) async {
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
-    DocumentReference userDocRef = users.doc(userId);
+  Future <void> addNewUserToDatabase(String username, String email, String location) async {
 
-    await userDocRef.set({
-      'username': username,
-      'email': email,
-      'location': location,
-    });
+    User? user = await _getCurrentUser();
+
+    if (user != null) {
+      CollectionReference users = FirebaseFirestore.instance.collection('users');
+      String userId = user.uid;
+
+      DocumentReference userDocRef = users.doc(userId);
+
+      await userDocRef.set({
+        'username': username,
+        'email': email,
+        'location': location,
+      });
+
+      print('User added successfully with ID: $userId');
+    } else {
+      print('Utilizatorul nu este autentificat.');
+      // Tratați în mod corespunzător cazul în care utilizatorul nu este autentificat
+    }
 
     print('User added successfully.');
   }
@@ -128,6 +145,5 @@ Future registerNewUser(String email, String password) async {
 
     }
   }
-
 
 }
