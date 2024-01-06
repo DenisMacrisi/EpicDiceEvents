@@ -157,7 +157,7 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                   ),
                   SizedBox(height: 40),
-                  // Adăugat un spațiu vertical între câmpuri
+
                   ElevatedButton(
                     onPressed: () async {
                       String username = _usernameController.text;

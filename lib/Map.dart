@@ -12,6 +12,8 @@ class _MapPageState extends State<MapPage> {
   Completer<GoogleMapController> _controller = Completer();
   late LatLng _currentLocation;
 
+  Set<Marker> _markers = Set<Marker>(); // Set pentru a stoca marcatorii
+
   @override
   void initState() {
     super.initState();

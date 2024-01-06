@@ -16,27 +16,11 @@ void main() async {
       appId: "1:401916273392:android:450f477d30735c29401835",
       messagingSenderId: "401916273392",
       projectId: "epicdiceevents-b7754",
+      storageBucket: "epicdiceevents-b7754.appspot.com"
     ),
   )
       :await Firebase.initializeApp(); // Inițializează Firebase
 
-/*
-  // Obține o referință la colecția "users"
-  CollectionReference users = FirebaseFirestore.instance.collection('users');
-
-  // Obține toți utilizatorii din colecție
-  QuerySnapshot querySnapshot = await users.get();
-
-  // Parcurge rezultatele și afișează detaliile fiecărui utilizator
-  querySnapshot.docs.forEach((doc) {
-    print('User ID: ${doc.id}');
-    print('Username: ${doc['username']}');
-    print('Email: ${doc['email']}');
-    print(' Password: ${doc['password']}');
-    print( 'Location: ${doc['location']}');
-    print('-----------------------');
-  });
-  */
   runApp(MyApp());
 }
 

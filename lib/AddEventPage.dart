@@ -1,17 +1,21 @@
 
 
 import 'dart:io';
-
+import 'dart:math';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
 import 'package:location/location.dart';
-
+import 'package:epic_dice_events/DatabaseService.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import 'HomePage.dart';
 
 class AddEventPage extends StatefulWidget {
 
@@ -21,8 +25,11 @@ class AddEventPage extends StatefulWidget {
 
 class _AddEventPageState extends State<AddEventPage> {
 
+  int numberOfParticipants  = 0;
+
   TextEditingController _eventNameController = TextEditingController();
   TextEditingController _eventDescriptionController = TextEditingController();
+  TextEditingController _eventNumberOfParticipansController = TextEditingController();
 
   CollectionReference _eventsReference = FirebaseFirestore.instance.collection('events');
 
@@ -35,7 +42,8 @@ class _AddEventPageState extends State<AddEventPage> {
   LatLng? _selectedLocation;
   LatLng? _currentLocation;
 
-  Set<Marker> _markers = {}; // Folosiți un set de markere
+  Set<Marker> _markers = {};
+
 
   @override
   void initState() {
@@ -127,6 +135,27 @@ class _AddEventPageState extends State<AddEventPage> {
                           return null;
                         },
                       ),
+                      TextFormField(
+                        controller: _eventNumberOfParticipansController,
+                        decoration: InputDecoration(hintText: 'Numar de participanti'),
+                        keyboardType: TextInputType.number, // Adăugat pentru a forța tastatura numerică
+                        validator: (String? value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Introdu numar participanti';
+                          }
+                          // Adaugă validare pentru a verifica dacă este un număr întreg
+                          try {
+                            numberOfParticipants = int.tryParse(_eventNumberOfParticipansController.text)!;
+                            if (numberOfParticipants <= 0) {
+                              return 'Numarul de participanti trebuie sa fie mai mare decat zero';
+                            }
+                          } catch (e) {
+                            return 'Introdu un numar valid';
+                          }
+
+                          return null;
+                        },
+                      ),
                       SizedBox(height: 20),
                       Container(
                         width: 300,
@@ -165,10 +194,34 @@ class _AddEventPageState extends State<AddEventPage> {
                         )
                       ),
                       SizedBox(height: 20.0,),
-                      ElevatedButton(onPressed: (){
+                      ElevatedButton(onPressed: () async{
+                        String? image_name = generateUniqueImageName();
+                        print("image name : " + image_name);
+                        String? imageUrl = await uploadImageToStorage(_selectedImage!, image_name);
+                        numberOfParticipants = int.tryParse(_eventNumberOfParticipansController.text) ?? 0;
+                        addNewEventToDatabase(_eventDescriptionController.text, _eventNameController.text, numberOfParticipants, imageUrl!, _currentLocation!);
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomePage()),
+                        );
 
-                      }, child: Text("Gata",
-
+                      },
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.5),
+                          ),
+                          elevation: 10.0,
+                          side: BorderSide(
+                            color: Colors.orangeAccent,
+                            width: 3.0,
+                          ),
+                        ),
+                        child: Text("Gata",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20.0,
+                          color: Colors.black, // Culoarea textului
+                        ),
                       ),
                       ),
 
@@ -208,7 +261,7 @@ class _AddEventPageState extends State<AddEventPage> {
         ),
       ));
 
-      // Actualizați widget-ul GoogleMap cu noile markere
+
       _mapController?.animateCamera(CameraUpdate.newLatLng(_selectedLocation!));
     });
   }
@@ -219,4 +272,64 @@ class _AddEventPageState extends State<AddEventPage> {
       _selectedImage = File(returnImage!.path);
     });
   }
+
+  Future<String?> uploadImageToStorage(File imageFile, String imageName) async {
+    try {
+      firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance.ref().child(imageName);
+
+      await ref.putFile(imageFile);
+
+
+      String downloadURL = await ref.getDownloadURL();
+
+      return downloadURL;
+    } catch (e) {
+      print('Eroare la încărcarea imaginii: $e');
+      return null;
+    }
+  }
+
+  String generateUniqueImageName() {
+
+    String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+
+
+    String random = Random().nextInt(1000).toString();
+
+    return 'image_'+timestamp+'_'+random;
+  }
+
+
+  Future <void> addNewEventToDatabase(String Details, String Name, int Capacity, String ImageURL, LatLng Location)async {
+    CollectionReference events = FirebaseFirestore.instance.collection('events');
+    String eventId = await generateUniqueEventId();
+
+    DocumentReference userDocRef = events.doc(eventId);
+
+    await userDocRef.set({
+      'Descriere': Details,
+      'Nume': Name,
+      'capacity': Capacity,
+      'imageURL' : ImageURL,
+      'location' : GeoPoint(Location.latitude, Location.longitude),
+    });
+
+    print("NewEventId : " + eventId);
+    print("Details : " + Details);
+    print(Capacity);
+    print("Name : " + Name);
+    print(_currentLocation);
+
+  }
+
+  String generateUniqueEventId() {
+
+    String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+
+
+    String random = Random().nextInt(1000).toString();
+
+    return 'event_'+timestamp+'_'+random;
+  }
+
 }

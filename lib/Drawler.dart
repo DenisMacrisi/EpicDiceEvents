@@ -19,13 +19,45 @@ class MyDrawer extends StatelessWidget {
             height: 120.00,
             child: DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: Color.fromRGBO(3, 230, 230, 100),
               ),
               child: Text(
                 'Meniu',
                 style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
+                  color: Colors.orangeAccent,
+                  fontSize: 30,
+                ),
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: InkWell(
+                onTap: () async {
+                  print('Text or icon pressed');
+                  /* Redirectionare catre Profil
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Profile()),
+                  );
+                   */
+                },
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Profil          ',
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.person),
+                      onPressed: () {
+                        // Acțiuni pentru butonul de utilizator
+                        //print('User icon pressed');
+                      },
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -62,7 +94,6 @@ class MyDrawer extends StatelessWidget {
               ),
             ),
           ),
-          // ... adăugați mai multe opțiuni după nevoie
         ],
       ),
     );

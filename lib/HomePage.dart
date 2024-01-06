@@ -2,6 +2,7 @@ import 'package:epic_dice_events/AddEventPage.dart';
 import 'package:epic_dice_events/Drawler.dart';
 import 'package:flutter/material.dart';
 
+import 'EventList.dart';
 import 'Map.dart';
 
 
@@ -34,7 +35,7 @@ class HomePage extends StatelessWidget {
           ),
         ),
         backgroundColor: Colors.transparent,
-        elevation: 100, // Elimină umbra sub AppBar
+        elevation: 100,
       ),
       body: Stack(
         children: [
@@ -47,6 +48,7 @@ class HomePage extends StatelessWidget {
               ),
             ),
           ),
+          EventList(),
         ],
       ),
       bottomNavigationBar: BottomAppBar(
@@ -162,4 +164,7 @@ class HomePage extends StatelessWidget {
       drawer: MyDrawer(),
     );
   }
+
+
+
 }

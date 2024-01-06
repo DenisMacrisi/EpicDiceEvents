@@ -57,7 +57,6 @@ class AuthenticationService {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
     QuerySnapshot querySnapshot = await users.get();
 
-    // Parcurge rezultatele și afișează detaliile fiecărui utilizator
     querySnapshot.docs.forEach((doc) {
       userId = doc.id;
     });
