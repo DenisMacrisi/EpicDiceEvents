@@ -7,6 +7,9 @@ import 'Authentication.dart';
 import 'MyApp.dart';
 
 void main() async {
+
+  Stopwatch stopwatch = Stopwatch()..start();
+
   WidgetsFlutterBinding.ensureInitialized();
 
   Platform.isAndroid?
@@ -20,6 +23,8 @@ void main() async {
     ),
   )
       :await Firebase.initializeApp(); // Inițializează Firebase
+  stopwatch.stop();
+  print('Durata conectării la baza de date: ${stopwatch.elapsedMilliseconds} ms');
 
   runApp(MyApp());
 }

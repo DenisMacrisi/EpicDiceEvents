@@ -8,7 +8,7 @@ class EventWidget extends StatelessWidget {
   final int participansNumber;
   final int eventCapacity;
   final String eventImage;
-
+  final String eventDetails;
 
   EventWidget({
     required this.eventName,
@@ -16,6 +16,7 @@ class EventWidget extends StatelessWidget {
     required this.participansNumber,
     required this.eventCapacity,
     required this.eventImage,
+    required this.eventDetails,
   });
 
   @override
@@ -37,7 +38,7 @@ class EventWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Event: $eventName',
+            '$eventName',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 18.0,
@@ -68,6 +69,18 @@ class EventWidget extends StatelessWidget {
               height: 200,
               fit: BoxFit.cover,  // Poate fi ajustat pentru a specifica modul în care imaginea se adaptează în container
             ),
+          ),
+          SizedBox(
+            height: 5.0,
+          ),
+          Text(
+            '$eventDetails',
+            style: TextStyle(
+              fontSize: 16.0,
+            ),
+          ),
+          SizedBox(
+            height: 5.0,
           ),
           ElevatedButton(onPressed: (){
 
