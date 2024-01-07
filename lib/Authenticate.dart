@@ -106,7 +106,7 @@ class Authenticate extends StatelessWidget {
                     height: 50.0,
                     alignment: Alignment.center,
                     child: Text(
-                      'Sign In',
+                      'Sign Up',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 28.0,

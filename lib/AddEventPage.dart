@@ -25,7 +25,7 @@ class AddEventPage extends StatefulWidget {
 
 class _AddEventPageState extends State<AddEventPage> {
 
-  int numberOfParticipants  = 0;
+  int capacity  = 0;
 
   TextEditingController _eventNameController = TextEditingController();
   TextEditingController _eventDescriptionController = TextEditingController();
@@ -145,8 +145,8 @@ class _AddEventPageState extends State<AddEventPage> {
                           }
                           // Adaugă validare pentru a verifica dacă este un număr întreg
                           try {
-                            numberOfParticipants = int.tryParse(_eventNumberOfParticipansController.text)!;
-                            if (numberOfParticipants <= 0) {
+                            capacity = int.tryParse(_eventNumberOfParticipansController.text)!;
+                            if (capacity <= 0) {
                               return 'Numarul de participanti trebuie sa fie mai mare decat zero';
                             }
                           } catch (e) {
@@ -198,8 +198,8 @@ class _AddEventPageState extends State<AddEventPage> {
                         String? image_name = generateUniqueImageName();
                         print("image name : " + image_name);
                         String? imageUrl = await uploadImageToStorage(_selectedImage!, image_name);
-                        numberOfParticipants = int.tryParse(_eventNumberOfParticipansController.text) ?? 0;
-                        addNewEventToDatabase(_eventDescriptionController.text, _eventNameController.text, numberOfParticipants, imageUrl!, _currentLocation!);
+                        capacity = int.tryParse(_eventNumberOfParticipansController.text) ?? 0;
+                        addNewEventToDatabase(_eventDescriptionController.text, _eventNameController.text, capacity, imageUrl!, _currentLocation!);
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(builder: (context) => HomePage()),
@@ -309,6 +309,7 @@ class _AddEventPageState extends State<AddEventPage> {
     await userDocRef.set({
       'Descriere': Details,
       'Nume': Name,
+      'participans' : 0,
       'capacity': Capacity,
       'imageURL' : ImageURL,
       'location' : GeoPoint(Location.latitude, Location.longitude),

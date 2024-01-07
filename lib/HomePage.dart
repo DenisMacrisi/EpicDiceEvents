@@ -60,13 +60,10 @@ class HomePage extends StatelessWidget {
               padding: const EdgeInsets.only(right: 20.0),
               child: InkWell(
                 onTap: () async {
-                  /*
-                  print('Text or icon pressed');
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => MyApp()),
+                    MaterialPageRoute(builder: (context) => AddEventPage()),
                   );
-                   */
                 },
                 child: Ink(
                   padding: const EdgeInsets.all(10.0),
@@ -146,7 +143,6 @@ class HomePage extends StatelessWidget {
                       IconButton(
                         icon: Icon(Icons.add),
                         onPressed: () {
-                          // Acțiuni pentru butonul de utilizator
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => AddEventPage()),
