@@ -19,13 +19,29 @@ class MyDrawer extends StatelessWidget {
             height: 120.00,
             child: DrawerHeader(
               decoration: BoxDecoration(
-                color: Color.fromRGBO(3, 230, 230, 100),
+                image: DecorationImage(
+                  image: AssetImage('images/Color.jpg'),
+                  fit: BoxFit.cover,
+                ),
               ),
               child: Text(
                 'Meniu',
                 style: TextStyle(
-                  color: Colors.orangeAccent,
-                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30.0,
+                  color: Colors.white,
+                  shadows: [
+                    Shadow(
+                      blurRadius: 10.0,
+                      color: Colors.orangeAccent,
+                      offset: Offset(0, 0),
+                    ),
+                    Shadow(
+                      blurRadius: 10.0,
+                      color: Colors.orangeAccent,
+                      offset: Offset(0, 0),
+                    ),
+                  ],
                 ),
               ),
             ),

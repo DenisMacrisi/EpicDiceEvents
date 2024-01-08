@@ -8,7 +8,7 @@ import 'MyApp.dart';
 
 void main() async {
 
-  Stopwatch stopwatch = Stopwatch()..start();
+  //Stopwatch stopwatch = Stopwatch()..start(); // Pentru masurate timp
 
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -23,8 +23,8 @@ void main() async {
     ),
   )
       :await Firebase.initializeApp(); // Inițializează Firebase
-  stopwatch.stop();
-  print('Durata conectării la baza de date: ${stopwatch.elapsedMilliseconds} ms');
+ // stopwatch.stop();
+ // print('Durata conectării la baza de date: ${stopwatch.elapsedMilliseconds} ms');
 
   runApp(MyApp());
 }

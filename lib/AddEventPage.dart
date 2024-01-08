@@ -197,12 +197,9 @@ class _AddEventPageState extends State<AddEventPage> {
                       ElevatedButton(onPressed: () async{
                         String? image_name = generateUniqueImageName();
                         print("image name : " + image_name);
-                        Stopwatch stopwatch = Stopwatch()..start();
                         String? imageUrl = await uploadImageToStorage(_selectedImage!, image_name);
                         capacity = int.tryParse(_eventNumberOfParticipansController.text) ?? 0;
                         addNewEventToDatabase(_eventDescriptionController.text, _eventNameController.text, capacity, imageUrl!, _currentLocation!);
-                        stopwatch.stop();
-                        print('Durata adaugare eveniment: ${stopwatch.elapsedMilliseconds} ms');
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(builder: (context) => HomePage()),
@@ -259,8 +256,8 @@ class _AddEventPageState extends State<AddEventPage> {
         markerId: MarkerId(_selectedLocation.toString()),
         position: _selectedLocation!,
         infoWindow: InfoWindow(
-          title: 'Locul evenimentului',
-          snippet: 'Descrierea locului',
+          title: "Nume ",
+          snippet: "Descriere ",
         ),
       ));
 

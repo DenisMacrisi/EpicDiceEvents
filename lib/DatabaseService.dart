@@ -16,7 +16,7 @@ class DatabaseService{
 
       await ref.putFile(imageFile);
 
-      // Obține URL-ul de descărcare pentru a salva în Firestore (poți utiliza acest URL pentru a afișa imaginea ulterior)
+
       String downloadURL = await ref.getDownloadURL();
 
       return downloadURL;

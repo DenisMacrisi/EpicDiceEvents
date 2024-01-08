@@ -30,7 +30,7 @@ class _LogInPageState extends State<LogInPage> {
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 25.0,
-            color: Colors.white, // Culoarea textului
+            color: Colors.white,
             shadows: [
               Shadow(
                 blurRadius: 10.0,
@@ -48,7 +48,6 @@ class _LogInPageState extends State<LogInPage> {
         backgroundColor: Colors.transparent,
         elevation: 100,
       ),
-      // Adăugați conținutul specific paginii LogIn aici
       body: Stack(
         children: [
           Container(
@@ -90,7 +89,7 @@ class _LogInPageState extends State<LogInPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 50), // Adăugat un spațiu vertical între câmpuri
+                SizedBox(height: 50),
                 ElevatedButton(
                   onPressed: () async {
 
@@ -104,7 +103,7 @@ class _LogInPageState extends State<LogInPage> {
                       print("Eroare la Logare");
                     }
                     else{
-                      _auth.afisare();
+                     // _auth.afisare();
 
                       Navigator.push(
                         context,
@@ -158,7 +157,7 @@ class _LogInPageState extends State<LogInPage> {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20.0,
-                        color: Colors.black, // Culoarea textului
+                        color: Colors.black,
                       ),
                     ),
                   ),

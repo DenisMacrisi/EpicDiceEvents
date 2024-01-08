@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'EventList.dart';
 import 'Map.dart';
 
-
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -18,7 +17,7 @@ class HomePage extends StatelessWidget {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 30.0,
-              color: Colors.white, // Culoarea textului
+              color: Colors.white,
               shadows: [
                 Shadow(
                   blurRadius: 10.0,
@@ -40,7 +39,6 @@ class HomePage extends StatelessWidget {
       body: Stack(
         children: [
           Container(
-            //color: Color.fromRGBO(r, g, b, opacity),
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('images/Color.jpg'),
@@ -62,8 +60,10 @@ class HomePage extends StatelessWidget {
                 onTap: () async {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => AddEventPage()),
+                    MaterialPageRoute(builder: (context) => MapPage()),
                   );
+
+
                 },
                 child: Ink(
                   padding: const EdgeInsets.all(10.0),
@@ -88,7 +88,7 @@ class HomePage extends StatelessWidget {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20.0,
-                          color: Colors.black, // Culoarea textului
+                          color: Colors.black,
                         ),
                       ),
                       IconButton(
@@ -137,7 +137,7 @@ class HomePage extends StatelessWidget {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20.0,
-                          color: Colors.black, // Culoarea textului
+                          color: Colors.black,
                         ),
                       ),
                       IconButton(

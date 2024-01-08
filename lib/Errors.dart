@@ -10,7 +10,7 @@ void showIncorectLenghtError(BuildContext context){
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 25.0,
-            color: Colors.white, // Culoarea textului
+            color: Colors.white,
             shadows: [
               Shadow(
                 blurRadius: 10.0,
@@ -29,7 +29,7 @@ void showIncorectLenghtError(BuildContext context){
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16.0,
-            color: Colors.white, // Culoarea textului
+            color: Colors.white,
             shadows: [
               Shadow(
                 blurRadius: 10.0,
@@ -53,7 +53,7 @@ void showIncorectLenghtError(BuildContext context){
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16.0,
-                color: Colors.white, // Culoarea textului
+                color: Colors.white,
                 shadows: [
                   Shadow(
                     blurRadius: 10.0,

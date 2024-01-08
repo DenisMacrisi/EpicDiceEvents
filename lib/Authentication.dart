@@ -44,10 +44,7 @@ class AuthenticationService {
       print('User added successfully with ID: $userId');
     } else {
       print('Utilizatorul nu este autentificat.');
-      // Tratați în mod corespunzător cazul în care utilizatorul nu este autentificat
     }
-
-    print('User added successfully.');
   }
 
   Future<String> getNextUserId() async{

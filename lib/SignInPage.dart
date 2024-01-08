@@ -1,4 +1,4 @@
-// sign_in_page.dart
+
 import 'package:epic_dice_events/Validation.dart';
 import 'Authentication.dart';
 import 'package:flutter/material.dart';
@@ -28,11 +28,11 @@ class _SignInPageState extends State<SignInPage> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text('Sign In',
+        title: Text('Sign Up',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 25.0,
-            color: Colors.white, // Culoarea textului
+            color: Colors.white,
             shadows: [
               Shadow(
                 blurRadius: 10.0,
@@ -50,7 +50,6 @@ class _SignInPageState extends State<SignInPage> {
         backgroundColor: Colors.transparent,
         elevation: 100,
       ),
-      // Adăugați conținutul specific paginii LogIn aici
       body: Stack(
         children: [
           Container(
@@ -177,11 +176,9 @@ class _SignInPageState extends State<SignInPage> {
                         if(result == null){
 
                           setState(() => errorMessage = 'Introdu un email valid' );
-                          //print("Eroare la Registrare");
                         }
                         else{
 
-                          //String userId = await _auth.getNextUserId();
                           _auth.addNewUserToDatabase(username, email, city);
 
                           Navigator.push(
@@ -192,9 +189,6 @@ class _SignInPageState extends State<SignInPage> {
 
                       }
 
-                      /// print("Username: $username");
-                      ///print(_usernameController);
-                      ///print("Password: ${_passwordController.text}");
                     },
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
@@ -211,11 +205,11 @@ class _SignInPageState extends State<SignInPage> {
                       height: 50.0,
                       alignment: Alignment.center,
                       child: Text(
-                        'Sign In',
+                        'Sign Up',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20.0,
-                          color: Colors.black, // Culoarea textului
+                          color: Colors.black,
                         ),
                       ),
                     ),

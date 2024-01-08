@@ -65,9 +65,9 @@ class EventWidget extends StatelessWidget {
             padding: EdgeInsets.all(10.0),
             child: Image.network(
               eventImage,  // URL-ul imaginii
-              width: 350,  // Ajustează dimensiunea imaginii conform necesităților tale
+              width: 350,
               height: 200,
-              fit: BoxFit.cover,  // Poate fi ajustat pentru a specifica modul în care imaginea se adaptează în container
+              fit: BoxFit.cover,
             ),
           ),
           SizedBox(

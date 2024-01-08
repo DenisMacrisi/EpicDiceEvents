@@ -14,7 +14,7 @@ class Authenticate extends StatelessWidget {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 30.0,
-              color: Colors.white, // Culoarea textului
+              color: Colors.white,
               shadows: [
                 Shadow(
                   blurRadius: 10.0,
@@ -31,7 +31,7 @@ class Authenticate extends StatelessWidget {
           ),
         ),
         backgroundColor: Colors.transparent,
-        elevation: 100, // Elimină umbra sub AppBar
+        elevation: 100,
       ),
       body: Stack(
         children: [
@@ -68,23 +68,23 @@ class Authenticate extends StatelessWidget {
                     ),
                   ),
                   child: Container(
-                    width: 90.0,
-                    height: 50.0,
+                    width: 100.0,
+                    height: 60.0,
                     alignment: Alignment.center,
                     child: Text(
                       'Log In',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 28.0,
-                        color: Colors.black, // Culoarea textului
+                        color: Colors.black,
                       ),
                     ),
                   ),
                 ),
-                SizedBox(height: 50), // Spațiu între butoane
+                SizedBox(height: 50),
                 ElevatedButton(
                   onPressed: () {
-                    // Acțiunea pentru butonul de Sign In
+                    // Acțiunea pentru butonul de Sign Up
                     print('Buton Sign In apăsat');
                     Navigator.push(
                       context,
@@ -102,15 +102,15 @@ class Authenticate extends StatelessWidget {
                     ),
                   ),
                   child: Container(
-                    width: 90.0,
-                    height: 50.0,
+                    width: 100.0,
+                    height: 60.0,
                     alignment: Alignment.center,
                     child: Text(
                       'Sign Up',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 28.0,
-                        color: Colors.black, // Culoarea textului
+                        color: Colors.black,
                       ),
                     ),
                   ),
