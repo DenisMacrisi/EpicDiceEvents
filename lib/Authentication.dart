@@ -130,7 +130,6 @@ Future registerNewUser(String email, String password) async {
         return null;
     }
 }
-
 // sign out
   Future signOut() async {
     try {

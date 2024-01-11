@@ -30,6 +30,7 @@ class EventList extends StatelessWidget {
             int eventCapacity = event['capacity'];
             String eventImage = event['imageURL'];
             String eventDetails = event['Descriere'];
+            String eventId = event.id;
 
             return EventWidget(
               eventName: eventName,
@@ -38,6 +39,7 @@ class EventList extends StatelessWidget {
               eventCapacity: eventCapacity,
               eventImage: eventImage,
               eventDetails: eventDetails,
+              eventId: eventId
             );
           }).toList();
 

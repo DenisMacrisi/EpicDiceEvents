@@ -59,7 +59,7 @@ class _MapPageState extends State<MapPage> {
           snippet: doc['Descriere'],
         ),
       );
-      print(marker.toString());
+      print("Added marker: $marker");
       newMarkers.add(marker);
     });
 
