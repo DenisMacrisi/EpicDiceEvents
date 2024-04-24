@@ -1,5 +1,6 @@
 import 'package:epic_dice_events/Authenticate.dart';
 import 'package:epic_dice_events/MyApp.dart';
+import 'package:epic_dice_events/ProfilePage.dart';
 import 'package:flutter/material.dart';
 import 'Authentication.dart';
 import 'HomePage.dart';
@@ -52,13 +53,13 @@ class MyDrawer extends StatelessWidget {
               padding: const EdgeInsets.only(right: 8.0),
               child: InkWell(
                 onTap: () async {
-                  print('Text or icon pressed');
-                  /* Redirectionare catre Profil
+                 // print('Text or icon pressed');
+                  // Redirectionare catre Profil
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Profile()),
+                    MaterialPageRoute(builder: (context) => ProfilePage()),
                   );
-                   */
+
                 },
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -86,7 +87,7 @@ class MyDrawer extends StatelessWidget {
                 onTap: () async {
 
                   await _auth.signOut();
-                  print('Text or icon pressed');
+                  //print('Text or icon pressed');
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => MyApp()),
@@ -100,6 +101,38 @@ class MyDrawer extends StatelessWidget {
                     ),
                     IconButton(
                       icon: Icon(Icons.logout),
+                      onPressed: () {
+                        // Acțiuni pentru butonul de utilizator
+                        //print('User icon pressed');
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: InkWell(
+                onTap: () async {
+
+                  await _auth.signOut();
+                  //print('Text or icon pressed');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MyApp()),
+                  );
+                },
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      ' About         ',
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.question_mark),
                       onPressed: () {
                         // Acțiuni pentru butonul de utilizator
                         //print('User icon pressed');

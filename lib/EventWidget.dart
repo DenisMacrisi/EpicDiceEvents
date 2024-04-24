@@ -97,26 +97,57 @@ class _EventWidgetState extends State<EventWidget> {
           SizedBox(
             height: 5.0,
           ),
-          ElevatedButton(onPressed: () {
-            participateAction();
-          },
-            child: Text("Participa",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 16,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  print("S-a apasat Participa \n");
+                  participateAction();
+                },
+                child: Text(
+                  "Participa",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.5),
+                  ),
+                  elevation: 10.0,
+                  side: BorderSide(
+                    color: Colors.orangeAccent,
+                    width: 3.0,
+                  ),
+                ),
               ),
-            ),
-            style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.5),
+              ElevatedButton(
+                onPressed: () {
+                  print("S-a apasat Retrage \n");
+                  resignAction();
+                },
+                child: Text(
+                  "Retrage",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.5),
+                  ),
+                  elevation: 10.0,
+                  side: BorderSide(
+                    color: Colors.orangeAccent,
+                    width: 3.0,
+                  ),
+                ),
               ),
-              elevation: 10.0,
-              side: BorderSide(
-                color: Colors.orangeAccent,
-                width: 3.0,
-              ),
-            ),
-          )
+            ],
+          ),
         ],
       ),
     );
@@ -131,6 +162,18 @@ class _EventWidgetState extends State<EventWidget> {
       await addEventToUser();
       await increaseNumberOfParticipants();
       setState(() { widget.participansNumber++; });
+    }
+  }
+
+  Future<void> resignAction() async{
+    if(await isUserRegistered()){
+      await unregisterUserFromEvent();
+      await removeEventFromUser();
+      await decreaseNumberOfParticipants();
+      setState(() { widget.participansNumber--; });
+    }
+    else {
+      showAlreadyUnRegistatedforEvent(context);
     }
   }
 
@@ -149,7 +192,6 @@ class _EventWidgetState extends State<EventWidget> {
 
       return subcollectionExists;
     }
-
     return false;
   }
 
@@ -165,7 +207,6 @@ class _EventWidgetState extends State<EventWidget> {
 
       String username = userSnapshot['username'];
       String email = userSnapshot['email'];
-
 
       print('Utilizator curent: $username, $email');
 
@@ -184,6 +225,26 @@ class _EventWidgetState extends State<EventWidget> {
             .collection('participantsList')
             .doc(userId)
             .set({});
+      }
+    }
+  }
+
+  Future<void> unregisterUserFromEvent() async {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      String userId = currentUser.uid;
+
+      try {
+        await FirebaseFirestore.instance
+            .collection('events')
+            .doc(widget.eventId)
+            .collection('participantsList')
+            .doc(userId)
+            .delete();
+
+        print('Utilizatorul a fost deînregistrat de la eveniment cu succes.');
+      } catch (error) {
+        print('Eroare în timpul deînregistrării utilizatorului de la eveniment: $error');
       }
     }
   }
@@ -216,30 +277,58 @@ class _EventWidgetState extends State<EventWidget> {
     }
   }
 
+  Future<void> removeEventFromUser() async {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      String userId = currentUser.uid;
+
+      try {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .collection('eventsList')
+            .doc(widget.eventId)
+            .delete();
+
+        print('Evenimentul a fost eliminat cu succes din lista utilizatorului.');
+      } catch (error) {
+        print('Eroare în timpul eliminării evenimentului din lista utilizatorului: $error');
+      }
+    }
+  }
+
+
   Future<void> increaseNumberOfParticipants() async {
     try {
-
       DocumentReference<Map<String, dynamic>> eventRef = FirebaseFirestore.instance.collection('events').doc(widget.eventId);
-
       await FirebaseFirestore.instance.runTransaction((transaction) async {
-
         DocumentSnapshot<Map<String, dynamic>> snapshot = await transaction.get(eventRef);
-
         if (snapshot.exists) {
-
           int currentParticipants = snapshot['noOfparticipans'];
-
-
           transaction.update(eventRef, {'noOfparticipans': currentParticipants + 1});
         } else {
-
           print('Evenimentul cu ID-ul $widget.eventId nu există.');
         }
       });
     } catch (e) {
-
       print('Eroare la incrementarea participanților: $e');
     }
   }
 
+  Future<void> decreaseNumberOfParticipants() async {
+    try {
+      DocumentReference<Map<String, dynamic>> eventRef = FirebaseFirestore.instance.collection('events').doc(widget.eventId);
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        DocumentSnapshot<Map<String, dynamic>> snapshot = await transaction.get(eventRef);
+        if (snapshot.exists) {
+          int currentParticipants = snapshot['noOfparticipans'];
+          transaction.update(eventRef, {'noOfparticipans': currentParticipants - 1});
+        } else {
+          print('Evenimentul cu ID-ul $widget.eventId nu există.');
+        }
+      });
+    } catch (e) {
+      print('Eroare la incrementarea participanților: $e');
+    }
+  }
 }
