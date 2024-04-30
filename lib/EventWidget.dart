@@ -3,6 +3,7 @@ import 'package:epic_dice_events/HomePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -16,6 +17,8 @@ class EventWidget extends StatefulWidget {
   final String eventImage;
   final String eventDetails;
   final String eventId;
+  final String eventDay;
+  final String eventTime;
 
   EventWidget({
     Key? key,
@@ -26,6 +29,8 @@ class EventWidget extends StatefulWidget {
     required this.eventImage,
     required this.eventDetails,
     required this.eventId,
+    required this.eventDay,
+    required this.eventTime,
   }) : super(key: key);
 
   @override
@@ -33,6 +38,29 @@ class EventWidget extends StatefulWidget {
 }
 
 class _EventWidgetState extends State<EventWidget> {
+
+  late String _address = 'Loading...';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAddress();
+  }
+
+  Future<void> _loadAddress() async {
+    try {
+      String address = await getAddressFromCoordinates(widget.location.latitude, widget.location.longitude);
+      setState(() {
+        _address = address;
+      });
+    } catch (e) {
+      setState(() {
+        _address = 'Unknown';
+      });
+      print('Error loading address: $e');
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +89,7 @@ class _EventWidgetState extends State<EventWidget> {
           ),
           SizedBox(height: 5.0),
           Text(
-            'Location: ${widget.location.latitude}, ${widget.location.longitude}',
+            'Location: $_address',
           ),
           SizedBox(
             height: 5.0,
@@ -83,6 +111,26 @@ class _EventWidgetState extends State<EventWidget> {
               width: 350,
               height: 200,
               fit: BoxFit.cover,
+            ),
+          ),
+          SizedBox(
+            height: 5.0,
+          ),
+          Text(
+            'Data: ${widget.eventDay}',
+            style: TextStyle(
+              fontSize: 20.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(
+            height: 5.0,
+          ),
+          Text(
+            'Ora: ${widget.eventTime}',
+            style: TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
             ),
           ),
           SizedBox(
@@ -331,4 +379,18 @@ class _EventWidgetState extends State<EventWidget> {
       print('Eroare la incrementarea participanților: $e');
     }
   }
+}
+
+// Funcție care convertește coordonatele în adresă
+Future<String> getAddressFromCoordinates(double latitude, double longitude) async {
+  try {
+    List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude);
+    if (placemarks != null && placemarks.isNotEmpty) {
+      Placemark placemark = placemarks.first;
+      return placemark.street ?? ''; // Sau orice altă proprietate a obiectului Placemark pe care dorești să o afișezi
+    }
+  } catch (e) {
+    print('Eroare la obținerea adresei: $e');
+  }
+  return '';
 }

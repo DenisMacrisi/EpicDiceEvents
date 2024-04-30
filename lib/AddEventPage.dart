@@ -2,6 +2,7 @@
 
 import 'dart:io';
 import 'dart:math';
+import 'package:epic_dice_events/Errors.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -43,6 +44,7 @@ class _AddEventPageState extends State<AddEventPage> {
   LatLng? _currentLocation;
 
   Set<Marker> _markers = {};
+  DateTime _selectedDateTime = DateTime.now();
 
 
   @override
@@ -157,6 +159,22 @@ class _AddEventPageState extends State<AddEventPage> {
                         },
                       ),
                       SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          _selectedDateTime = _selectDateTime(context) as DateTime; // Adăugat funcția pentru selectarea datei și orei
+                        },
+                        child: Text('Selectează data și ora'),
+                      ),
+                      Text(
+                        'Data: ${_selectedDateTime.day}/${_selectedDateTime.month}/${_selectedDateTime.year}',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      SizedBox(height: 5), // Spațiu între textele de data și ora
+                      Text(
+                        'Ora: ${_selectedDateTime.hour}:${_selectedDateTime.minute}',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      SizedBox(height: 20),
                       Container(
                         width: 300,
                         height: 150,
@@ -173,7 +191,8 @@ class _AddEventPageState extends State<AddEventPage> {
                         await _pickImageFromGallery();
                         print(_selectedImage);
                       },
-                          icon: Icon(Icons.camera_alt),),
+                          icon: Icon(Icons.camera_alt),
+                      ),
                       Container(
                         width: 400,
                         height: 250,
@@ -195,15 +214,19 @@ class _AddEventPageState extends State<AddEventPage> {
                       ),
                       SizedBox(height: 20.0,),
                       ElevatedButton(onPressed: () async{
-                        String? image_name = generateUniqueImageName();
-                        print("image name : " + image_name);
-                        String? imageUrl = await uploadImageToStorage(_selectedImage!, image_name);
-                        capacity = int.tryParse(_eventNumberOfParticipansController.text) ?? 0;
-                        addNewEventToDatabase(_eventDescriptionController.text, _eventNameController.text, capacity, imageUrl!, _currentLocation!);
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => HomePage()),
-                        );
+                        if (_selectedImage != null) {
+                          String? image_name = generateUniqueImageName();
+                          print("image name : " + image_name);
+                          String? imageUrl = await uploadImageToStorage(
+                              _selectedImage!, image_name);
+                          capacity = int.tryParse(_eventNumberOfParticipansController.text) ?? 0;
+                          if( addNewEventToDatabase(_eventDescriptionController.text, _eventNameController.text, capacity, imageUrl!, _currentLocation!, _selectedDateTime) == 1 ) {
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage()));
+                          }
+                        }
+                        else{
+                          showIncompleteDataError(context);
+                        }
 
                       },
                         style: ElevatedButton.styleFrom(
@@ -224,7 +247,6 @@ class _AddEventPageState extends State<AddEventPage> {
                         ),
                       ),
                       ),
-
                       SizedBox(height: 100),
                     ],
                   ),
@@ -235,6 +257,33 @@ class _AddEventPageState extends State<AddEventPage> {
         ],
       ),
     );
+  }
+
+  Future<DateTime> _selectDateTime(BuildContext context) async {
+    final DateTime picked = (await showDatePicker(
+      context: context,
+      initialDate: _selectedDateTime,
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2101),
+    ))!;
+
+    final TimeOfDay timePicked = (await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    ))!;
+
+    if (picked != null && timePicked != null) {
+      setState(() {
+        _selectedDateTime = DateTime(
+          picked.year,
+          picked.month,
+          picked.day,
+          timePicked.hour,
+          timePicked.minute,
+        );
+      });
+    }
+    return _selectedDateTime;
   }
 
   void _onMapCreated(GoogleMapController controller) {
@@ -300,7 +349,14 @@ class _AddEventPageState extends State<AddEventPage> {
   }
 
 
-  Future <void> addNewEventToDatabase(String Details, String Name, int Capacity, String ImageURL, LatLng Location)async {
+  Future <int> addNewEventToDatabase(String Details, String Name, int Capacity, String ImageURL, LatLng Location, DateTime dateTime )async {
+    
+    if(Details.isEmpty || Name.isEmpty || Capacity == 0 || Location == null || ImageURL.isEmpty){
+      
+      showIncompleteDataError(context);
+      return 0;
+    }
+    
     CollectionReference events = FirebaseFirestore.instance.collection('events');
     String eventId = await generateUniqueEventId();
 
@@ -313,14 +369,17 @@ class _AddEventPageState extends State<AddEventPage> {
       'capacity': Capacity,
       'imageURL' : ImageURL,
       'location' : GeoPoint(Location.latitude, Location.longitude),
+      'date': dateTime,
     });
-
+/*
     print("NewEventId : " + eventId);
     print("Details : " + Details);
     print(Capacity);
     print("Name : " + Name);
     print(_currentLocation);
 
+ */
+  return 1;
   }
 
   String generateUniqueEventId() {

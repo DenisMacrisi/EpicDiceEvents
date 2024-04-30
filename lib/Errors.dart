@@ -86,3 +86,6 @@ void showAlreadyRegistatedforEvent(BuildContext context){
 void showAlreadyUnRegistatedforEvent(BuildContext context){
   showSimpleError(context,'Retras', 'Deja te-ai retras din acest Eveniment');
 }
+void showIncompleteDataError(BuildContext context){
+  showSimpleError(context, 'Date Incomplete', 'Nu ai completat toate câmpurile necesare');
+}

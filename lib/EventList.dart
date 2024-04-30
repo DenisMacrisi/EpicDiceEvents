@@ -31,6 +31,9 @@ class EventList extends StatelessWidget {
             String eventImage = event['imageURL'];
             String eventDetails = event['Descriere'];
             String eventId = event.id;
+            DateTime eventDate = event['date'].toDate();
+            String eventDay = eventDate.day.toString() + '/' + eventDate.month.toString() + '/' + eventDate.year.toString();
+            String eventTime = eventDate.hour.toString() + ':' + eventDate.minute.toString();
 
             return EventWidget(
               eventName: eventName,
@@ -39,7 +42,9 @@ class EventList extends StatelessWidget {
               eventCapacity: eventCapacity,
               eventImage: eventImage,
               eventDetails: eventDetails,
-              eventId: eventId
+              eventId: eventId,
+              eventDay: eventDay,
+              eventTime: eventTime,
             );
           }).toList();
 
