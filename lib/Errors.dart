@@ -89,3 +89,6 @@ void showAlreadyUnRegistatedforEvent(BuildContext context){
 void showIncompleteDataError(BuildContext context){
   showSimpleError(context, 'Date Incomplete', 'Nu ai completat toate câmpurile necesare');
 }
+void showSelectedDateError(BuildContext context){
+  showSimpleError(context,'Nepotrivire Date' ,'Data de inceput nu poate fi mai mare decat data de final');
+}

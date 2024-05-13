@@ -8,17 +8,14 @@ import 'EventWidget.dart';
 class EventList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
-
-      future: FirebaseFirestore.instance.collection('events').get(),
+    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+      stream: FirebaseFirestore.instance.collection('events').snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-
           return Center(
             child: CircularProgressIndicator(),
           );
         } else if (snapshot.hasError) {
-
           return Center(
             child: Text('Error loading events'),
           );
@@ -35,19 +32,22 @@ class EventList extends StatelessWidget {
             String eventDay = eventDate.day.toString() + '/' + eventDate.month.toString() + '/' + eventDate.year.toString();
             String eventTime = eventDate.hour.toString() + ':' + eventDate.minute.toString();
 
-            return EventWidget(
-              eventName: eventName,
-              location: LatLng(location.latitude, location.longitude),
-              participansNumber: participansNumber,
-              eventCapacity: eventCapacity,
-              eventImage: eventImage,
-              eventDetails: eventDetails,
-              eventId: eventId,
-              eventDay: eventDay,
-              eventTime: eventTime,
-            );
-          }).toList();
-
+            if (eventDate.isAfter(DateTime.now())) {
+              return EventWidget(
+                eventName: eventName,
+                location: LatLng(location.latitude, location.longitude),
+                participansNumber: participansNumber,
+                eventCapacity: eventCapacity,
+                eventImage: eventImage,
+                eventDetails: eventDetails,
+                eventId: eventId,
+                eventDay: eventDay,
+                eventTime: eventTime,
+              );
+            } else {
+              return null;
+            }
+          }).whereType<EventWidget>().toList();
           return ListView(
             children: eventWidgets,
           );

@@ -39,7 +39,8 @@ class AuthenticationService {
         'username': username,
         'email': email,
         'location': location,
-        'profileImageUrl' : null,
+        'profileImageUrl': null,
+        'searches':[null,null,null],
       });
 
       print('User added successfully with ID: $userId');

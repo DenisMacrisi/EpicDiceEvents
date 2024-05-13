@@ -68,7 +68,7 @@ class Authenticate extends StatelessWidget {
                     ),
                   ),
                   child: Container(
-                    width: 100.0,
+                    width: 110.0,
                     height: 60.0,
                     alignment: Alignment.center,
                     child: Text(
@@ -102,7 +102,7 @@ class Authenticate extends StatelessWidget {
                     ),
                   ),
                   child: Container(
-                    width: 100.0,
+                    width: 110.0,
                     height: 60.0,
                     alignment: Alignment.center,
                     child: Text(

@@ -54,7 +54,7 @@ class _ProfilePageState extends State<ProfilePage>{
             centerTitle: true,
         ),
       body: FutureBuilder(
-        future: getUserData(), // Apelează funcția getUserData() pentru a obține datele utilizatorului
+        future: getUserData(),
         builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return CircularProgressIndicator();
@@ -62,7 +62,6 @@ class _ProfilePageState extends State<ProfilePage>{
           if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           }
-          // Extrage URL-ul imaginii din snapshot-ul documentului
           String imageUrl = snapshot.data!.get('profileImageUrl') ?? '';
           return Stack(
             children: [
@@ -91,23 +90,23 @@ class _ProfilePageState extends State<ProfilePage>{
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
-                        if (_selectedImage != null || imageUrl.isNotEmpty) // Verifică dacă există o imagine locală sau un URL către imagine
+                        if (_selectedImage != null || imageUrl.isNotEmpty)
                           ClipOval(
-                            child: _selectedImage != null // Dacă există o imagine locală, o afișează
+                            child: _selectedImage != null
                                 ? Image.file(
                               _selectedImage!,
                               fit: BoxFit.cover,
                               width: 120,
                               height: 120,
                             )
-                                : imageUrl.isNotEmpty // Altfel, dacă există un URL către imagine, o afișează
+                                : imageUrl.isNotEmpty
                                 ? Image.network(
                               imageUrl,
                               fit: BoxFit.cover,
                               width: 120,
                               height: 1200,
                             )
-                                : Container(), // Dacă nu există nici o imagine locală și nici un URL către imagine, afișează un container gol
+                                : Container(),
                           ),
                         Icon(
                           Icons.camera_alt,
@@ -166,20 +165,16 @@ class _ProfilePageState extends State<ProfilePage>{
   }
 
   Future<DocumentSnapshot> getUserData() async {
-    // Obține utilizatorul curent
     User? currentUser = FirebaseAuth.instance.currentUser;
 
     if (currentUser != null) {
-      // Accesează baza de date Firestore și obține datele utilizatorului
       DocumentSnapshot userData = await FirebaseFirestore.instance
           .collection('users')
           .doc(currentUser.uid)
           .get();
 
-      // Returnează datele utilizatorului sub formă de obiect Future<DocumentSnapshot>
       return userData;
     } else {
-      // În cazul în care utilizatorul nu este autentificat, returnează un DocumentSnapshot gol
       return FirebaseFirestore.instance.collection('users').doc().snapshots().first;
     }
   }

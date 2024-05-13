@@ -3,7 +3,9 @@ import 'package:epic_dice_events/Drawler.dart';
 import 'package:flutter/material.dart';
 
 import 'EventList.dart';
+import 'FilterWidget.dart';
 import 'Map.dart';
+import 'SearchWidget.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -36,7 +38,11 @@ class HomePage extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 100,
       ),
-      body: Stack(
+      body: RefreshIndicator(
+        onRefresh: (){
+          return Future.delayed(Duration(seconds: 1));
+        },
+      child: Stack(
         children: [
           Container(
             decoration: BoxDecoration(
@@ -47,8 +53,19 @@ class HomePage extends StatelessWidget {
             ),
           ),
           EventList(),
+          Positioned(
+              bottom: 70.0,
+              right: 20.0,
+              child: SearchWidget(),
+          ),
+          Positioned(
+              bottom: 10.0,
+              right: 20.0,
+              child: FilterWidget(),
+          ),
         ],
-      ),
+      ),),
+
       bottomNavigationBar: BottomAppBar(
         color: Color.fromRGBO(0, 222, 250, 60),
         child: Row(
@@ -62,8 +79,6 @@ class HomePage extends StatelessWidget {
                     context,
                     MaterialPageRoute(builder: (context) => MapPage()),
                   );
-
-
                 },
                 child: Ink(
                   padding: const EdgeInsets.all(10.0),
@@ -117,8 +132,8 @@ class HomePage extends StatelessWidget {
                 child: Ink(
                   padding: EdgeInsets.all(10.0),
                   decoration: BoxDecoration(
-                    color: Colors.white,
                     borderRadius: BorderRadius.circular(12.5),
+                    color: Colors.white,
                     boxShadow: [BoxShadow(
                       color: Colors.orangeAccent,
                       spreadRadius: 2,
@@ -143,10 +158,12 @@ class HomePage extends StatelessWidget {
                       IconButton(
                         icon: Icon(Icons.add),
                         onPressed: () {
+                          /*
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => AddEventPage()),
                           );
+                           */
                         },
                       ),
                     ],
@@ -160,7 +177,4 @@ class HomePage extends StatelessWidget {
       drawer: MyDrawer(),
     );
   }
-
-
-
 }

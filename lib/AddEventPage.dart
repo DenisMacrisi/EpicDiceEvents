@@ -160,8 +160,11 @@ class _AddEventPageState extends State<AddEventPage> {
                       ),
                       SizedBox(height: 20),
                       ElevatedButton(
-                        onPressed: () {
-                          _selectedDateTime = _selectDateTime(context) as DateTime; // Adăugat funcția pentru selectarea datei și orei
+                        onPressed: () async {
+                          final DateTime selectedDateTime = await _selectDateTime(context);
+                          setState(() {
+                            _selectedDateTime = selectedDateTime;
+                          });// Adăugat funcția pentru selectarea datei și orei
                         },
                         child: Text('Selectează data și ora'),
                       ),
@@ -220,11 +223,22 @@ class _AddEventPageState extends State<AddEventPage> {
                           String? imageUrl = await uploadImageToStorage(
                               _selectedImage!, image_name);
                           capacity = int.tryParse(_eventNumberOfParticipansController.text) ?? 0;
-                          if( addNewEventToDatabase(_eventDescriptionController.text, _eventNameController.text, capacity, imageUrl!, _currentLocation!, _selectedDateTime) == 1 ) {
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage()));
-                          }
-                        }
-                        else{
+                          addNewEventToDatabase(
+                            _eventDescriptionController.text,
+                            _eventNameController.text,
+                            capacity,
+                            imageUrl!,
+                            _selectedLocation ?? _currentLocation!,
+                            _selectedDateTime,
+                          ).then((value) {
+                            if (value == 1) {
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage()));
+                            }
+                          }).catchError((error) {
+                            print("Error adding event: $error");
+                            // Poți adăuga aici un mesaj de eroare pentru utilizator
+                          });
+                        } else {
                           showIncompleteDataError(context);
                         }
 
@@ -312,6 +326,7 @@ class _AddEventPageState extends State<AddEventPage> {
 
 
       _mapController?.animateCamera(CameraUpdate.newLatLng(_selectedLocation!));
+      print(_selectedLocation);
     });
   }
 
@@ -371,14 +386,7 @@ class _AddEventPageState extends State<AddEventPage> {
       'location' : GeoPoint(Location.latitude, Location.longitude),
       'date': dateTime,
     });
-/*
-    print("NewEventId : " + eventId);
-    print("Details : " + Details);
-    print(Capacity);
-    print("Name : " + Name);
-    print(_currentLocation);
 
- */
   return 1;
   }
 

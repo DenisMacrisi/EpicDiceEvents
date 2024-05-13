@@ -387,7 +387,9 @@ Future<String> getAddressFromCoordinates(double latitude, double longitude) asyn
     List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude);
     if (placemarks != null && placemarks.isNotEmpty) {
       Placemark placemark = placemarks.first;
-      return placemark.street ?? ''; // Sau orice altă proprietate a obiectului Placemark pe care dorești să o afișezi
+      String street = placemark.street ?? '';
+      String locality = placemark.locality ?? '';
+      return '$locality , $street';
     }
   } catch (e) {
     print('Eroare la obținerea adresei: $e');
