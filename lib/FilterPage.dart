@@ -118,7 +118,7 @@ class _FilterPageState extends State<FilterPage> {
                           color: Colors.black,
                         ),),
                       style: ElevatedButton.styleFrom(
-                        primary: selectedStartDateIsSelected ? Colors.orangeAccent : null,
+                        primary: selectedEndDateIsSelected ? Colors.orangeAccent : null,
                       ),
                     ),
                     Container(

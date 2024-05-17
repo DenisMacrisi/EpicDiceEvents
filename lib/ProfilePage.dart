@@ -119,7 +119,7 @@ class _ProfilePageState extends State<ProfilePage>{
                 ),
               ),
               Positioned(
-                top: MediaQuery.of(context).size.height * 0.3,
+                top: MediaQuery.of(context).size.height * 0.38,
                 left: MediaQuery.of(context).size.width * 0.5 - 50,
                 child: ElevatedButton(
                   onPressed: () async {
