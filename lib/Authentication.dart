@@ -1,5 +1,4 @@
 import 'dart:async';
-//import 'dart:ffi';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -15,6 +14,11 @@ class AuthenticationService {
 
   Future<User?> _getCurrentUser() async{
     return _auth.currentUser;
+  }
+
+  Future<bool> isUserAuthenticated() async{
+    User? user = await _auth.currentUser;
+    return user != null;
   }
 
 /*
@@ -48,7 +52,7 @@ class AuthenticationService {
       print('Utilizatorul nu este autentificat.');
     }
   }
-
+/*
   Future<String> getNextUserId() async{
     int counter_users = 0;
     String userId ="";
@@ -66,9 +70,9 @@ class AuthenticationService {
 
     return newUserId.toString();
 
-    return  counter_users.toString();
+   // return  counter_users.toString();
   }
-
+*/
   Future afisare() async{
     CollectionReference users = FirebaseFirestore.instance.collection('users');
     QuerySnapshot querySnapshot = await users.get();
@@ -142,5 +146,6 @@ Future registerNewUser(String email, String password) async {
 
     }
   }
+
 
 }

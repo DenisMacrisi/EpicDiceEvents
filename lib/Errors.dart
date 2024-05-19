@@ -1,4 +1,5 @@
 
+import 'package:epic_dice_events/Authenticate.dart';
 import 'package:flutter/material.dart';
 
 void showSimpleError(BuildContext context, String title, String contet){
@@ -77,6 +78,86 @@ void showSimpleError(BuildContext context, String title, String contet){
   return;
 }
 
+
+void showNetworkError(BuildContext context, String title, String contet){
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(title,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 25.0,
+            color: Colors.white,
+            shadows: [
+              Shadow(
+                blurRadius: 10.0,
+                color: Colors.orangeAccent,
+                offset: Offset(0, 0),
+              ),
+              Shadow(
+                blurRadius: 10.0,
+                color: Colors.orangeAccent,
+                offset: Offset(0, 0),
+              ),
+            ],
+          ),
+        ),
+        content: Text(contet,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16.0,
+            color: Colors.white,
+            shadows: [
+              Shadow(
+                blurRadius: 10.0,
+                color: Colors.orangeAccent,
+                offset: Offset(0, 0),
+              ),
+              Shadow(
+                blurRadius: 10.0,
+                color: Colors.orangeAccent,
+                offset: Offset(0, 0),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Authenticate()),
+              );
+            },
+            child: Text('OK',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16.0,
+                color: Colors.white,
+                shadows: [
+                  Shadow(
+                    blurRadius: 10.0,
+                    color: Colors.orangeAccent,
+                    offset: Offset(0, 0),
+                  ),
+                  Shadow(
+                    blurRadius: 10.0,
+                    color: Colors.orangeAccent,
+                    offset: Offset(0, 0),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+        backgroundColor: Color.fromRGBO(3, 220, 252,100),
+      );
+    },
+  );
+  return;
+}
+
 void showIncorectLenghtError(BuildContext context){
   showSimpleError(context,'Format Incorect', 'Numele si Parola trebuie sa aiba minim 5 caractere');
 }
@@ -91,4 +172,7 @@ void showIncompleteDataError(BuildContext context){
 }
 void showSelectedDateError(BuildContext context){
   showSimpleError(context,'Nepotrivire Date' ,'Data de inceput nu poate fi mai mare decat data de final');
+}
+void showNoConexionError(BuildContext context){
+  showNetworkError(context, "Eroare Conexiune", "Nu exista conexiune la internet");
 }

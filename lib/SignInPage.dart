@@ -104,6 +104,7 @@ class _SignInPageState extends State<SignInPage> {
                   SizedBox(height: 20,),
                   TextField(
                     controller: _passwordController,
+                    obscureText: true,
                     decoration: InputDecoration(
                       hintText: ' Parola',
                       hintStyle: TextStyle(color: Colors.black,
@@ -122,6 +123,7 @@ class _SignInPageState extends State<SignInPage> {
                   SizedBox(height: 20,),
                   TextField(
                     controller: _repeatPasswordController,
+                    obscureText: true,
                     decoration: InputDecoration(
                       hintText: ' Repeta Parola',
                       hintStyle: TextStyle(color: Colors.black,

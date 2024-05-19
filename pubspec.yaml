@@ -51,6 +51,7 @@ dependencies:
   firebase_storage: ^11.6.0
   flutter_typeahead: ^5.2.0
   geodesy: 0.10.2
+  connectivity_plus: 2.3.5
 dev_dependencies:
   flutter_test:
     sdk: flutter

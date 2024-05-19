@@ -78,6 +78,7 @@ class _LogInPageState extends State<LogInPage> {
                 SizedBox(height: 20,),
                 TextField(
                   controller: _passwordController,
+                  obscureText: true,
                   decoration: InputDecoration(
                     hintText: ' Parola',
                     hintStyle: TextStyle(color: Colors.black,fontWeight: FontWeight.w500,fontStyle: FontStyle.italic),
