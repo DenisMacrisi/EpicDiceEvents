@@ -3,6 +3,7 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:epic_dice_events/Errors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -46,6 +47,8 @@ class _AddEventPageState extends State<AddEventPage> {
   Set<Marker> _markers = {};
   DateTime _selectedDateTime = DateTime.now();
 
+  String eventId = "aaa";
+
 
   @override
   void initState() {
@@ -79,7 +82,7 @@ class _AddEventPageState extends State<AddEventPage> {
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 30.0,
-                color: Colors.white, // Culoarea textului
+                color: Colors.white,
                 shadows: [
                   Shadow(
                     blurRadius: 10.0,
@@ -232,6 +235,7 @@ class _AddEventPageState extends State<AddEventPage> {
                             _selectedDateTime,
                           ).then((value) {
                             if (value == 1) {
+                              addEventToEventsCreatedList();
                               Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage()));
                             }
                           }).catchError((error) {
@@ -373,7 +377,7 @@ class _AddEventPageState extends State<AddEventPage> {
     }
     
     CollectionReference events = FirebaseFirestore.instance.collection('events');
-    String eventId = await generateUniqueEventId();
+    eventId = await generateUniqueEventId();
 
     DocumentReference userDocRef = events.doc(eventId);
 
@@ -398,6 +402,34 @@ class _AddEventPageState extends State<AddEventPage> {
     String random = Random().nextInt(1000).toString();
 
     return 'event_'+timestamp+'_'+random;
+  }
+
+  Future<void> addEventToEventsCreatedList() async {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      DocumentSnapshot<Map<String, dynamic>> userSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .get();
+      String userId = userSnapshot.id;
+
+      bool collectionExists = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('eventsCreatedList')
+          .doc(eventId)
+          .get()
+          .then((doc) => doc.exists);
+
+      if (!collectionExists) {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .collection('eventsCreatedList')
+            .doc(eventId)
+            .set({});
+      }
+    }
   }
 
 }

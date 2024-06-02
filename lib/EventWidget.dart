@@ -330,8 +330,11 @@ class _EventWidgetState extends State<EventWidget> {
     }
   }
 
+
+
   Future<void> _showParticipantsDialog(BuildContext context) async {
     List<Widget> participantWidgets = [];
+    int colorCodeForUsername;
 
     // Obținem lista de participanți
     QuerySnapshot participantsSnapshot = await FirebaseFirestore.instance
@@ -350,9 +353,8 @@ class _EventWidgetState extends State<EventWidget> {
             .get();
         String participantName = userSnapshot['username'];
         String? participantImageUrl = userSnapshot != null ? userSnapshot['profileImageUrl'] : null;
+        colorCodeForUsername = userSnapshot['color'];
 
-
-        // Construim un widget pentru afișarea numelui și imaginii de profil
         Widget participantWidget = Row(
           children: [
             CircleAvatar(
@@ -367,9 +369,9 @@ class _EventWidgetState extends State<EventWidget> {
             Text(
               participantName,
               style: TextStyle(
-                color: Colors.black, // Culoarea textului
+                color: Color(colorCodeForUsername),
                 fontSize: 18.0,
-                fontWeight: FontWeight.w800// Dimensiunea fontului
+                fontWeight: FontWeight.w800
               ),
             ),
           ],
@@ -381,13 +383,12 @@ class _EventWidgetState extends State<EventWidget> {
       participantWidgets.add(Text(
         'Nu există participanți',
         style: TextStyle(
-          color: Colors.black, // Culoarea textului
-          fontSize: 16.0, // Dimensiunea fontului
+          color: Colors.black,
+          fontSize: 16.0,
         ),
       ));
     }
 
-    // Afișăm fereastra pop-up
     showDialog(
       context: context,
       builder: (BuildContext context) {

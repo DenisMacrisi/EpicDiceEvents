@@ -65,9 +65,7 @@ class HomePage extends StatelessWidget {
             StreamBuilder<ConnectivityResult>(
               stream: Connectivity().onConnectivityChanged,
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError || snapshot.data == ConnectivityResult.none) {
+              if (snapshot.hasError || snapshot.data == ConnectivityResult.none) {
                   return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,

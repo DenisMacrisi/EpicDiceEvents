@@ -45,6 +45,8 @@ class AuthenticationService {
         'location': location,
         'profileImageUrl': null,
         'searches':[null,null,null],
+        'color': 4278190080,
+
       });
 
       print('User added successfully with ID: $userId');
@@ -110,7 +112,7 @@ class AuthenticationService {
     }
   }
 
-// sign in email &
+// sign in email & pass
 
   Future logIn(String email, String password) async {
     try{
@@ -146,6 +148,5 @@ Future registerNewUser(String email, String password) async {
 
     }
   }
-
 
 }

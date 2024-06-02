@@ -24,6 +24,16 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage>{
 
   File? _selectedImage;
+  Color selectedColor = Colors.black;
+  List<Color> colorOptions = [Colors.black, Colors.red, Colors.green, Colors.yellow, Colors.blue, Colors.pink];
+  User? currentUser = FirebaseAuth.instance.currentUser;
+  Color newColorToUpdate = Color(0);
+
+  @override
+  void initState() {
+    super.initState();
+    loadUserColor();
+  }
 
   Widget build(BuildContext context){
 
@@ -63,6 +73,7 @@ class _ProfilePageState extends State<ProfilePage>{
             return Text('Error: ${snapshot.error}');
           }
           String imageUrl = snapshot.data!.get('profileImageUrl') ?? '';
+          String username = snapshot.data!.get('username') ?? 'User';
           return Stack(
             children: [
               Container(
@@ -119,13 +130,66 @@ class _ProfilePageState extends State<ProfilePage>{
                 ),
               ),
               Positioned(
+                top: MediaQuery.of(context).size.height * 0.30,
+                left: MediaQuery.of(context).size.width * 0.5 - 130,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    DropdownButtonHideUnderline(
+                      child: DropdownButton<Color>(
+                        icon: Container(
+                          width: 20,
+                          height: 20,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: selectedColor,
+                          ),
+                        ),
+                        items: colorOptions.map((Color color) {
+                          return DropdownMenuItem<Color>(
+                            value: color,
+                            child: Container(
+                              width: 20,
+                              height: 20,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: color,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (Color? newColor) {
+                          setState(() {
+                            selectedColor = newColor!;
+                          });
+                          newColorToUpdate = newColor!;
+                        },
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    Text(
+                      username,
+                      style: TextStyle(
+                        color: selectedColor,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Positioned(
                 top: MediaQuery.of(context).size.height * 0.38,
-                left: MediaQuery.of(context).size.width * 0.5 - 50,
+                left: MediaQuery.of(context).size.width * 0.5 - 60,
                 child: ElevatedButton(
                   onPressed: () async {
                     String? image_name = generateUniqueImageName();
-                    String? imageUrl = await uploadImageToStorage(_selectedImage!, image_name);
-                    changeProfilePicture(imageUrl!);
+                    if(_selectedImage != null) {
+                      String? imageUrl = await uploadImageToStorage(
+                          _selectedImage!, image_name);
+                      changeProfilePicture(imageUrl!);
+                    }
+                    updateUserColor(newColorToUpdate);
                     print("S-a apasat buton");
                   },
                   style: ElevatedButton.styleFrom(
@@ -138,7 +202,7 @@ class _ProfilePageState extends State<ProfilePage>{
                       width: 3.0,
                     ),
                   ),
-                  child: Text('Încarcă',style: TextStyle(
+                  child: Text('Modifică',style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 25.0,
                     color: Colors.white,
@@ -154,7 +218,8 @@ class _ProfilePageState extends State<ProfilePage>{
                         offset: Offset(0, 0),
                       ),
                     ],
-                  ),),
+                  ),
+                  ),
                 ),
               ),
             ],
@@ -184,6 +249,25 @@ class _ProfilePageState extends State<ProfilePage>{
     setState(() {
       _selectedImage = File(returnImage!.path);
     });
+  }
+
+  Future<void> loadUserColor() async {
+    if (currentUser != null) {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(currentUser!.uid).get();
+      if (userDoc.exists) {
+        int colorValue = userDoc['color'] ?? Colors.black.value;
+        setState(() {
+          selectedColor = Color(colorValue);
+        });
+      }
+    }
+  }
+  Future<void> updateUserColor(Color color) async {
+    if (currentUser != null) {
+      await FirebaseFirestore.instance.collection('users').doc(currentUser!.uid).update({
+        'color': color.value,
+      });
+    }
   }
 
 }
@@ -230,6 +314,7 @@ Future <void> changeProfilePicture(String imageUrl)async {
         .doc(userId)
         .update({'profileImageUrl': imageUrl});
   }
+  
 
 }
 

@@ -74,12 +74,23 @@ class _FilterPageState extends State<FilterPage> {
                 child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Selecteaza Data ",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.0,
-                        color: Colors.black,
-                      ),),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Selecteaza Data ",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.0,
+                              color: Colors.black,
+                            ),
+                          ),
+                          IconButton(onPressed:(){
+                            //do nothing
+                          } ,
+                              icon: Icon(Icons.calendar_today),
+                          ),
+                        ]
+                    ),
                     ElevatedButton(
                       onPressed: () async {
                         final DateTime selectedStartDate = await _selectDate(context);
