@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
+import 'package:intl/intl.dart';
 import 'EventWidget.dart';
 
 class SearchWidget extends StatelessWidget {
@@ -129,7 +129,16 @@ class CustomSearchDelegate extends SearchDelegate<String> {
             } else {
               return null;
             }
-          }).whereType<EventWidget>().toList();
+          }).whereType<EventWidget>().toList()..sort((a, b) {
+            DateFormat dateFormat = DateFormat('dd/MM/yyyy');
+            DateTime aDate = dateFormat.parse(a.eventDay);  // Aici presupunem că ai data în formatul 'dd/MM/yyyy'
+            DateTime bDate = dateFormat.parse(b.eventDay);  // Aceeași logică pentru b
+
+            if (aDate.compareTo(bDate) != 0 )
+              return aDate.compareTo(bDate);
+            else
+              return a.eventTime.compareTo(b.eventTime);  // Compară datele
+          });
           return Container(
             decoration: BoxDecoration(
               image: DecorationImage(

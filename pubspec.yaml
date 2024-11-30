@@ -52,8 +52,16 @@ dependencies:
   flutter_typeahead: ^5.2.0
   geodesy: 0.10.2
   connectivity_plus: 2.3.5
+  html: ^0.15.0
+  path_provider: ^2.0.0
+  permission_handler: ^9.2.0
+
+
 dev_dependencies:
   flutter_test:
+    sdk: flutter
+  mockito: ^5.0.0
+  integration_test:
     sdk: flutter
 
   # The "flutter_lints" package below contains a set of recommended lints to

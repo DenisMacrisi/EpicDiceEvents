@@ -13,6 +13,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:epic_dice_events/UserEventsList.dart';
+
 
 
 class ProfilePage extends StatefulWidget {
@@ -74,6 +76,11 @@ class _ProfilePageState extends State<ProfilePage>{
           }
           String imageUrl = snapshot.data!.get('profileImageUrl') ?? '';
           String username = snapshot.data!.get('username') ?? 'User';
+
+          print('Username: $username');
+          print('Selected color: $selectedColor');
+          print('Snapshot data: ${snapshot.data}');
+
           return Stack(
             children: [
               Container(
@@ -84,6 +91,7 @@ class _ProfilePageState extends State<ProfilePage>{
                   ),
                 ),
               ),
+              ///Adauga aici un SingleChildScrollView sau un Column
               Positioned(
                 top: MediaQuery.of(context).size.height * 0.15,
                 left: MediaQuery.of(context).size.width * 0.5 - 50,
@@ -180,45 +188,93 @@ class _ProfilePageState extends State<ProfilePage>{
               ),
               Positioned(
                 top: MediaQuery.of(context).size.height * 0.38,
-                left: MediaQuery.of(context).size.width * 0.5 - 60,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    String? image_name = generateUniqueImageName();
-                    if(_selectedImage != null) {
-                      String? imageUrl = await uploadImageToStorage(
-                          _selectedImage!, image_name);
-                      changeProfilePicture(imageUrl!);
-                    }
-                    updateUserColor(newColorToUpdate);
-                    print("S-a apasat buton");
-                  },
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.5),
+                left: (MediaQuery.of(context).size.width - 120) / 2 - 10,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      String? image_name = generateUniqueImageName();
+                      if(_selectedImage != null) {
+                        String? imageUrl = await uploadImageToStorage(
+                            _selectedImage!, image_name);
+                        changeProfilePicture(imageUrl!);
+                      }
+                      updateUserColor(newColorToUpdate);
+                      print("S-a apasat buton");
+                    },
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.5),
+                      ),
+                      elevation: 10.0,
+                      side: BorderSide(
+                        color: Colors.orangeAccent,
+                        width: 3.0,
+                      ),
                     ),
-                    elevation: 10.0,
-                    side: BorderSide(
-                      color: Colors.orangeAccent,
-                      width: 3.0,
+                    child: Text('Modifică',style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25.0,
+                      color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          blurRadius: 10.0,
+                          color: Colors.orangeAccent,
+                          offset: Offset(0, 0),
+                        ),
+                        Shadow(
+                          blurRadius: 10.0,
+                          color: Colors.orangeAccent,
+                          offset: Offset(0, 0),
+                        ),
+                      ],
+                    ),
                     ),
                   ),
-                  child: Text('Modifică',style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 25.0,
-                    color: Colors.white,
-                    shadows: [
-                      Shadow(
-                        blurRadius: 10.0,
-                        color: Colors.orangeAccent,
-                        offset: Offset(0, 0),
+                ),
+              ),
+              Positioned(
+                child: Align(
+                  alignment: Alignment.center,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    child: Text("Evenimente viitoare"),
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: 30, horizontal: 75),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.5),
                       ),
-                      Shadow(
-                        blurRadius: 10.0,
+                      elevation: 10.0,
+                      side: BorderSide(
                         color: Colors.orangeAccent,
-                        offset: Offset(0, 0),
+                        width: 3.0,
                       ),
-                    ],
+                    ),
                   ),
+                ),
+              ),
+              SizedBox(
+                height: 100,
+              ),
+              Positioned(
+                top: MediaQuery.of(context).size.height * 0.60,
+                left: MediaQuery.of(context).size.width * 0.17,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    child: Text("Evenimente trecute"),
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: 30, horizontal: 75),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.5),
+                      ),
+                      elevation: 10.0,
+                      side: BorderSide(
+                        color: Colors.orangeAccent,
+                        width: 3.0,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -314,7 +370,7 @@ Future <void> changeProfilePicture(String imageUrl)async {
         .doc(userId)
         .update({'profileImageUrl': imageUrl});
   }
-  
+
 
 }
 

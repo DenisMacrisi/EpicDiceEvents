@@ -71,7 +71,10 @@ class MyDrawer extends StatelessWidget {
                       icon: Icon(Icons.person),
                       onPressed: () {
                         // Acțiuni pentru butonul de utilizator
-                        //print('User icon pressed');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ProfilePage()),
+                        );
                       },
                     ),
                   ],

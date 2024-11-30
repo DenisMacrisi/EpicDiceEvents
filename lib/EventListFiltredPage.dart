@@ -104,6 +104,7 @@ class EventListFiltredPage extends StatelessWidget {
                 String eventTime = eventDate.hour.toString() + ':' +
                     eventDate.minute.toString();
 
+
                 if (eventDate.isAfter(selectedStartDate) &&
                     eventDate.isBefore(selectedEndDate) &&
                     noOfParticipansFilterConditon(eventCapacity) &&
@@ -136,6 +137,7 @@ class EventListFiltredPage extends StatelessWidget {
                   Center(child: Text('Nu există evenimente')),
                 );
               }
+
               return ListView(
                 children: eventWidgets,
               );
