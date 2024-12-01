@@ -1,0 +1,29 @@
+name: Run Flutter Integration Tests
+
+on:
+  push:
+    branches:
+      - main # Rulează doar când se face push pe branch-ul main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout codul din repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2. Instalează Flutter
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 'stable' # Sau specifică o versiune fixă, de exemplu: '3.3.2'
+
+      # 3. Instalează dependențele
+      - name: Install dependencies
+        run: flutter pub get
+
+      # 4. Rulează testele de integrare
+      - name: Run integration tests
+        run: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
