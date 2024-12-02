@@ -117,6 +117,8 @@ void main() {
   tearDownAll(() {
     //generarea raportului aici
     generateReport(testResults);
+    IntegrationTestWidgetsFlutterBinding?.ensureInitialized();
+    exit(0);
   });
 
 }
