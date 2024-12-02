@@ -1,26 +1,42 @@
-name: Run Flutter Integration Tests
+name: Flutter Android Integration Tests
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  test:
+  android-tests:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v2
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.24.5'
 
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Run integration tests
-        run: flutter run integration_test/app_test_automated.dart
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v2
+        with:
+          sdk-version: 'commandlinetools-linux-8512546_latest'
+          android-version: '31.0.0'
 
+      - name: Start Android Emulator
+        run: |
+          echo "y" | sdkmanager --install "system-images;android-30;google_apis;x86_64"
+          echo "no" | avdmanager create avd -n testAVD -k "system-images;android-30;google_apis;x86_64" --force
+          nohup emulator -avd testAVD -no-skin -no-window -gpu off -qemu -m 2048 -enable-kvm > emulator.log 2>&1 &
+          adb wait-for-device
+
+      - name: Run Integration Tests
+        run: flutter drive --target=integration_test/app_test_automated.dart
+
+      - name: Clean up
+        run: adb emu kill
