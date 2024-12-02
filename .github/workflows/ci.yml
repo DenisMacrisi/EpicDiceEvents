@@ -22,4 +22,5 @@ jobs:
         run: flutter pub get
 
       - name: Run integration tests
-        run: flutter run integration_test\app_test_automated.dart
+        run: flutter run integration_test/app_test_automated.dart
+
