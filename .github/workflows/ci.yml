@@ -1,29 +1,23 @@
-name: Run Flutter Integration Tests
+name: ci
 
 on:
-  push:
+  pull_request:
     branches:
-      - main # Rulează doar când se face push pe branch-ul main
+      - master # Rulează doar când se face push pe branch-ul main
 
 jobs:
-  test:
+  flutter_test:
+    name: Run flutter test and analyze
     runs-on: ubuntu-latest
-
     steps:
-      # 1. Checkout codul din repository
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      # 2. Instalează Flutter
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
         with:
-          flutter-version: 'stable' # Sau specifică o versiune fixă, de exemplu: '3.3.2'
+          java-version: "12.x"
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: "stable"
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test
 
-      # 3. Instalează dependențele
-      - name: Install dependencies
-        run: flutter pub get
-
-      # 4. Rulează testele de integrare
-      - name: Run integration tests
-        run: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
