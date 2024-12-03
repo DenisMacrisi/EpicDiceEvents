@@ -1,44 +1,26 @@
-name: Flutter Android Integration Tests
+name: Run Flutter Integration Tests
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
-  android-tests:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.5'
 
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v2
-        with:
-          sdk-version: 'commandlinetools-linux-8512546_latest'
-          android-version: '31.0.0'
+      - name: Run integration tests
+        run: flutter run integration_test/app_test_automated.dart
 
-  - name: Run first script (RunIntegrationTests)
-      run: |
-        cd C:\Users\HP\AndroidStudioProjects\EpicDiceEvents_1.4\Automation
-        RunIntegrationTests
-      continue-on-error: false
-
-      - name: Run second script (adb pull)
-        run: |
-          cd C:\Users\HP\AndroidStudioProjects\EpicDiceEvents_1.4\Automation
-          RunAdbPullScript.bat
-        continue-on-error: false
-
-      - name: Clean up
-        run: adb emu kill
