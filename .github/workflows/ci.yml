@@ -7,7 +7,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest  # Schimbă la un runner Windows
 
     steps:
       - name: Checkout repository
@@ -15,13 +15,13 @@ jobs:
 
       - name: Run first script (RunIntegrationTests)
         run: |
-          cd C:\\Users\\HP\\AndroidStudioProjects\\EpicDiceEvents_1.4\\Automation
+          cd C:\Users\HP\AndroidStudioProjects\EpicDiceEvents_1.4\Automation
           RunIntegrationTests
         continue-on-error: false
 
       - name: Run second script (adb pull)
         run: |
-          cd C:\\Users\\HP\\AndroidStudioProjects\\EpicDiceEvents_1.4\\Automation
+          cd C:\Users\HP\AndroidStudioProjects\EpicDiceEvents_1.4\Automation
           RunAdbPullScript.bat
         continue-on-error: false
 
