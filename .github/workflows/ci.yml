@@ -14,15 +14,16 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Run first script (RunIntegrationTests)
-          run: |
-            cd C:\Users\HP\AndroidStudioProjects\EpicDiceEvents_1.4\Automation
-            RunIntegrationTests
-          continue-on-error: false
+        run: |
+          cd C:\Users\HP\AndroidStudioProjects\EpicDiceEvents_1.4\Automation
+          RunIntegrationTests
+        continue-on-error: false
 
       - name: Run second script (adb pull)
-          run: |
-            cd C:\Users\HP\AndroidStudioProjects\EpicDiceEvents_1.4\Automation
-            RunAdbPullScript.bat
-          continue-on-error: false
+        run: |
+          cd C:\Users\HP\AndroidStudioProjects\EpicDiceEvents_1.4\Automation
+          RunAdbPullScript.bat
+        continue-on-error: false
+
       - name: Clean up
         run: adb emu kill
