@@ -17,10 +17,10 @@ void main() {
 
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  // Lista pentru a stoca toate rezultatele testului
+  /// Lista pentru a stoca toate rezultatele testului
   final List<Map<String, dynamic>> testResults = [];
 
-  // Funcție pentru a adăuga rezultate în raport
+  /// Funcție pentru a adăuga rezultate în raport
   void addResult(String className, String testCase, bool status, {String? error}) {
     testResults.add({
       'className': className,
