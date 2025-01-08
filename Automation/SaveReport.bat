@@ -1,14 +1,5 @@
 @echo off
-echo Aștept ca emulatorul să fie detectat de adb...
-
-:: Verifică dacă emulatorul este activ
-:wait_for_device
-adb devices | find "emulator-5554" >nul
-if %errorlevel% neq 0 (
-    timeout /t 5 >nul
-    goto wait_for_device
-)
-echo Emulatorul este detectat.
+:: Script pentru salvarea raportului de testare
 
 :: Verificare dacă fișierul există pe dispozitiv înainte de a-l extrage
 adb shell "ls /storage/emulated/0/Android/data/com.example.epic_dice_events/files/test_report.html" >nul 2>&1
