@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:epic_dice_events/AddEventPage.dart';
+import 'package:epic_dice_events/CustomWidgets.dart';
 import 'package:epic_dice_events/Drawler.dart';
 import 'package:epic_dice_events/MyApp.dart';
 import 'package:flutter/material.dart';
@@ -22,31 +23,8 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        title: Center(
-          child: Text(
-            'EpicDiceEvents',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 30.0,
-              color: Colors.white,
-              shadows: [
-                Shadow(
-                  blurRadius: 10.0,
-                  color: Colors.orangeAccent,
-                  offset: Offset(0, 0),
-                ),
-                Shadow(
-                  blurRadius: 10.0,
-                  color: Colors.orangeAccent,
-                  offset: Offset(0, 0),
-                ),
-              ],
-            ),
-          ),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 100,
+      appBar:const CustomAppBar(
+        title: 'EpicDiceEvents',
       ),
       body: RefreshIndicator(
         onRefresh: () {

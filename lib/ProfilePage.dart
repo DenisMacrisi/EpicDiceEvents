@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:epic_dice_events/CustomWidgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -41,29 +42,8 @@ class _ProfilePageState extends State<ProfilePage>{
 
     return Scaffold(
         extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          title: Text('Profil',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 25.0,
-              color: Colors.white,
-              shadows: [
-                Shadow(
-                  blurRadius: 10.0,
-                  color: Colors.orangeAccent,
-                  offset: Offset(0, 0),
-                ),
-                Shadow(
-                  blurRadius: 10.0,
-                  color: Colors.orangeAccent,
-                  offset: Offset(0, 0),
-                ),
-              ],
-            ),
-          ),
-            backgroundColor: Colors.transparent,
-            elevation: 100,
-            centerTitle: true,
+        appBar: const CustomAppBar(
+          title: 'Profil',
         ),
       body: FutureBuilder(
         future: getUserData(),
@@ -91,7 +71,6 @@ class _ProfilePageState extends State<ProfilePage>{
                   ),
                 ),
               ),
-              ///Adauga aici un SingleChildScrollView sau un Column
               Positioned(
                 top: MediaQuery.of(context).size.height * 0.15,
                 left: MediaQuery.of(context).size.width * 0.5 - 50,

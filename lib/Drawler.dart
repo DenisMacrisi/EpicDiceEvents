@@ -4,6 +4,7 @@ import 'package:epic_dice_events/ProfilePage.dart';
 import 'package:flutter/material.dart';
 import 'Authentication.dart';
 import 'HomePage.dart';
+import 'RecommendationPage.dart';
 class MyDrawer extends StatelessWidget {
 
   final AuthenticationService _auth = new AuthenticationService();
@@ -100,13 +101,47 @@ class MyDrawer extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'Logout          ',
+                      'Logout        ',
                     ),
                     IconButton(
                       icon: Icon(Icons.logout),
                       onPressed: () {
                         // Acțiuni pentru butonul de utilizator
                         //print('User icon pressed');
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: InkWell(
+                onTap: () async {
+
+                  await _auth.signOut();
+                  //print('Text or icon pressed');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => RecommendationPage()),
+                  );
+                },
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                        "Sugestie      "
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.recommend),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => RecommendationPage()),
+                        );
                       },
                     ),
                   ],

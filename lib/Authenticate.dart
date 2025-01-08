@@ -1,3 +1,4 @@
+import 'package:epic_dice_events/CustomWidgets.dart';
 import 'package:flutter/material.dart';
 import 'LogInPage.dart';
 import 'SignInPage.dart';
@@ -7,31 +8,8 @@ class Authenticate extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        title: Center(
-          child: Text(
-            'EpicDiceEvents',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 30.0,
-              color: Colors.white,
-              shadows: [
-                Shadow(
-                  blurRadius: 10.0,
-                  color: Colors.orangeAccent,
-                  offset: Offset(0, 0),
-                ),
-                Shadow(
-                  blurRadius: 10.0,
-                  color: Colors.orangeAccent,
-                  offset: Offset(0, 0),
-                ),
-              ],
-            ),
-          ),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 100,
+      appBar: const CustomAppBar(
+        title: 'EpicDiceEvents',
       ),
       body: Stack(
         children: [
@@ -48,73 +26,9 @@ class Authenticate extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(height: 125),
-                ElevatedButton(
-                  onPressed: () {
-                    // Acțiunea pentru butonul de Log In
-                    print('Buton Log In apăsat');
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => LogInPage()),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.5),
-                    ),
-                    elevation: 10.0,
-                    side: BorderSide(
-                      color: Colors.orangeAccent,
-                      width: 3.0,
-                    ),
-                  ),
-                  child: Container(
-                    width: 110.0,
-                    height: 60.0,
-                    alignment: Alignment.center,
-                    child: Text(
-                      'Log In',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 28.0,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ),
+                CustomGoToElevatedButton(title: 'Log In', widthSize: 110.0, heightSize: 60.0, fontSize: 28.0, targetPage: LogInPage()),
                 SizedBox(height: 50),
-                ElevatedButton(
-                  onPressed: () {
-                    // Acțiunea pentru butonul de Sign Up
-                    print('Buton Sign In apăsat');
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SignInPage()),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.5),
-                    ),
-                    elevation: 10.0,
-                    side: BorderSide(
-                      color: Colors.orangeAccent,
-                      width: 3.0,
-                    ),
-                  ),
-                  child: Container(
-                    width: 110.0,
-                    height: 60.0,
-                    alignment: Alignment.center,
-                    child: Text(
-                      'Sign Up',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 28.0,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ),
+                CustomGoToElevatedButton(title: 'Sign Up', widthSize: 110.0, heightSize: 60.0, fontSize: 28.0, targetPage: SignInPage()),
               ],
             ),
           ),

@@ -286,7 +286,6 @@ class _EventWidgetState extends State<EventWidget> {
     User? currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser != null) {
       String userId = currentUser.uid;
-
       try {
         await FirebaseFirestore.instance
             .collection('events')

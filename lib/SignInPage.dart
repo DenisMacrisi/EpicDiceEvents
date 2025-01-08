@@ -158,7 +158,6 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                   ),
                   SizedBox(height: 40),
-
                   ElevatedButton(
                     onPressed: () async {
                       String username = _usernameController.text;
@@ -171,13 +170,21 @@ class _SignInPageState extends State<SignInPage> {
                         showIncorectLenghtError(context);
                         return;
                       }
+                      else if(!validateEmail(email)){
+                        showIncorectEmailError(context);
+                      }
+                      else if (validatePasswordRetype(password,repeat_password))
+                      {
+                        showIncorectPasswordRetyped(context);
+                        return;
+                      }
                       else
                       {
                         dynamic result = await _auth.registerNewUser(email,password);
 
                         if(result == null){
 
-                          setState(() => errorMessage = 'Introdu un email valid' );
+                            setState(() => errorMessage = 'Date invalide sau Utilizator deja existent' );
                         }
                         else{
 

@@ -2,6 +2,7 @@
 
 import 'dart:io';
 import 'dart:math';
+import 'package:epic_dice_events/CustomWidgets.dart';
 import 'package:epic_dice_events/Errors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -73,34 +74,8 @@ class _AddEventPageState extends State<AddEventPage> {
   Widget build(BuildContext context){
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        title: Padding(
-          padding: const EdgeInsets.only(right:60.0) ,
-          child: Center(
-            child: Text(
-              'Adaugare',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 30.0,
-                color: Colors.white,
-                shadows: [
-                  Shadow(
-                    blurRadius: 10.0,
-                    color: Colors.orangeAccent,
-                    offset: Offset(0, 0),
-                  ),
-                  Shadow(
-                    blurRadius: 10.0,
-                    color: Colors.orangeAccent,
-                    offset: Offset(0, 0),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 100, // Elimină umbra sub AppBar
+      appBar: const CustomAppBar(
+        title: 'Adaugare',
       ),
       body: Stack(
         children: [

@@ -1,4 +1,5 @@
 
+import 'package:epic_dice_events/CustomWidgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -30,34 +31,8 @@ class _FilterPageState extends State<FilterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        title: Padding(
-          padding: const EdgeInsets.only(right:60.0) ,
-          child: Center(
-            child: Text(
-              'Filtrare',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 30.0,
-                color: Colors.white,
-                shadows: [
-                  Shadow(
-                    blurRadius: 10.0,
-                    color: Colors.orangeAccent,
-                    offset: Offset(0, 0),
-                  ),
-                  Shadow(
-                    blurRadius: 10.0,
-                    color: Colors.orangeAccent,
-                    offset: Offset(0, 0),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 100,
+      appBar: const CustomAppBar(
+        title: 'Filtrare',
       ),
       body: Container(
         decoration: BoxDecoration(

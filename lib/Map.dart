@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:epic_dice_events/CustomWidgets.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
@@ -132,35 +133,8 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        title: Center(
-          child: Padding(
-            padding: const EdgeInsets.only(right: 40),
-            child: Text(
-              'Harta',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 30.0,
-                color: Colors.white,
-                shadows: [
-                  Shadow(
-                    blurRadius: 10.0,
-                    color: Colors.orangeAccent,
-                    offset: Offset(0, 0),
-                  ),
-                  Shadow(
-                    blurRadius: 10.0,
-                    color: Colors.orangeAccent,
-                    offset: Offset(0, 0),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        backgroundColor: Color.fromRGBO(3, 220, 255, 100),
-        elevation: 100,
-
+      appBar: const CustomAppBar(
+        title: 'Harta',
       ),
       body: Stack(
         children: [

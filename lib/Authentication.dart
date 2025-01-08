@@ -90,7 +90,6 @@ class AuthenticationService {
   }
 
 // auth change stream
-
   Stream<CustomUser?> get user{
     return _auth.authStateChanges()
         //.map((User? user) => _customUserFromFirebase(user));
@@ -113,7 +112,6 @@ class AuthenticationService {
   }
 
 // sign in email & pass
-
   Future logIn(String email, String password) async {
     try{
       UserCredential result = await _auth.signInWithEmailAndPassword(email: email, password: password);
