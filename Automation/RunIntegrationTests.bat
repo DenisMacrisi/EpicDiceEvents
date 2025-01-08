@@ -10,6 +10,7 @@ adb devices | find "emulator-5554" >nul
 if %errorlevel% neq 0 (
     timeout /t 5 >nul
     goto wait_for_device
+
 )
 echo Emulatorul a fost detectat cu succes .
 
