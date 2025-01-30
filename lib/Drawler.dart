@@ -121,8 +121,6 @@ class MyDrawer extends StatelessWidget {
               padding: const EdgeInsets.only(right: 8.0),
               child: InkWell(
                 onTap: () async {
-
-                  await _auth.signOut();
                   //print('Text or icon pressed');
                   Navigator.push(
                     context,
