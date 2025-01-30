@@ -117,7 +117,7 @@ class _RecommendationPage extends State<RecommendationPage> {
                   SizedBox(height: 40),
                   ElevatedButton(
                     onPressed: () {
-                      print('Buton Apasat');
+                      showFeedbackForm(context);
                     },
                     child: Text(
                       'Feedback',
@@ -143,6 +143,141 @@ class _RecommendationPage extends State<RecommendationPage> {
           }),
     );
   }
+}
+
+void showFeedbackForm(BuildContext context) {
+  // Controlor pentru textul comentariului
+  TextEditingController suggestionCommentController = TextEditingController();
+
+  // Variabilă pentru opțiunea Like/Dislike
+  int isSuggestionLiked = 0;
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (context, setState) {
+          return AlertDialog(
+            title: Text('Feedback'),
+            backgroundColor:Colors.lightBlue,
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                            Icons.thumb_up,
+                          color: isSuggestionLiked == 1 ? Colors.orangeAccent : null,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            isSuggestionLiked = 1;  // setare Like
+                          });
+                        },
+                      ),
+                      Text('Like'),
+                      IconButton(
+                        icon: Icon(
+                            Icons.thumb_down,
+                            color: isSuggestionLiked == 2 ? Colors.orangeAccent : null,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            isSuggestionLiked = 2;  // setare Dislike
+                          });
+                        },
+                      ),
+                      Text('Dislike'),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  TextField(
+                    controller: suggestionCommentController,
+                    decoration: InputDecoration(
+                      labelText: 'Comentariu',
+                      hintText: 'Feedback...',
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      sendFeedbackResponseToFirebase(isSuggestionLiked, suggestionCommentController.text);
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                        'Trimite',
+                        style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0,
+                        color: Colors.black,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.5),
+                        ),
+                        elevation: 10.0,
+                        side: BorderSide(
+                          color: Colors.orangeAccent,
+                          width: 3.0,
+                        )),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    },
+  );
+}
+
+Future<void> sendFeedbackResponseToFirebase(int likeStatus, String comment) async {
+  try {
+
+    DocumentReference<Map<String, dynamic>> suggestionReferance =
+    await FirebaseFirestore.instance
+        .collection('suggestion')
+        .doc('q4MLFWfMXNAj1E1LmFgb'); // Documentul cu id-ul 'id_no'
+
+
+    DocumentSnapshot<Map<String, dynamic>> suggestionSnapshot =
+    await suggestionReferance.get();
+
+    Map<String, dynamic> data = suggestionSnapshot.data()!;
+
+    int noLikes = data['likes'];
+    int noDislikes = data['dislikes'];
+    int counter = data['counter'];
+    User? currentUser = FirebaseAuth.instance.currentUser;
+
+    counter++;
+    if (likeStatus == 1)
+      noLikes++;
+    if (likeStatus == 2)
+      noDislikes++;
+
+    await suggestionReferance.update({
+      'counter': counter,
+      'likes': noLikes,
+      'dislikes': noDislikes,
+    });
+
+    String feedbackResponse = "feedbacker_" + counter.toString();
+
+    await suggestionReferance.collection('feedback').doc(feedbackResponse).set({
+      'comment': comment,
+      'like': likeStatus == 1 ? "Da" : "Nu",
+      'user': currentUser?.uid,
+    });
+
+  }
+  catch (e){
+    print("Eroare la acesarea documentelor Firebase");
+  }
+
 }
 
 /// Extragere detalii pentru sugestia saptamanii
