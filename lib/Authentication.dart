@@ -1,12 +1,11 @@
 import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'CustomUser.dart';
 
 class AuthenticationService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final StreamController<User?> _authChangesController = StreamController<User?>();
+  //final StreamController<User?> _authChangesController = StreamController<User?>();
   // Create user obj
   CustomUser? _customUserFromFirebase(User? user) {
     return user != null ? CustomUser(uid: user.uid) : null;
@@ -17,17 +16,9 @@ class AuthenticationService {
   }
 
   Future<bool> isUserAuthenticated() async{
-    User? user = await _auth.currentUser;
+    User? user = _auth.currentUser;
     return user != null;
   }
-
-/*
-  Future <Int> getNextUserId(String uid) async{
-      CollectionReference userCollection = FirebaseFirestore.instance.collection('users');
-      DocumentReference userDocRef = userCollection.doc(userId);
-      QuerySnapshot collectionSnapshot = await userDocRef.collections();
-  }
-*/
 
   Future <void> addNewUserToDatabase(String username, String email, String location) async {
 
@@ -43,38 +34,15 @@ class AuthenticationService {
         'username': username,
         'email': email,
         'location': location,
-        'profileImageUrl': null,
+        'profileImageUrl': 'https://firebasestorage.googleapis.com/v0/b/epicdiceevents-b7754.appspot.com/o/profile.jpg?alt=media&token=0c7357c6-35e4-436e-8bb7-2d9a7e8f1e1a',
         'searches':[null,null,null],
         'color': 4278190080,
-
       });
-
-      print('User added successfully with ID: $userId');
     } else {
       print('Utilizatorul nu este autentificat.');
     }
   }
-/*
-  Future<String> getNextUserId() async{
-    int counter_users = 0;
-    String userId ="";
-
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
-    QuerySnapshot querySnapshot = await users.get();
-
-    querySnapshot.docs.forEach((doc) {
-      userId = doc.id;
-    });
-
-    int newUserId = int.parse(userId);
-
-    newUserId++;
-
-    return newUserId.toString();
-
-   // return  counter_users.toString();
-  }
-*/
+/* Just for debugg
   Future afisare() async{
     CollectionReference users = FirebaseFirestore.instance.collection('users');
     QuerySnapshot querySnapshot = await users.get();
@@ -88,15 +56,13 @@ class AuthenticationService {
       print('-----------------------');
     });
   }
-
+*/
 // auth change stream
   Stream<CustomUser?> get user{
     return _auth.authStateChanges()
         //.map((User? user) => _customUserFromFirebase(user));
         .map(_customUserFromFirebase);
   }
-
-
 
 // sign in anon
   Future signInAnon() async {
@@ -147,4 +113,142 @@ Future registerNewUser(String email, String password) async {
     }
   }
 
+  /// Function used to delete user account
+  /// Delete user and all data associated
+  Future<void> deleteCurrentUserAccount() async{
+    try{
+      User? user = _auth.currentUser;
+      if(user != null){
+        AuthCredential credentials = EmailAuthProvider.credential(
+            email: user.email!,
+            password: "test123"
+        );
+        await user.reauthenticateWithCredential(credentials);
+        await deleteCurrentUserFromEveryEvent();
+        await deleteEventsCreatedByCurrentUser();
+        await deleteCurrentUserFromCollectionUsers();
+        await deleteUser();
+        await _auth.signOut();
+      }
+    }
+    catch(e){
+      print("Eroare la stergerea utilizatorului");
+    }
+  }
+
+//delete
+  Future<void> deleteUser() async{
+    try{
+      User? user = _auth.currentUser;
+
+      if(user != null){
+        user.delete();
+      }
+    } catch(e){
+      print("Eroare la stergerea contului");
+    }
+  }
+
+  /// Function used to delete a subcollection
+  /// This function is very usefull for deleting documents
+  /// collectionPath - parent collection
+  /// docId - Id of the document from we want to delete a sub-collection
+  /// subcollectionList -
+  Future<void> deleteSubcollectionsFromParentCollection(String collectionPath, String docId, List<String> subcollectionList) async {
+    DocumentReference docRef = FirebaseFirestore.instance.collection(collectionPath).doc(docId);
+
+    for (String subcollection in subcollectionList) {
+      CollectionReference subcollectionRef = docRef.collection(subcollection);
+
+      QuerySnapshot snapshot = await subcollectionRef.get();
+      if (snapshot.docs.isNotEmpty) {
+        for (QueryDocumentSnapshot doc in snapshot.docs) {
+          await doc.reference.delete();
+        }
+      }
+    }
+  }
+  ///Function Used to delete all data associated with the current account
+  Future<void> deleteCurrentUserFromCollectionUsers() async{
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    try{
+      User? user = _auth.currentUser;
+      if(user != null){
+        String userId = user.uid;
+
+        deleteSubcollectionsFromParentCollection("users", userId,['eventsList']);
+        await users.doc(userId).delete();
+        await Future.delayed(const Duration(seconds: 2)); // Așteaptare pentru orice eventualitate
+      }
+    }catch(e){
+      print("Eroare la stergerea datelor utilizatorului din colectia Users: $e");
+    }
+  }
+
+  /// Function used to delete the events created by the current user
+  Future<void> deleteEventsCreatedByCurrentUser() async {
+    CollectionReference usersReference = FirebaseFirestore.instance.collection('users');
+    CollectionReference eventsReference = FirebaseFirestore.instance.collection('events');
+    try{
+      User? user = _auth.currentUser;
+      
+      if(user != null) {
+        String userId = user.uid;
+        CollectionReference eventsCreatedReference = usersReference.doc(userId)
+            .collection('eventsCreatedList');
+        QuerySnapshot eventsCreatedSnapshot = await eventsCreatedReference
+            .get();
+
+        for(var event in eventsCreatedSnapshot.docs){
+          String eventId = event.id;
+          await deleteSubcollectionsFromParentCollection('events', eventId, ["participantsList"]);
+          await eventsReference.doc(eventId).delete();
+        }
+
+        for (var event in eventsCreatedSnapshot.docs) {
+          await event.reference.delete();
+        }
+        await usersReference.doc(userId).update({
+          'eventsCreatedList': FieldValue.delete()
+        });
+      }
+    }catch(e){
+      print('Eroare la stergerea evenimentelor create de utilizatorul curent: $e');
+    }
+
+  }
+
+  /// Function used for deleting current user from every event that is registred for
+  Future<void> deleteCurrentUserFromEveryEvent() async {
+    CollectionReference events = FirebaseFirestore.instance.collection('events');
+
+    try {
+      User? user = _auth.currentUser;
+
+      if (user != null) {
+        QuerySnapshot querySnapshotEvents = await events.get();
+        String userId = user.uid;
+
+        for (var doc in querySnapshotEvents.docs) {
+          DocumentReference eventReference = events.doc(doc.id);
+          CollectionReference participantsList = eventReference.collection('participantsList');
+          DocumentSnapshot participantDoc = await participantsList.doc(userId).get();
+
+          if (participantDoc.exists) {
+            await participantsList.doc(userId).delete();
+            int noOfparticipants = doc.get('noOfparticipants') ?? 0;
+            noOfparticipants = (noOfparticipants > 0) ? noOfparticipants - 1 : 0;
+
+            await eventReference.update({
+              'noOfparticipants': noOfparticipants,
+            });
+          } else {
+            //Do Nothing
+          }
+        }
+      }
+    } catch (e) {
+      print("Eroare la eliminarea utilizatorului curent din evenimente: $e");
+    }
+  }
 }
