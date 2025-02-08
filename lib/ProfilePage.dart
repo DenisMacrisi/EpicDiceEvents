@@ -4,17 +4,11 @@ import 'package:epic_dice_events/CustomWidgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
-import 'package:location/location.dart';
-import 'package:epic_dice_events/DatabaseService.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:epic_dice_events/UserEventsList.dart';
+import 'package:epic_dice_events/Authentication.dart';
+import 'package:epic_dice_events/Authenticate.dart';
 
 
 
@@ -31,6 +25,8 @@ class _ProfilePageState extends State<ProfilePage>{
   List<Color> colorOptions = [Colors.black, Colors.red, Colors.green, Colors.yellow, Colors.blue, Colors.pink];
   User? currentUser = FirebaseAuth.instance.currentUser;
   Color newColorToUpdate = Color(0);
+  final AuthenticationService _authService = AuthenticationService();
+
 
   @override
   void initState() {
@@ -57,6 +53,10 @@ class _ProfilePageState extends State<ProfilePage>{
           String imageUrl = snapshot.data!.get('profileImageUrl') ?? '';
           String username = snapshot.data!.get('username') ?? 'User';
 
+          /// Used for future calculation
+          double screenHeight = MediaQuery.of(context).size.height;
+          double screenWidth = MediaQuery.of(context).size.width;
+
           print('Username: $username');
           print('Selected color: $selectedColor');
           print('Snapshot data: ${snapshot.data}');
@@ -72,8 +72,8 @@ class _ProfilePageState extends State<ProfilePage>{
                 ),
               ),
               Positioned(
-                top: MediaQuery.of(context).size.height * 0.15,
-                left: MediaQuery.of(context).size.width * 0.5 - 50,
+                top: screenHeight * 0.15,
+                left: (screenWidth - 120) / 2,
                 child: GestureDetector(
                   onTap: () async {
                     await _pickImageFromGallery();
@@ -117,8 +117,8 @@ class _ProfilePageState extends State<ProfilePage>{
                 ),
               ),
               Positioned(
-                top: MediaQuery.of(context).size.height * 0.30,
-                left: MediaQuery.of(context).size.width * 0.5 - 130,
+                top: screenHeight * 0.30,  // Adjusted to be just below the avatar
+                left: (screenWidth - 240) / 2,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -166,8 +166,8 @@ class _ProfilePageState extends State<ProfilePage>{
                 ),
               ),
               Positioned(
-                top: MediaQuery.of(context).size.height * 0.38,
-                left: (MediaQuery.of(context).size.width - 120) / 2 - 10,
+                top: screenHeight * 0.35,
+                left: (screenWidth - 145) / 2,
                 child: Align(
                   alignment: Alignment.center,
                   child: ElevatedButton(
@@ -213,6 +213,9 @@ class _ProfilePageState extends State<ProfilePage>{
                 ),
               ),
               Positioned(
+                top: screenHeight * 0.50,  // Spacing below the Modify button
+                left: (screenWidth - 270) / 2,
+
                 child: Align(
                   alignment: Alignment.center,
                   child: ElevatedButton(
@@ -236,8 +239,8 @@ class _ProfilePageState extends State<ProfilePage>{
                 height: 100,
               ),
               Positioned(
-                top: MediaQuery.of(context).size.height * 0.60,
-                left: MediaQuery.of(context).size.width * 0.17,
+              top: screenHeight * 0.65,  // Spacing below the Upcoming events button
+              left: (screenWidth - 270) / 2,
                 child: Align(
                   alignment: Alignment.center,
                   child: ElevatedButton(
@@ -245,6 +248,42 @@ class _ProfilePageState extends State<ProfilePage>{
                     child: Text("Evenimente trecute"),
                     style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.symmetric(vertical: 30, horizontal: 75),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.5),
+                      ),
+                      elevation: 10.0,
+                      side: BorderSide(
+                        color: Colors.orangeAccent,
+                        width: 3.0,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 100,
+              ),
+              Positioned(
+                top: MediaQuery.of(context).size.height * 0.90,
+                left: MediaQuery.of(context).size.width * 0.36,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _authService.deleteCurrentUserAccount();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Authenticate()),
+                      );
+                    },
+                    child: Text(
+                        "Stergere Cont",
+                      style: TextStyle(
+                        color: Colors.red
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12.5),
                       ),
