@@ -1,11 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:epic_dice_events/CustomWidgets.dart';
 import 'package:epic_dice_events/HomePage.dart';
 import 'package:epic_dice_events/ResetPasswordPage.dart';
 import 'package:flutter/material.dart';
-
-import 'Errors.dart';
-import 'Validation.dart';
 import 'Authentication.dart';
 
 
