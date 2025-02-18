@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:epic_dice_events/CustomWidgets.dart';
 import 'package:epic_dice_events/HomePage.dart';
+import 'package:epic_dice_events/ResetPasswordPage.dart';
 import 'package:flutter/material.dart';
 
 import 'Errors.dart';
@@ -62,6 +64,9 @@ class _LogInPageState extends State<LogInPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                SizedBox(
+                  height: 80,
+                ),
                 TextField(
                   controller: _emailController,
                   decoration: InputDecoration(
@@ -104,40 +109,13 @@ class _LogInPageState extends State<LogInPage> {
                       print("Eroare la Logare");
                     }
                     else{
-                     // _auth.afisare();
+                      // _auth.afisare();
 
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => HomePage()),
                       );
                     }
-/*
-                    if(!validateUsername(email) || !validatePassword(password)){
-                      showIncorectLenghtError(context);
-                      return;
-                    }
-                    else
-                    {
-                      dynamic result = await _auth.registerNewUser(email,password);
-
-                      if(result == null){
-
-                        setState(() => errorMessage = 'Introdu un email valid' );
-                        //print("Eroare la Registrare");
-                      }
-                      else{
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => HomePage()),
-                        );
-                      }
-
-                    }
- */
-
-                    /// print("Username: $username");
-                    ///print(_usernameController);
-                    ///print("Password: ${_passwordController.text}");
                   },
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
@@ -169,7 +147,7 @@ class _LogInPageState extends State<LogInPage> {
                     child: Container(
                       padding: EdgeInsets.all(2.0),
                       decoration: BoxDecoration(
-                        color: Color.fromRGBO(5,140 ,250 , 50),
+                        color: Color.fromRGBO(5,140 ,250 , 250),
                       ),
                       child: Text(
                         errorMessage,
@@ -192,7 +170,9 @@ class _LogInPageState extends State<LogInPage> {
                         ),
                       ),
                     )
-                )
+                ),
+                SizedBox(height: 50),
+                CustomGoToElevatedButton(title: 'Resetare Parola', widthSize: 180, heightSize: 40, fontSize: 18.0, targetPage: ResetPasswordPage()),
               ],
             ),
           ),
