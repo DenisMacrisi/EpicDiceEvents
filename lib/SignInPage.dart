@@ -1,10 +1,9 @@
 
+import 'package:epic_dice_events/Authenticate.dart';
 import 'package:epic_dice_events/Validation.dart';
 import 'Authentication.dart';
 import 'package:flutter/material.dart';
-
 import 'Errors.dart';
-import 'HomePage.dart';
 
 class SignInPage extends StatefulWidget {
 
@@ -184,15 +183,28 @@ class _SignInPageState extends State<SignInPage> {
 
                         if(result == null){
 
-                            setState(() => errorMessage = 'Date invalide sau Utilizator deja existent' );
+                          setState(() => errorMessage = 'Date invalide sau Utilizator deja existent' );
                         }
                         else{
 
                           _auth.addNewUserToDatabase(username, email, city);
-
-                          Navigator.push(
+                          _auth.signOut();
+                          Navigator.pushAndRemoveUntil(
                             context,
-                            MaterialPageRoute(builder: (context) => HomePage()),
+                            MaterialPageRoute(builder: (context) => Authenticate()),
+                                (Route<dynamic> route) => false, // Elimină toate paginile anterioare
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'Un email de confirmare al adresei a fost trimis',
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.white
+                                  ),
+                                ),
+                                backgroundColor: Colors.orangeAccent,
+                              )
                           );
                         }
 
@@ -225,33 +237,33 @@ class _SignInPageState extends State<SignInPage> {
                   ),
                   SizedBox(height: 5.00,),
                   Visibility(
-                    visible: errorMessage.length > 1,
-                  child: Container(
-                    padding: EdgeInsets.all(2.0),
-                    decoration: BoxDecoration(
-                      color: Color.fromRGBO(5,140 ,250 , 50),
-                    ),
-                    child: Text(
-                      errorMessage,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.00,
-                        shadows: [
-                          Shadow(
-                            blurRadius: 15.0,
-                            color: Colors.orangeAccent,
-                            offset: Offset(0, 0),
+                      visible: errorMessage.length > 1,
+                      child: Container(
+                        padding: EdgeInsets.all(2.0),
+                        decoration: BoxDecoration(
+                          color: Color.fromRGBO(5,140 ,250 , 50),
+                        ),
+                        child: Text(
+                          errorMessage,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20.00,
+                            shadows: [
+                              Shadow(
+                                blurRadius: 15.0,
+                                color: Colors.orangeAccent,
+                                offset: Offset(0, 0),
+                              ),
+                              Shadow(
+                                blurRadius: 15.0,
+                                color: Colors.orangeAccent,
+                                offset: Offset(0, 0),
+                              ),
+                            ],
                           ),
-                          Shadow(
-                            blurRadius: 15.0,
-                            color: Colors.orangeAccent,
-                            offset: Offset(0, 0),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
+                        ),
+                      )
                   )
                 ],
               ),
@@ -262,5 +274,4 @@ class _SignInPageState extends State<SignInPage> {
     );
   }
 }
-
 
