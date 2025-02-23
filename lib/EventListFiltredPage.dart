@@ -14,6 +14,7 @@ class EventListFiltredPage extends StatelessWidget {
   final bool betweenTenTwentyParticipansCondition;
   final bool overTwentyParticipansCondition;
   final String selectedCounty;
+  final String selectedCategory;
 
   EventListFiltredPage({
     required this.selectedStartDate,
@@ -22,6 +23,7 @@ class EventListFiltredPage extends StatelessWidget {
     required this.betweenTenTwentyParticipansCondition,
     required this.overTwentyParticipansCondition,
     required this.selectedCounty,
+    required this.selectedCategory,
   });
 
   @override
@@ -92,7 +94,7 @@ class EventListFiltredPage extends StatelessWidget {
                 final event = snapshot.data!.docs[index];
                 GeoPoint location = event['location'];
                 String eventName = event['Nume'];
-                int participansNumber = event['noOfparticipans'];
+                int participansNumber = event['noOfparticipants'];
                 int eventCapacity = event['capacity'];
                 String eventImage = event['imageURL'];
                 String eventDetails = event['Descriere'];
@@ -103,12 +105,13 @@ class EventListFiltredPage extends StatelessWidget {
                     eventDate.year.toString();
                 String eventTime = eventDate.hour.toString() + ':' +
                     eventDate.minute.toString();
-
+                String eventCategory = event['category'];
 
                 if (eventDate.isAfter(selectedStartDate) &&
                     eventDate.isBefore(selectedEndDate) &&
-                    noOfParticipansFilterConditon(eventCapacity) &&
-                    locationFilterCondition(location, selectedCounty)) {
+                    noOfparticipantsFilterCondition(eventCapacity) &&
+                    locationFilterCondition(location, selectedCounty) && 
+                    categoryFilterCondition(eventCategory)) {
                   thereAreNoEvents = false;
                   eventWidgets.add(
                     Padding(
@@ -126,6 +129,7 @@ class EventListFiltredPage extends StatelessWidget {
                           eventId: eventId,
                           eventDay: eventDay,
                           eventTime: eventTime,
+                          eventCategory: eventCategory,
                         ),
                       ),
                     ),
@@ -148,7 +152,7 @@ class EventListFiltredPage extends StatelessWidget {
     );
   }
 
-  bool noOfParticipansFilterConditon(int eventCapacity) {
+  bool noOfparticipantsFilterCondition(int eventCapacity) {
     if (underTenParticipansCondition)
       if (eventCapacity < 10)
         return true;
@@ -161,6 +165,7 @@ class EventListFiltredPage extends StatelessWidget {
 
     return false;
   }
+
 
   bool locationFilterCondition(GeoPoint location, String county) {
     // Definire Harta Judete Romania
@@ -243,6 +248,17 @@ class EventListFiltredPage extends StatelessWidget {
 
   double _degreesToRadians(double degrees) {
     return degrees * pi / 180;
+  }
+
+  bool categoryFilterCondition(String category){
+
+    if(selectedCategory == "Niciuna")
+      return true;
+
+    if(category == selectedCategory)
+      return true;
+
+    return false;
   }
 }
 

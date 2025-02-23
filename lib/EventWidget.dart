@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:epic_dice_events/HomePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,6 +21,7 @@ class EventWidget extends StatefulWidget {
   final String eventId;
   final String eventDay;
   final String eventTime;
+  final String eventCategory;
 
   EventWidget({
     Key? key,
@@ -31,6 +34,7 @@ class EventWidget extends StatefulWidget {
     required this.eventId,
     required this.eventDay,
     required this.eventTime,
+    required this.eventCategory,
   }) : super(key: key);
 
   @override
@@ -40,11 +44,14 @@ class EventWidget extends StatefulWidget {
 class _EventWidgetState extends State<EventWidget> {
 
   late String _address = 'Loading...';
+  late bool _isUserRegistered = false;
+  late bool _showFullDescription = false;
 
   @override
   void initState() {
     super.initState();
     _loadAddress();
+    _checkRegistrationForEvent();
   }
 
   Future<void> _loadAddress() async {
@@ -60,7 +67,16 @@ class _EventWidgetState extends State<EventWidget> {
       print('Error loading address: $e');
     }
   }
-
+  Future<void> _checkRegistrationForEvent() async{
+    try {
+      bool i = await isUserRegisteredForEvent();
+      setState(() {
+        _isUserRegistered = i;
+      });
+    }catch(e){
+      print('Eroare');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,12 +114,43 @@ class _EventWidgetState extends State<EventWidget> {
             SizedBox(
               height: 5.0,
             ),
-            Text(
-              'Disponibilitate: ${widget.participansNumber} / ${widget.eventCapacity} ',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Participare: ${widget.participansNumber} / ${widget.eventCapacity} ',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.orangeAccent,
+                    borderRadius: BorderRadius.circular(12.5),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.orangeAccent.withOpacity(0.5),
+                        blurRadius: 10.0,
+                        offset: Offset(4, 4),
+                      ),
+                    ],
+                  ),
+                 padding: EdgeInsets.symmetric(horizontal: 10.0),
+                 child: Text(
+                    '${widget.eventCategory}',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Icon(
+                    Icons.check,
+                  color: _isUserRegistered? Colors.green: Colors.transparent,
+                  size: 40,
+                )
+              ]
             ),
             SizedBox(
               height: 10.0,
@@ -120,22 +167,26 @@ class _EventWidgetState extends State<EventWidget> {
             SizedBox(
               height: 5.0,
             ),
-            Text(
-              'Data: ${widget.eventDay}',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(
-              height: 5.0,
-            ),
-            Text(
-              'Ora: ${formatTime(widget.eventTime)}',
-              style: TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
-              ),
+            Row(
+              children: [
+                Text(
+                  'Data: ${widget.eventDay}',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  "               ",
+                ),
+                Text(
+                  'Ora: ${formatTime(widget.eventTime)}',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ]
             ),
             SizedBox(
               height: 5.0,
@@ -207,30 +258,36 @@ class _EventWidgetState extends State<EventWidget> {
   }
 
   Future<void> participateAction() async{
-    if(await isUserRegistered()){
+    if(await isUserRegisteredForEvent()){
       showAlreadyRegistatedforEvent(context);
     }
     else {
       await registerUserToEvent();
       await addEventToUser();
       await increaseNumberOfParticipants();
-      setState(() { widget.participansNumber++; });
+      setState(() {
+        widget.participansNumber++;
+        _isUserRegistered = true;
+      });
     }
   }
 
   Future<void> resignAction() async{
-    if(await isUserRegistered()){
+    if(await isUserRegisteredForEvent()){
       await unregisterUserFromEvent();
       await removeEventFromUser();
       await decreaseNumberOfParticipants();
-      setState(() { widget.participansNumber--; });
+      setState(() {
+        widget.participansNumber--;
+        _isUserRegistered = false;
+      });
     }
     else {
       showAlreadyUnRegistatedforEvent(context);
     }
   }
 
-  Future<bool> isUserRegistered() async {
+  Future<bool> isUserRegisteredForEvent() async {
     User? currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser != null) {
       String userId = currentUser.uid;
@@ -477,8 +534,8 @@ class _EventWidgetState extends State<EventWidget> {
       await FirebaseFirestore.instance.runTransaction((transaction) async {
         DocumentSnapshot<Map<String, dynamic>> snapshot = await transaction.get(eventRef);
         if (snapshot.exists) {
-          int currentParticipants = snapshot['noOfparticipans'];
-          transaction.update(eventRef, {'noOfparticipans': currentParticipants + 1});
+          int currentParticipants = snapshot['noOfparticipants'];
+          transaction.update(eventRef, {'noOfparticipants': currentParticipants + 1});
         } else {
           print('Evenimentul cu ID-ul $widget.eventId nu există.');
         }
@@ -494,8 +551,8 @@ class _EventWidgetState extends State<EventWidget> {
       await FirebaseFirestore.instance.runTransaction((transaction) async {
         DocumentSnapshot<Map<String, dynamic>> snapshot = await transaction.get(eventRef);
         if (snapshot.exists) {
-          int currentParticipants = snapshot['noOfparticipans'];
-          transaction.update(eventRef, {'noOfparticipans': currentParticipants - 1});
+          int currentParticipants = snapshot['noOfparticipants'];
+          transaction.update(eventRef, {'noOfparticipants': currentParticipants - 1});
         } else {
           print('Evenimentul cu ID-ul $widget.eventId nu există.');
         }

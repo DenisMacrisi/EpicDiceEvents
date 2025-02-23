@@ -2,9 +2,7 @@
 import 'package:epic_dice_events/CustomWidgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'Errors.dart';
-import 'EventList.dart';
 import 'EventListFiltredPage.dart';
 class FilterPage extends StatefulWidget {
 
@@ -23,7 +21,9 @@ class _FilterPageState extends State<FilterPage> {
   String buttonStartDateText = 'Selectează data de start';
   String buttonEndDateText = 'Selectează data de final';
   String selectedCounty = 'Alba';
+  String selectedCategory = 'Niciuna';
   bool isCountySelected = false;
+  bool isCategorySelected = false;
 
 
   GlobalKey<FormState> key = GlobalKey();
@@ -191,6 +191,59 @@ class _FilterPageState extends State<FilterPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          Text("Alege categorie ",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.0,
+                              color: Colors.black,
+                            ),
+                          ),
+                          IconButton(onPressed:(){
+                            //do nothing
+                          } ,
+                              icon: Icon(Icons.category)
+                          )
+                        ],
+                      ),
+                    ),
+                    /*Dropdown*/
+                    Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20.0),
+                          border: Border.all(
+                              color: Colors.orangeAccent,
+                              width: 3.0
+                          ),
+                        ),
+                        padding: EdgeInsets.only(left: 5.0, right: 5.0),
+                        child: DropdownButton<String>(
+                          value: selectedCategory,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedCategory = newValue!;
+                              isCategorySelected = true;
+                            });
+                          },
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          dropdownColor: Colors.white,
+                          items: <String>['Niciuna','Strategie', 'Zaruri', 'Gateway', 'Diverse','Toate Varstele','Party','Carti'
+                            ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        )
+                    ),
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
                           Text("Alege locatie ",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -203,7 +256,7 @@ class _FilterPageState extends State<FilterPage> {
                           } ,
                               icon: Icon(Icons.map)
                           )
-                    ],
+                        ],
                       ),
                     ),
                     /*Dropdown*/
@@ -321,6 +374,7 @@ class _FilterPageState extends State<FilterPage> {
             betweenTenTwentyParticipansCondition: betweenTenTwentyParticipansCondition,
             overTwentyParticipansCondition: overTwentyParticipansCondition,
             selectedCounty: selectedCounty,
+            selectedCategory: selectedCategory,
           ),
         ),
       );
