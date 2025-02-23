@@ -1,5 +1,3 @@
-
-
 import 'dart:io';
 import 'dart:math';
 import 'package:epic_dice_events/CustomWidgets.dart';
@@ -9,14 +7,9 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
 import 'package:location/location.dart';
-import 'package:epic_dice_events/DatabaseService.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'HomePage.dart';
 
@@ -28,13 +21,15 @@ class AddEventPage extends StatefulWidget {
 
 class _AddEventPageState extends State<AddEventPage> {
 
+  List<String> categoryGameList = ['Strategie', 'Zaruri', 'Gateway', 'Diverse','Toate Varstele','Party','Carti'];
+  String _selectedCategory = "";
   int capacity  = 0;
 
   TextEditingController _eventNameController = TextEditingController();
   TextEditingController _eventDescriptionController = TextEditingController();
   TextEditingController _eventNumberOfParticipansController = TextEditingController();
 
-  CollectionReference _eventsReference = FirebaseFirestore.instance.collection('events');
+
 
   GlobalKey<FormState> key = GlobalKey();
 
@@ -107,10 +102,17 @@ class _AddEventPageState extends State<AddEventPage> {
                       ),
                       TextFormField(
                         controller: _eventDescriptionController,
-                        decoration: InputDecoration(hintText: 'Descriere'),
-                        validator: (String? value) {
+                        decoration: InputDecoration(
+                          hintText: 'Descriere: maxim 100 de caractere',
+                          counterText: '',
+                        ),
+                          maxLength: 100,
+                          validator: (String? value) {
                           if (value == null || value.isEmpty) {
                             return 'Introdu descriere';
+                          }
+                          if(value.length > 100){
+                            return 'Descrierea ta are mai mult de 100 de caractere';
                           }
                           return null;
                         },
@@ -118,42 +120,80 @@ class _AddEventPageState extends State<AddEventPage> {
                       TextFormField(
                         controller: _eventNumberOfParticipansController,
                         decoration: InputDecoration(hintText: 'Numar de participanti'),
-                        keyboardType: TextInputType.number, // Adăugat pentru a forța tastatura numerică
+                        keyboardType: TextInputType.number,
+                        maxLength: 2,
                         validator: (String? value) {
                           if (value == null || value.isEmpty) {
                             return 'Introdu numar participanti';
                           }
-                          // Adaugă validare pentru a verifica dacă este un număr întreg
                           try {
                             capacity = int.tryParse(_eventNumberOfParticipansController.text)!;
                             if (capacity <= 0) {
                               return 'Numarul de participanti trebuie sa fie mai mare decat zero';
                             }
+                            if (capacity > 99) {
+                              return 'Numarul de participanti trebuie sa fie mai mic decat 100';
+                            }
                           } catch (e) {
                             return 'Introdu un numar valid';
                           }
-
                           return null;
                         },
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: 10),
+                      DropdownButton<String>(
+                        value: _selectedCategory.isEmpty ? null : _selectedCategory,
+                        hint: Text('Alege o categorie'),
+                        items: categoryGameList.map((String category) {
+                          return DropdownMenuItem<String>(
+                            value: category,
+                            child: Text(
+                                '$category',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w800,
+                                color: Colors.black,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            _selectedCategory = newValue!;
+                          });
+                        },
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
                       ElevatedButton(
                         onPressed: () async {
                           final DateTime selectedDateTime = await _selectDateTime(context);
                           setState(() {
                             _selectedDateTime = selectedDateTime;
-                          });// Adăugat funcția pentru selectarea datei și orei
+                          });
                         },
-                        child: Text('Selectează data și ora'),
+                        child: Text(
+                            'Selectează data și ora',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w900,
+                            color: Colors.black
+                          ),
+                        ),
                       ),
                       Text(
                         'Data: ${_selectedDateTime.day}/${_selectedDateTime.month}/${_selectedDateTime.year}',
-                        style: TextStyle(fontSize: 16),
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold
+                        ),
                       ),
-                      SizedBox(height: 5), // Spațiu între textele de data și ora
+                      SizedBox(height: 5),
                       Text(
                         'Ora: ${_selectedDateTime.hour}:${_selectedDateTime.minute}',
-                        style: TextStyle(fontSize: 16),
+                        style: TextStyle(
+                            fontSize: 16,
+                          fontWeight: FontWeight.bold
+                        ),
                       ),
                       SizedBox(height: 20),
                       Container(
@@ -208,6 +248,7 @@ class _AddEventPageState extends State<AddEventPage> {
                             imageUrl!,
                             _selectedLocation ?? _currentLocation!,
                             _selectedDateTime,
+                            _selectedCategory,
                           ).then((value) {
                             if (value == 1) {
                               addEventToEventsCreatedList();
@@ -215,7 +256,6 @@ class _AddEventPageState extends State<AddEventPage> {
                             }
                           }).catchError((error) {
                             print("Error adding event: $error");
-                            // Poți adăuga aici un mesaj de eroare pentru utilizator
                           });
                         } else {
                           showIncompleteDataError(context);
@@ -236,7 +276,7 @@ class _AddEventPageState extends State<AddEventPage> {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20.0,
-                          color: Colors.black, // Culoarea textului
+                          color: Colors.black,
                         ),
                       ),
                       ),
@@ -332,6 +372,7 @@ class _AddEventPageState extends State<AddEventPage> {
     }
   }
 
+
   String generateUniqueImageName() {
 
     String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
@@ -342,8 +383,8 @@ class _AddEventPageState extends State<AddEventPage> {
     return 'image_'+timestamp+'_'+random;
   }
 
-
-  Future <int> addNewEventToDatabase(String Details, String Name, int Capacity, String ImageURL, LatLng Location, DateTime dateTime )async {
+/// Functie folosita pentru a adauga evenimentul in baza de date
+  Future <int> addNewEventToDatabase(String Details, String Name, int Capacity, String ImageURL, LatLng Location, DateTime dateTime, String category )async {
     
     if(Details.isEmpty || Name.isEmpty || Capacity == 0 || Location == null || ImageURL.isEmpty){
       
@@ -359,16 +400,18 @@ class _AddEventPageState extends State<AddEventPage> {
     await userDocRef.set({
       'Descriere': Details,
       'Nume': Name,
-      'noOfparticipans' : 0,
+      'noOfparticipants' : 0,
       'capacity': Capacity,
       'imageURL' : ImageURL,
       'location' : GeoPoint(Location.latitude, Location.longitude),
       'date': dateTime,
+      'category': category,
     });
 
   return 1;
   }
 
+  /// Functie folosita pentru generarea unui Id unic
   String generateUniqueEventId() {
 
     String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
@@ -379,6 +422,7 @@ class _AddEventPageState extends State<AddEventPage> {
     return 'event_'+timestamp+'_'+random;
   }
 
+  /// Adauga Evenimentul in Lista de evenimente create de utilizatorul curent
   Future<void> addEventToEventsCreatedList() async {
     User? currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser != null) {
