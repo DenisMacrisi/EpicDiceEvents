@@ -10,8 +10,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:epic_dice_events/Authentication.dart';
 import 'package:epic_dice_events/Authenticate.dart';
 
-
-
 class ProfilePage extends StatefulWidget {
 
   @override
@@ -37,10 +35,10 @@ class _ProfilePageState extends State<ProfilePage>{
   Widget build(BuildContext context){
 
     return Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: const CustomAppBar(
-          title: 'Profil',
-        ),
+      extendBodyBehindAppBar: true,
+      appBar: const CustomAppBar(
+        title: 'Profil',
+      ),
       body: FutureBuilder(
         future: getUserData(),
         builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
@@ -117,7 +115,7 @@ class _ProfilePageState extends State<ProfilePage>{
                 ),
               ),
               Positioned(
-                top: screenHeight * 0.30,  // Adjusted to be just below the avatar
+                top: screenHeight * 0.30,
                 left: (screenWidth - 240) / 2,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -213,7 +211,7 @@ class _ProfilePageState extends State<ProfilePage>{
                 ),
               ),
               Positioned(
-                top: screenHeight * 0.50,  // Spacing below the Modify button
+                top: screenHeight * 0.50,
                 left: (screenWidth - 270) / 2,
 
                 child: Align(
@@ -239,8 +237,8 @@ class _ProfilePageState extends State<ProfilePage>{
                 height: 100,
               ),
               Positioned(
-              top: screenHeight * 0.65,  // Spacing below the Upcoming events button
-              left: (screenWidth - 270) / 2,
+                top: screenHeight * 0.65,
+                left: (screenWidth - 270) / 2,
                 child: Align(
                   alignment: Alignment.center,
                   child: ElevatedButton(
@@ -270,16 +268,99 @@ class _ProfilePageState extends State<ProfilePage>{
                   alignment: Alignment.center,
                   child: ElevatedButton(
                     onPressed: () {
-                      _authService.deleteCurrentUserAccount();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Authenticate()),
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text("Esti sigur ?",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 25.0,
+                                color: Colors.white,
+                                shadows: [
+                                  Shadow(
+                                    blurRadius: 10.0,
+                                    color: Colors.orangeAccent,
+                                    offset: Offset(0, 0),
+                                  ),
+                                  Shadow(
+                                    blurRadius: 10.0,
+                                    color: Colors.orangeAccent,
+                                    offset: Offset(0, 0),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () async {
+                                  bool isDeletionSuccessfully = await askUserForPasswordandDelete();
+                                  if(isDeletionSuccessfully == true) {
+                                    Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Authenticate()),
+                                          (Route<dynamic> route) => false,
+                                    );
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            'Contul a fost sters',
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                                color: Colors.white
+                                            ),
+                                          ),
+                                          backgroundColor: Colors.orangeAccent,
+                                        )
+                                    );
+                                  }
+                                  if(isDeletionSuccessfully == false){
+                                    Navigator.of(context).pop();
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          'Parola incorecta',
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.white
+                                          ),
+                                        ),
+                                        backgroundColor: Colors.orangeAccent,
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: Text('Sterge',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 28.0,
+                                    color: Colors.white,
+                                    shadows: [
+                                      Shadow(
+                                        blurRadius: 10.0,
+                                        color: Colors.redAccent,
+                                        offset: Offset(0, 0),
+                                      ),
+                                      Shadow(
+                                        blurRadius: 10.0,
+                                        color: Colors.orangeAccent,
+                                        offset: Offset(0, 0),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                            backgroundColor: Color.fromRGBO(3, 220, 252,100),
+                          );
+                        },
                       );
                     },
                     child: Text(
-                        "Stergere Cont",
+                      "Stergere Cont",
                       style: TextStyle(
-                        color: Colors.red
+                          color: Colors.red
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
@@ -343,8 +424,87 @@ class _ProfilePageState extends State<ProfilePage>{
       });
     }
   }
+  Future<bool> askUserForPasswordandDelete() async{
+    TextEditingController passwordController = TextEditingController();
+    bool success = false;
+    await showDialog<String>(
+        context: context,
+        builder: (BuildContext context){
+          return AlertDialog(
+            backgroundColor: Colors.cyan,
+            title: Text(
+              "Confirma parola",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20.0,
+                color: Colors.white,
+                shadows: [
+                  Shadow(
+                    blurRadius: 10.0,
+                    color: Colors.orangeAccent,
+                    offset: Offset(0, 0),
+                  ),
+                  Shadow(
+                    blurRadius: 10.0,
+                    color: Colors.orangeAccent,
+                    offset: Offset(0, 0),
+                  ),
+                ],
+              ),
+            ),
+            content: Container(
+              height: 200,
+              child: Column(
+                children: [
+                  TextField(
+                    controller: passwordController,
+                  ),
+                  SizedBox(
+                    height: 50,
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      try {
+                        String pass = passwordController.text;
+                        success = await _authService.deleteCurrentUserAccount(pass);
+                        Navigator.of(context).pop();
+                      }
+                      catch(e){
+                        success = false;
+                        print("Eroare la Stergerea userului curent");
+                        Navigator.of(context).pop();
+                      }
+                    },
+                    child: Text(
+                      "Sterge",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.5),
+                      ),
+                      elevation: 10.0,
+                      side: BorderSide(
+                        color: Colors.orangeAccent,
+                        width: 3.0,
+                      ),
+                    ),
 
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+    );
+    return success;
+  }
 }
+
+
 
 Future<String?> getProfileImageUrl() async {
 

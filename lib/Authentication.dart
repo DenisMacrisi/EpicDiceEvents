@@ -60,7 +60,7 @@ class AuthenticationService {
 // auth change stream
   Stream<CustomUser?> get user{
     return _auth.authStateChanges()
-        //.map((User? user) => _customUserFromFirebase(user));
+    //.map((User? user) => _customUserFromFirebase(user));
         .map(_customUserFromFirebase);
   }
 
@@ -83,6 +83,10 @@ class AuthenticationService {
       UserCredential result = await _auth.signInWithEmailAndPassword(email: email, password: password);
       User? user = result.user;
 
+      if(!user!.emailVerified){
+        return null;
+      }
+
       return _customUserFromFirebase(user);
     }catch(e){
       print(e.toString());
@@ -91,17 +95,20 @@ class AuthenticationService {
   }
 
 // register email & pass
-Future registerNewUser(String email, String password) async {
-    try{
+  Future<UserCredential?> registerNewUser(String email, String password) async {
+    try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       User? user = result.user;
+      if(user != null){
+        await user.sendEmailVerification();
+      }
 
-      return _customUserFromFirebase(user);
-    }catch(e){
-        print(e.toString());
-        return null;
+      return result;
+    } catch (e) {
+      print(e.toString());
+      return null;
     }
-}
+  }
 // sign out
   Future signOut() async {
     try {
@@ -115,24 +122,42 @@ Future registerNewUser(String email, String password) async {
 
   /// Function used to delete user account
   /// Delete user and all data associated
-  Future<void> deleteCurrentUserAccount() async{
+  Future<bool> deleteCurrentUserAccount(String password) async{
+    bool succes =false;
     try{
       User? user = _auth.currentUser;
       if(user != null){
         AuthCredential credentials = EmailAuthProvider.credential(
             email: user.email!,
-            password: "test123"
+            password: password
         );
+
         await user.reauthenticateWithCredential(credentials);
+        print("Reautentificare");
         await deleteCurrentUserFromEveryEvent();
         await deleteEventsCreatedByCurrentUser();
         await deleteCurrentUserFromCollectionUsers();
         await deleteUser();
+        print("User sters");
         await _auth.signOut();
+        print("User deconectat");
+        succes = true;
       }
+      return succes;
     }
     catch(e){
       print("Eroare la stergerea utilizatorului");
+      succes = false;
+    }
+    return succes;
+  }
+  Future<void> sendEmailVerification() async {
+    User? user = _auth.currentUser;
+    if (user != null && !user.emailVerified) {
+      await user.sendEmailVerification();
+      print("Email de verificare trimis.");
+    } else {
+      print("Utilizatorul este deja verificat sau nu este autentificat.");
     }
   }
 
@@ -191,7 +216,7 @@ Future registerNewUser(String email, String password) async {
     CollectionReference eventsReference = FirebaseFirestore.instance.collection('events');
     try{
       User? user = _auth.currentUser;
-      
+
       if(user != null) {
         String userId = user.uid;
         CollectionReference eventsCreatedReference = usersReference.doc(userId)
