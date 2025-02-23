@@ -24,7 +24,7 @@ class EventList extends StatelessWidget {
           List<EventWidget> eventWidgets = snapshot.data!.docs.map((event) {
             GeoPoint location = event['location'];
             String eventName = event['Nume'];
-            int participansNumber = event['noOfparticipans'];
+            int participansNumber = event['noOfparticipants'];
             int eventCapacity = event['capacity'];
             String eventImage = event['imageURL'];
             String eventDetails = event['Descriere'];
@@ -32,6 +32,7 @@ class EventList extends StatelessWidget {
             DateTime eventDate = event['date'].toDate();
             String eventDay = eventDate.day.toString() + '/' + eventDate.month.toString() + '/' + eventDate.year.toString();
             String eventTime = eventDate.hour.toString() + ':' + eventDate.minute.toString();
+            String eventCategory = event['category'];
 
             if (eventDate.isAfter(DateTime.now())) {
               return EventWidget(
@@ -44,6 +45,7 @@ class EventList extends StatelessWidget {
                 eventId: eventId,
                 eventDay: eventDay,
                 eventTime: eventTime,
+                eventCategory: eventCategory,
               );
             } else {
               return null;
