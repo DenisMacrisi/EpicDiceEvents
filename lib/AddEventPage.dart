@@ -143,15 +143,19 @@ class _AddEventPageState extends State<AddEventPage> {
                       SizedBox(height: 10),
                       DropdownButton<String>(
                         value: _selectedCategory.isEmpty ? null : _selectedCategory,
-                        hint: Text('Alege o categorie'),
+                        hint: Text('Alege o categorie',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20),
+                        ),
                         items: categoryGameList.map((String category) {
                           return DropdownMenuItem<String>(
                             value: category,
                             child: Text(
                                 '$category',
                               style: TextStyle(
-                                fontWeight: FontWeight.w800,
-                                color: Colors.black,
+                                fontWeight: FontWeight.w900,
+                                fontSize: 20,
                               ),
                             ),
                           );
@@ -161,6 +165,7 @@ class _AddEventPageState extends State<AddEventPage> {
                             _selectedCategory = newValue!;
                           });
                         },
+                        dropdownColor: Colors.orangeAccent,
                       ),
                       SizedBox(
                         height: 20,
@@ -172,6 +177,9 @@ class _AddEventPageState extends State<AddEventPage> {
                             _selectedDateTime = selectedDateTime;
                           });
                         },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.orangeAccent,
+                        ),
                         child: Text(
                             'Selectează data și ora',
                           style: TextStyle(
@@ -189,7 +197,7 @@ class _AddEventPageState extends State<AddEventPage> {
                       ),
                       SizedBox(height: 5),
                       Text(
-                        'Ora: ${_selectedDateTime.hour}:${_selectedDateTime.minute}',
+                        'Ora: ${_selectedDateTime.hour}:${_selectedDateTime.minute.toString().padLeft(2, '0')}',
                         style: TextStyle(
                             fontSize: 16,
                           fontWeight: FontWeight.bold
@@ -298,11 +306,45 @@ class _AddEventPageState extends State<AddEventPage> {
       initialDate: _selectedDateTime,
       firstDate: DateTime.now(),
       lastDate: DateTime(2101),
+      builder: (context, child) {
+        return Theme(data: ThemeData.light().copyWith(
+          primaryColor: Colors.orangeAccent,
+          colorScheme: ColorScheme.light(
+            primary: Colors.orangeAccent,
+            onPrimary: Colors.white,
+            onSurface: Colors.black,
+            surface: Color.fromRGBO(3, 220, 255, 50),
+          ),
+          textTheme: TextTheme(
+            labelLarge: TextStyle(
+              fontSize: 30,
+            ),
+          ),
+        ), child: child!,
+        );
+      }
     ))!;
 
     final TimeOfDay timePicked = (await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
+        builder: (context, child) {
+          return Theme(data: ThemeData.light().copyWith(
+            primaryColor: Colors.orangeAccent,
+            colorScheme: ColorScheme.light(
+              primary: Colors.orangeAccent,
+              onPrimary: Colors.white,
+              onSurface: Colors.black,
+              surface: Color.fromRGBO(3, 220, 255, 50),
+            ),
+            textTheme: TextTheme(
+              labelLarge: TextStyle(
+                fontSize: 30,
+              ),
+            ),
+          ), child: child!,
+          );
+        }
     ))!;
 
     if (picked != null && timePicked != null) {
