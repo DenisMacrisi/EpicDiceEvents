@@ -317,7 +317,7 @@ class _AddEventPageState extends State<AddEventPage> {
           ),
           textTheme: TextTheme(
             labelLarge: TextStyle(
-              fontSize: 30,
+              fontSize: 24,
             ),
           ),
         ), child: child!,
