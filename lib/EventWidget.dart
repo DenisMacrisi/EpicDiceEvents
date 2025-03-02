@@ -1,14 +1,14 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:epic_dice_events/HomePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:intl/intl.dart';
+import 'package:add_2_calendar/add_2_calendar.dart';
 
+import 'CustomWidgets.dart';
 import 'Errors.dart';
 
 class EventWidget extends StatefulWidget {
@@ -45,7 +45,6 @@ class _EventWidgetState extends State<EventWidget> {
 
   late String _address = 'Loading...';
   late bool _isUserRegistered = false;
-  late bool _showFullDescription = false;
 
   @override
   void initState() {
@@ -108,8 +107,24 @@ class _EventWidgetState extends State<EventWidget> {
               ),
             ),
             SizedBox(height: 5.0),
-            Text(
-              'Location: $_address',
+            InkWell(
+              onTap:() async {
+                String encodedAddress = Uri.encodeComponent(_address);
+                String googleMapsUrl = "https://www.google.com/maps/search/?api=1&query=$encodedAddress";
+
+                if (await canLaunch(googleMapsUrl)) {
+                  await launch(googleMapsUrl);
+                } else {
+                  throw 'Nu s-a putut deschide harta';
+                }
+              },
+              child: Text(
+                'Locatie: $_address',
+                style: TextStyle(
+                  color: Colors.orangeAccent,
+                  //decoration: TextDecoration.underline,
+                ),
+              ),
             ),
             SizedBox(
               height: 5.0,
@@ -269,8 +284,86 @@ class _EventWidgetState extends State<EventWidget> {
         widget.participansNumber++;
         _isUserRegistered = true;
       });
+      askToAddEventToCalendar();
     }
   }
+
+  Future<void> addEventToCalendar() async{
+
+    String formattedDateTime = '${widget.eventDay} ${widget.eventTime}';
+    DateTime selectedDateTime = DateFormat("d/M/yyyy H:m").parse(formattedDateTime);
+    final Event event = Event(
+      title:  '${widget.eventName}',
+      startDate: selectedDateTime,
+      endDate: selectedDateTime.add(Duration(hours: 1)),
+    );
+    try{
+      await Add2Calendar.addEvent2Cal(event);
+    }catch(e){
+      print("Eroare la adaugarea evenimentului in Calendar");
+    }
+  }
+
+  void askToAddEventToCalendar(){
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+                "Adauga in calendar",
+              style: customOrangeShadowTextStyle(26),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                          "Nu",
+                        style: customBasicTextStyle(18,true),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        elevation: 10.0,
+                        side: BorderSide(
+                          color: Colors.orangeAccent,
+                          width: 3.0,
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        addEventToCalendar();
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        "Da",
+                        style: customBasicTextStyle(18,true),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        elevation: 10.0,
+                        side: BorderSide(
+                          color: Colors.orangeAccent,
+                          width: 3.0,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            backgroundColor: Color.fromRGBO(3, 220, 252,100),
+          );
+
+        }
+    );
+  }
+
 
   Future<void> resignAction() async{
     if(await isUserRegisteredForEvent()){

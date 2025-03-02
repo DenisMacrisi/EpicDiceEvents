@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'SignInPage.dart';
-
 class CustomGoToElevatedButton extends StatelessWidget implements PreferredSizeWidget{
 
    final String title;
@@ -100,6 +98,33 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}
+
+TextStyle customOrangeShadowTextStyle(double fontSize) {
+  return TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: fontSize,
+    color: Colors.white,
+    shadows: [
+      Shadow(
+        blurRadius: 10.0,
+        color: Colors.orangeAccent,
+        offset: Offset(0, 0),
+      ),
+      Shadow(
+        blurRadius: 10.0,
+        color: Colors.orangeAccent,
+        offset: Offset(0, 0),
+      ),
+    ],
+  );
+}
+TextStyle customBasicTextStyle(double fontSize, bool bold){
+  return TextStyle(
+    fontWeight: bold? FontWeight.bold : null,
+    fontSize: fontSize,
+    color: Colors.black,
+  );
 }
 
 /*
