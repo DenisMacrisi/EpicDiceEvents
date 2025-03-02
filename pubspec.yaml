@@ -55,6 +55,7 @@ dependencies:
   html: ^0.15.0
   path_provider: ^2.0.0
   permission_handler: ^9.2.0
+  add_2_calendar: ^3.0.1
 
 
 dev_dependencies:
