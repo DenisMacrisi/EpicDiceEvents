@@ -56,7 +56,7 @@ class CustomSearchDelegate extends SearchDelegate<String> {
       },
       onSubmitted: (value) {
         print('S-a apasat search');
-       // showResults(context);
+        //showResults(context);
       },
     );
   }
@@ -105,7 +105,7 @@ class CustomSearchDelegate extends SearchDelegate<String> {
           final List<EventWidget> searchResults = snapshot.data!.docs.where((event) => event['Nume'].toLowerCase().contains(query.toLowerCase()) || event['Descriere'].toLowerCase().contains(query.toLowerCase())).map((event) {
             GeoPoint location = event['location'];
             String eventName = event['Nume'];
-            int participansNumber = event['noOfparticipans'];
+            int participansNumber = event['noOfparticipants'];
             int eventCapacity = event['capacity'];
             String eventImage = event['imageURL'];
             String eventDetails = event['Descriere'];
@@ -113,6 +113,7 @@ class CustomSearchDelegate extends SearchDelegate<String> {
             DateTime eventDate = event['date'].toDate();
             String eventDay = eventDate.day.toString() + '/' + eventDate.month.toString() + '/' + eventDate.year.toString();
             String eventTime = eventDate.hour.toString() + ':' + eventDate.minute.toString();
+            String eventCategory = event['category'];
 
             if (eventDate.isAfter(DateTime.now())) {
               return EventWidget(
@@ -125,6 +126,7 @@ class CustomSearchDelegate extends SearchDelegate<String> {
                 eventId: eventId,
                 eventDay: eventDay,
                 eventTime: eventTime,
+                eventCategory: eventCategory,
               );
             } else {
               return null;

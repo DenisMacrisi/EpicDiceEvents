@@ -493,12 +493,74 @@ class _EventWidgetState extends State<EventWidget> {
     List<Widget> participantWidgets = [];
     int colorCodeForUsername;
 
+    //Obtinem organizatorul
+    DocumentSnapshot currentEvent = await FirebaseFirestore.instance
+        .collection('events')
+        .doc(widget.eventId)
+        .get();
+
+    String hostId = currentEvent['host'];
+
     // Obținem lista de participanți
     QuerySnapshot participantsSnapshot = await FirebaseFirestore.instance
         .collection('events')
         .doc(widget.eventId)
         .collection('participantsList')
         .get();
+
+    // Obținem datele despre organizator
+    DocumentSnapshot hostSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(hostId)
+        .get();
+
+    String hostName = hostSnapshot['username'];
+    String? hostImageUrl = hostSnapshot['profileImageUrl'];
+    int hostColor = hostSnapshot['color'];
+    double hostRating = hostSnapshot['rating'].toDouble();
+
+    Widget hostWidget = Row(
+      children: [
+        Icon(
+          Icons.home,
+          color: Colors.orangeAccent,
+        ),
+        SizedBox(height: 5,),
+        CircleAvatar(
+          radius: 20,
+          child: Image(
+            image: hostImageUrl != null
+                ? NetworkImage(hostImageUrl) as ImageProvider<Object>
+                : AssetImage("images/profile.jpg"),
+          ),
+        ),
+        SizedBox(width: 10),
+        Text(
+          hostName,
+          style: TextStyle(
+              color: Color(hostColor),
+              fontSize: 18.0,
+              fontWeight: FontWeight.w800
+          ),
+        ),
+        SizedBox(width: 5),
+        Text(
+         hostRating > 0.01?hostRating.toStringAsFixed(2):'-',
+          style: TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.w800
+          ),
+        ),
+        SizedBox(width: 5),
+        Icon(
+          Icons.star,
+          color: Colors.orangeAccent,
+        ),
+        SizedBox(height: 100,),
+      ],
+    );
+
+    participantWidgets.add(hostWidget);
 
     // Extragem informațiile despre participanți
     if (participantsSnapshot.docs.isNotEmpty) {
@@ -514,6 +576,11 @@ class _EventWidgetState extends State<EventWidget> {
 
         Widget participantWidget = Row(
           children: [
+            Icon(
+              Icons.man,
+              color: Colors.orangeAccent,
+            ),
+            SizedBox(height: 5,),
             CircleAvatar(
               radius: 20,
               child: Image(
@@ -558,12 +625,7 @@ class _EventWidgetState extends State<EventWidget> {
               color: Colors.white,
               shadows: [
                 Shadow(
-                  blurRadius: 10.0,
-                  color: Colors.orangeAccent,
-                  offset: Offset(0, 0),
-                ),
-                Shadow(
-                  blurRadius: 10.0,
+                  blurRadius: 20.0,
                   color: Colors.orangeAccent,
                   offset: Offset(0, 0),
                 ),
@@ -588,12 +650,7 @@ class _EventWidgetState extends State<EventWidget> {
                   color: Colors.white,
                   shadows: [
                     Shadow(
-                      blurRadius: 10.0,
-                      color: Colors.orangeAccent,
-                      offset: Offset(0, 0),
-                    ),
-                    Shadow(
-                      blurRadius: 10.0,
+                      blurRadius: 20.0,
                       color: Colors.orangeAccent,
                       offset: Offset(0, 0),
                     ),

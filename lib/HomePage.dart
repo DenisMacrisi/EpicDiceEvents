@@ -117,10 +117,7 @@ class HomePage extends StatelessWidget {
               padding: const EdgeInsets.only(right: 20.0),
               child: InkWell(
                 onTap: () async {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MapPage()),
-                  );
+
                 },
                 child: Ink(
                   padding: const EdgeInsets.all(10.0),
