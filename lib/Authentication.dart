@@ -37,6 +37,7 @@ class AuthenticationService {
         'profileImageUrl': 'https://firebasestorage.googleapis.com/v0/b/epicdiceevents-b7754.appspot.com/o/profile.jpg?alt=media&token=0c7357c6-35e4-436e-8bb7-2d9a7e8f1e1a',
         'searches':[null,null,null],
         'color': 4278190080,
+        'rating': 0,
       });
     } else {
       print('Utilizatorul nu este autentificat.');

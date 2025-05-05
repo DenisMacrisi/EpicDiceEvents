@@ -21,7 +21,7 @@ class AddEventPage extends StatefulWidget {
 
 class _AddEventPageState extends State<AddEventPage> {
 
-  List<String> categoryGameList = ['Strategie', 'Zaruri', 'Gateway', 'Diverse','Toate Varstele','Party','Carti'];
+  List<String> categoryGameList = ['Strategie', 'Zaruri', 'Gateway', 'Diverse','Party','Carti'];
   String _selectedCategory = "";
   int capacity  = 0;
 
@@ -427,7 +427,8 @@ class _AddEventPageState extends State<AddEventPage> {
 
 /// Functie folosita pentru a adauga evenimentul in baza de date
   Future <int> addNewEventToDatabase(String Details, String Name, int Capacity, String ImageURL, LatLng Location, DateTime dateTime, String category )async {
-    
+    User? currentUser = FirebaseAuth.instance.currentUser;
+
     if(Details.isEmpty || Name.isEmpty || Capacity == 0 || Location == null || ImageURL.isEmpty){
       
       showIncompleteDataError(context);
@@ -448,6 +449,9 @@ class _AddEventPageState extends State<AddEventPage> {
       'location' : GeoPoint(Location.latitude, Location.longitude),
       'date': dateTime,
       'category': category,
+      'host': currentUser?.uid,
+      'totalStars': 0,
+      'noReviewers': 0
     });
 
   return 1;
