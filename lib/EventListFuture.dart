@@ -10,7 +10,7 @@ import 'EventWidgetSummary.dart';
 class EventListFuture extends StatelessWidget {
   final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
-  // Functie care returnează evenimentele
+  /// Function used for load Events
   Future<List<EventWidgetSummary>> _loadEvents() async {
     QuerySnapshot<Map<String, dynamic>> snapshot =
     await FirebaseFirestore.instance.collection('events').get();
@@ -44,9 +44,6 @@ class EventListFuture extends StatelessWidget {
         });
 
         if (participantsDoc.exists) {
-          // Debug: Afișăm un mesaj când utilizatorul este găsit în subcolecția participantsList
-          print('Utilizatorul $currentUserId este participant la evenimentul ${doc.id}');
-
           GeoPoint location = doc['location'];
           String eventName = doc['Nume'];
           String eventId = doc.id;
@@ -69,8 +66,7 @@ class EventListFuture extends StatelessWidget {
             eventRating: eventRating,
           ));
         } else {
-          // Debug: Afișăm un mesaj când utilizatorul nu este găsit în subcolecția participantsList
-          print('Utilizatorul $currentUserId NU este participant la evenimentul ${doc.id}');
+          // Do Nothing . Used for Debug
         }
       }
     }
@@ -95,7 +91,7 @@ class EventListFuture extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Center(child: Text('Eroare la încărcare evenimente.'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(child: Text('Nu ai participat la niciun eveniment viitor.'));
+          return Center(child: Text('Nu ai niciun eveniment în viitor'));
         } else {
           return ListView(children: snapshot.data!);
         }

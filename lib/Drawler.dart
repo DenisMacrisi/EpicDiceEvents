@@ -1,9 +1,7 @@
-import 'package:epic_dice_events/Authenticate.dart';
 import 'package:epic_dice_events/MyApp.dart';
 import 'package:epic_dice_events/ProfilePage.dart';
 import 'package:flutter/material.dart';
 import 'Authentication.dart';
-import 'HomePage.dart';
 import 'RecommendationPage.dart';
 class MyDrawer extends StatelessWidget {
 
@@ -91,7 +89,6 @@ class MyDrawer extends StatelessWidget {
                 onTap: () async {
 
                   await _auth.signOut();
-                  //print('Text or icon pressed');
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => MyApp()),
@@ -105,9 +102,12 @@ class MyDrawer extends StatelessWidget {
                     ),
                     IconButton(
                       icon: Icon(Icons.logout),
-                      onPressed: () {
-                        // Acțiuni pentru butonul de utilizator
-                        //print('User icon pressed');
+                      onPressed: () async {
+                        await _auth.signOut();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => MyApp()),
+                        );
                       },
                     ),
                   ],

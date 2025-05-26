@@ -127,6 +127,25 @@ TextStyle customBasicTextStyle(double fontSize, bool bold){
   );
 }
 
+TextStyle customSnackBoxTextStyle(double fontSize, Color color){
+  return TextStyle(
+    fontSize: fontSize,
+    color: color,
+  );
+}
+ButtonStyle SimpleButtonStyle(double borderRadius, double elevation, Color color, double width){
+  return ElevatedButton.styleFrom(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(borderRadius),
+    ),
+    elevation: elevation,
+    side: BorderSide(
+      color: color,
+      width: width,
+    )
+  );
+}
+
 /*
                 ElevatedButton(
                   onPressed: () {

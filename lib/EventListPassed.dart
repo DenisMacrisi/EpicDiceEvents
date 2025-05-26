@@ -10,7 +10,7 @@ import 'EventWidgetSummary.dart';
 class EventListPassed extends StatelessWidget {
   final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
-  // Functie care returnează evenimentele
+  /// Function used to load Passed Events
   Future<List<EventWidgetSummary>> _loadEvents() async {
     QuerySnapshot<Map<String, dynamic>> snapshot =
     await FirebaseFirestore.instance.collection('events').get();
@@ -20,32 +20,17 @@ class EventListPassed extends StatelessWidget {
 
     List<EventWidgetSummary> result = [];
 
-    print('UID-ul curent este: $currentUserId');  // Debug: UID-ul utilizatorului curent
-
     for (var doc in snapshot.docs) {
       DateTime eventDate = doc['date'].toDate();
 
-      // Verificăm dacă evenimentul este în viitor
       if (eventDate.isBefore(now)) {
-        // Debug: Afișăm ID-ul evenimentului și data acestuia
-        print('Eveniment: ${doc.id}, Data evenimentului: $eventDate');
 
-        // Verificăm dacă utilizatorul este în subcolecția participantsList
         var participantsDoc = await doc.reference
             .collection('participantsList')
-            .doc(currentUserId) // Verificăm dacă documentul cu ID-ul utilizatorului există
+            .doc(currentUserId)
             .get();
 
-        // Debug: Afișăm subcolectia participantsList si documentul curent
-        var participantsSnapshot = await doc.reference.collection('participantsList').get();
-        print('Subcolectia participantsList pentru evenimentul ${doc.id}:');
-        participantsSnapshot.docs.forEach((participant) {
-          print('UID participant: ${participant.id}');
-        });
-
         if (participantsDoc.exists) {
-          // Debug: Afișăm un mesaj când utilizatorul este găsit în subcolecția participantsList
-          print('Utilizatorul $currentUserId este participant la evenimentul ${doc.id}');
 
           GeoPoint location = doc['location'];
           String eventName = doc['Nume'];
@@ -69,13 +54,11 @@ class EventListPassed extends StatelessWidget {
             eventRating: eventRating,
           ));
         } else {
-          // Debug: Afișăm un mesaj când utilizatorul nu este găsit în subcolecția participantsList
-          print('Utilizatorul $currentUserId NU este participant la evenimentul ${doc.id}');
+            //Do Nothing
         }
       }
     }
 
-    // Sortează lista în ordine descrescătoare
     result.sort((a, b) {
       DateTime aDate = dateFormat.parse('${a.eventDay} ${a.eventTime}');
       DateTime bDate = dateFormat.parse('${b.eventDay} ${b.eventTime}');
@@ -95,7 +78,7 @@ class EventListPassed extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Center(child: Text('Eroare la încărcare evenimente.'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(child: Text('Nu ai participat la niciun eveniment viitor.'));
+          return Center(child: Text('Nu ai participat la niciun eveniment'));
         } else {
           return ListView(children: snapshot.data!);
         }
