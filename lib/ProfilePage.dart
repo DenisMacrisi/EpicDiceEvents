@@ -226,7 +226,10 @@ class _ProfilePageState extends State<ProfilePage>{
                         MaterialPageRoute(builder: (context) =>EventListFuturePage()),
                       );
                     },
-                    child: Text("Evenimente viitoare"),
+                    child: Text(
+                        "Evenimente viitoare",
+                      style: customBasicTextStyle(13.5, true),
+                    ),
                     style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.symmetric(vertical: 30, horizontal: 75),
                       shape: RoundedRectangleBorder(
@@ -256,7 +259,10 @@ class _ProfilePageState extends State<ProfilePage>{
                         MaterialPageRoute(builder: (context) =>EventListPassedPage()),
                       );
                     },
-                    child: Text("Evenimente trecute"),
+                    child: Text(
+                        "Evenimente trecute",
+                      style:customBasicTextStyle(13.5,true) ,
+                    ),
                     style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.symmetric(vertical: 30, horizontal: 75),
                       shape: RoundedRectangleBorder(
