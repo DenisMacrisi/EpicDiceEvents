@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 
 import 'CustomWidgets.dart';
+import 'EventWidget.dart';
 
 class EventWidgetSummary extends StatelessWidget {
   final String eventName;
@@ -25,10 +26,11 @@ class EventWidgetSummary extends StatelessWidget {
     required this.eventRating,
   }) : super(key: key);
 
-  bool _isEventInFuture() {
 
+  bool _isEventInFuture() {
     try {
-      final eventDateTime = DateFormat("dd/MM/yyyy HH:mm").parse('$eventDay $eventTime');
+      final eventDateTime = DateFormat("dd/MM/yyyy HH:mm").parse(
+          '$eventDay $eventTime');
       return eventDateTime.isAfter(DateTime.now());
     } catch (e) {
       return true;
@@ -40,77 +42,117 @@ class EventWidgetSummary extends StatelessWidget {
     final isFuture = _isEventInFuture();
     print("isFuture:  $isFuture");
 
-    if (isFuture) {
-      return Card(
-        color: Colors.lightBlue[50],
-        elevation: 4,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                eventName,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 8),
-              Text(
-                "Location: $location",
-                style: TextStyle(fontSize: 16, color: Colors.black87),
-              ),
-              SizedBox(height: 6),
-              Text(
-                "Date: $eventDay at $eventTime",
-                style: TextStyle(fontSize: 15, color: Colors.black54),
-              ),
-            ],
-          ),
-        ),
-      );
-    } else {
-      return Card(
-        color: Colors.grey[200],
-        elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                eventName,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.grey[800]),
-              ),
-              SizedBox(height: 8),
-              Row(
+    return FutureBuilder<String>(
+      future: getAddressFromCoordinates(location.latitude, location.longitude),
+      builder: (context, snapshot) {
+        String addressText = "Locație necunoscută";
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          addressText = "Se încarcă adresa...";
+        } else if (snapshot.hasError) {
+          addressText = "Eroare la încărcarea adresei";
+        } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+          addressText = snapshot.data!;
+        }
+
+        if (isFuture) {
+          return Card(
+            color: Colors.lightBlue[50],
+            elevation: 4,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16)),
+            margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(Icons.star, color: Colors.orangeAccent,size: 24.0,),
-                  SizedBox(width: 4),
                   Text(
-                    eventRating.toStringAsFixed(1),
-                    style: TextStyle(fontSize: 20, color: Colors.grey[700], fontWeight: FontWeight.bold),
+                    eventName,
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 8),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.location_on_outlined,
+                        color: Colors.orangeAccent,
+                        size: 40,
+                      ),
+                      SizedBox(width: 4),
+                      Flexible(
+                        child: Text(
+                          "Location: $addressText",
+                          style: customBasicTextStyle(18, true, color: Colors.black),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 6),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.date_range,
+                        color: Colors.orangeAccent,
+                        size: 40,
+                      ),
+                      Text(
+                        " Date: $eventDay at $eventTime",
+                        style: customBasicTextStyle(20, true, color: Colors.black),
+                      ),
+                    ],
                   ),
                 ],
               ),
-              SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () {
-                  openEvaluateEventWindow(context, eventId);
-                },
-                style: SimpleButtonStyle(12.0, 10.0, Colors.orangeAccent, 5.0),
-                child: Text(
-                    "Evalueaza",
-                  style: customBasicTextStyle(16.0, true),
-                ),
+            ),
+          );
+        } else {
+          // Evenimentul trecut, UI rămâne neschimbat
+          return Card(
+            color: Colors.grey[200],
+            elevation: 2,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16)),
+            margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    eventName,
+                    style: customBasicTextStyle(30, true, color: Colors.black)
+                  ),
+                  SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Icon(Icons.star, color: Colors.orangeAccent, size: 24.0),
+                      SizedBox(width: 4),
+                      Text(
+                        eventRating.toStringAsFixed(1),
+                        style: TextStyle(fontSize: 20,
+                            color: Colors.grey[700],
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      openEvaluateEventWindow(context, eventId);
+                    },
+                    style: SimpleButtonStyle(12.0, 10.0, Colors.orangeAccent, 5.0),
+                    child: Text(
+                      "Evalueaza",
+                      style: customBasicTextStyle(16.0, true),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
-      );
-    }
+            ),
+          );
+        }
+      },
+    );
   }
 }
 
