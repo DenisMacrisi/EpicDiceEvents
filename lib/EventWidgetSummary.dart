@@ -203,15 +203,7 @@ Future<void> openEvaluateEventWindow(BuildContext context, String eventId) async
                 onPressed: () {
                   if(selectedRating == 0){
                     Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          "Nu ai selectat o evaluare pentru eveniment. Te rugăm să repeți acțiunea",
-                          style: customSnackBoxTextStyle(20, Colors.white),
-                        ),
-                        backgroundColor: Colors.orangeAccent,
-                      ),
-                    );
+                    showCustomSnackBar(context, "Nu ai selectat o evaluare pentru eveniment. Te rugăm să repeți operațiunea", Colors.orangeAccent);
                     return;
                   }
                   else {
@@ -251,15 +243,7 @@ Future<void> submitRatingToFirebase(String eventId, int rating, BuildContext con
 
       if (evaluators.contains(userId)) {
         Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              "Ai evaluat deja acest eveniment. Mulțumim !",
-              style: customSnackBoxTextStyle(20, Colors.white),
-            ),
-            backgroundColor: Colors.orangeAccent,
-          ),
-        );
+        showCustomSnackBar(context, "Ai evaluat deja acest eveniment", Colors.orangeAccent);
         return;
       }
 
@@ -270,27 +254,56 @@ Future<void> submitRatingToFirebase(String eventId, int rating, BuildContext con
         'noReviewers': noReviewers + 1,
         'totalStars': totalStars + rating,
       });
+
+      try {
+        await updateHostRating(host, rating);
+      }catch(e){
+        Navigator.pop(context);
+        showCustomSnackBar(context, "Eroare la actualizarea ratingului gazdei: $e", Colors.orangeAccent);
+        return;
+      }
+
       Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            "Evaluare trimisă cu succes! Mulțumim !",
-            style: customSnackBoxTextStyle(20, Colors.white),
-          ),
-          backgroundColor: Colors.orangeAccent,
-        ),
-      );
+      showCustomSnackBar(context,"Evaluare trimisa cu success. Mulțumim!", Colors.orangeAccent);
     });
   } catch (e) {
     Navigator.pop(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          "A apărut o eroare la trimiterea evaluării: $e",
-          style: customSnackBoxTextStyle(20, Colors.white),
-        ),
-        backgroundColor: Colors.orange,
-      ),
-    );
+    showCustomSnackBar(context, "A apărut o eroare la trimiterea evaluării", Colors.orangeAccent);
   }
 }
+
+Future<void> updateHostRating(String hostId, int rating) async {
+
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  final DocumentReference userRef = firestore.collection('users').doc(hostId);
+
+  print("user reference: + $userRef");
+  try {
+    await firestore.runTransaction((transaction) async {
+      final snapshot = await transaction.get(userRef);
+      final data = snapshot.data() as Map<String, dynamic>;
+      int reviewsHost =data['reviews'];
+      int starsHost = data['stars'];
+
+      reviewsHost += 1;
+      starsHost +=rating;
+
+      transaction.update(userRef, {
+        'reviews': reviewsHost,
+        'stars': starsHost,
+      });
+
+
+    });
+
+  } catch (e, stackTrace) {
+    print("Eroare la actualizarea rating user: $e");
+    print(stackTrace);
+    throw Exception("Eroare la actualizarea rating user: $e");
+  }
+
+}
+
+
+
