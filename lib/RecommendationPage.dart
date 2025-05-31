@@ -157,7 +157,7 @@ void showFeedbackForm(BuildContext context) {
                 'Feedback',
               style: customOrangeShadowTextStyle(30),
             ),
-            backgroundColor:Colors.lightBlueAccent,
+            backgroundColor:Color.fromRGBO(3, 220, 255, 50),
             content: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,

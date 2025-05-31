@@ -125,13 +125,11 @@ class EventWidgetSummary extends StatelessWidget {
                   SizedBox(height: 8),
                   Row(
                     children: [
-                      Icon(Icons.star, color: Colors.orangeAccent, size: 24.0),
+                      Icon(Icons.star, color: Colors.orangeAccent, size: 40.0),
                       SizedBox(width: 4),
                       Text(
                         eventRating.toStringAsFixed(1),
-                        style: TextStyle(fontSize: 20,
-                            color: Colors.grey[700],
-                            fontWeight: FontWeight.bold),
+                        style: customBasicTextStyle(30, true),
                       ),
                     ],
                   ),
@@ -143,7 +141,7 @@ class EventWidgetSummary extends StatelessWidget {
                     style: SimpleButtonStyle(12.0, 10.0, Colors.orangeAccent, 5.0),
                     child: Text(
                       "Evalueaza",
-                      style: customBasicTextStyle(16.0, true),
+                      style: customBasicTextStyle(20.0, true),
                     ),
                   ),
                 ],
