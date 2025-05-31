@@ -518,6 +518,8 @@ class _EventWidgetState extends State<EventWidget> {
     String? hostImageUrl = hostSnapshot['profileImageUrl'];
     int hostColor = hostSnapshot['color'];
     double hostRating = hostSnapshot['rating'].toDouble();
+    int hostStars = hostSnapshot['stars'];
+    int hostReviews = hostSnapshot['reviews'];
 
     Widget hostWidget = Row(
       children: [
@@ -545,7 +547,7 @@ class _EventWidgetState extends State<EventWidget> {
         ),
         SizedBox(width: 5),
         Text(
-         hostRating > 0.01?hostRating.toStringAsFixed(2):'-',
+         hostStars > 0.01?(hostStars/hostReviews).toStringAsFixed(2):'-',
           style: TextStyle(
               fontSize: 18.0,
               fontWeight: FontWeight.w800

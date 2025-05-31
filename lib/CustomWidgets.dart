@@ -146,6 +146,18 @@ ButtonStyle SimpleButtonStyle(double borderRadius, double elevation, Color color
   );
 }
 
+void showCustomSnackBar(BuildContext context, String message, Color backgroundColor) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(
+        message,
+        style: customSnackBoxTextStyle(20, Colors.white),
+      ),
+      backgroundColor: backgroundColor,
+    ),
+  );
+}
+
 /*
                 ElevatedButton(
                   onPressed: () {

@@ -38,6 +38,8 @@ class AuthenticationService {
         'searches':[null,null,null],
         'color': 4278190080,
         'rating': 0,
+        'stars': 0,
+        'reviews': 0,
       });
     } else {
       print('Utilizatorul nu este autentificat.');
