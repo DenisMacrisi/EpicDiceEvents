@@ -119,11 +119,11 @@ TextStyle customOrangeShadowTextStyle(double fontSize) {
     ],
   );
 }
-TextStyle customBasicTextStyle(double fontSize, bool bold){
+TextStyle customBasicTextStyle(double fontSize, bool bold, {Color? color}){
   return TextStyle(
     fontWeight: bold? FontWeight.bold : null,
     fontSize: fontSize,
-    color: Colors.black,
+    color: color ?? Colors.black
   );
 }
 

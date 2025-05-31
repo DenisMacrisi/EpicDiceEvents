@@ -1,17 +1,11 @@
 import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'Authentication.dart';
 import 'MyApp.dart';
 import 'NoInternetApp.dart';
 
 void main() async {
-
-
-  //Stopwatch stopwatch = Stopwatch()..start(); // Pentru masurate timp
 
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -28,13 +22,12 @@ void main() async {
     ),
   )
       :await Firebase.initializeApp(); // Inițializează Firebase
- // stopwatch.stop();
- // print('Durata conectării la baza de date: ${stopwatch.elapsedMilliseconds} ms');
 
-  if(isConnected == true)
-   runApp(MyApp());
-  else
+  if(isConnected == true) {
+    runApp(MyApp());
+  } else {
     runApp(NoInternetApp());
+  }
 
 
 }
