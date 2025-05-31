@@ -165,7 +165,6 @@ class _AddEventPageState extends State<AddEventPage> {
                             _selectedCategory = newValue!;
                           });
                         },
-                        dropdownColor: Colors.orangeAccent,
                       ),
                       SizedBox(
                         height: 20,
@@ -177,9 +176,6 @@ class _AddEventPageState extends State<AddEventPage> {
                             _selectedDateTime = selectedDateTime;
                           });
                         },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.orangeAccent,
-                        ),
                         child: Text(
                             'Selectează data și ora',
                           style: TextStyle(
@@ -218,7 +214,6 @@ class _AddEventPageState extends State<AddEventPage> {
                       SizedBox(height: 20),
                       IconButton(onPressed: () async{
                         await _pickImageFromGallery();
-                        print(_selectedImage);
                       },
                           icon: Icon(Icons.camera_alt),
                       ),
@@ -245,7 +240,6 @@ class _AddEventPageState extends State<AddEventPage> {
                       ElevatedButton(onPressed: () async{
                         if (_selectedImage != null) {
                           String? image_name = generateUniqueImageName();
-                          print("image name : " + image_name);
                           String? imageUrl = await uploadImageToStorage(
                               _selectedImage!, image_name);
                           capacity = int.tryParse(_eventNumberOfParticipansController.text) ?? 0;
@@ -370,12 +364,8 @@ class _AddEventPageState extends State<AddEventPage> {
   void _onMapTap(LatLng location) {
     setState(() {
       _selectedLocation = location;
-      print(_selectedLocation);
-
-      // Eliminați toate markerele anterioare
       _markers.clear();
-
-      // Adăugați un nou marker și actualizați _markers
+      // Adăuga marker
       _markers.add(Marker(
         markerId: MarkerId(_selectedLocation.toString()),
         position: _selectedLocation!,
@@ -385,9 +375,7 @@ class _AddEventPageState extends State<AddEventPage> {
         ),
       ));
 
-
       _mapController?.animateCamera(CameraUpdate.newLatLng(_selectedLocation!));
-      print(_selectedLocation);
     });
   }
 

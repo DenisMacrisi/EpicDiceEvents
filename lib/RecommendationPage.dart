@@ -1,11 +1,7 @@
 import 'package:epic_dice_events/CustomWidgets.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'dart:io';
-import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RecommendationPage extends StatefulWidget {
@@ -56,7 +52,7 @@ class _RecommendationPage extends State<RecommendationPage> {
                     child: Column(children: [
                   Container(
                       child: Padding(
-                    padding: const EdgeInsets.only(top: 120),
+                    padding: const EdgeInsets.only(top: 120, left: 30,right: 30),
                     child: Text(
                       '${suggestion.data!['name']}',
                       style: const TextStyle(
@@ -98,7 +94,7 @@ class _RecommendationPage extends State<RecommendationPage> {
                   ),
                   Container(
                       child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
                     child: Text(
                       '${suggestion.data!['description']}',
                       style: const TextStyle(
@@ -157,8 +153,11 @@ void showFeedbackForm(BuildContext context) {
       return StatefulBuilder(
         builder: (context, setState) {
           return AlertDialog(
-            title: Text('Feedback'),
-            backgroundColor:Colors.lightBlue,
+            title: Text(
+                'Feedback',
+              style: customOrangeShadowTextStyle(30),
+            ),
+            backgroundColor:Colors.lightBlueAccent,
             content: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
