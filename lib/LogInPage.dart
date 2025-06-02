@@ -64,6 +64,7 @@ class _LogInPageState extends State<LogInPage> {
                   height: 80,
                 ),
                 TextField(
+                  key: Key('EmailField'),
                   controller: _emailController,
                   decoration: InputDecoration(
                     hintText: ' Email',
@@ -78,6 +79,7 @@ class _LogInPageState extends State<LogInPage> {
                 ),
                 SizedBox(height: 20,),
                 TextField(
+                  key: Key('ParolaField'),
                   controller: _passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
@@ -124,11 +126,11 @@ class _LogInPageState extends State<LogInPage> {
                     ),
                   ),
                   child: Container(
-                    width: 90.0,
+                    width: 120.0,
                     height: 50.0,
                     alignment: Alignment.center,
                     child: Text(
-                      'Sign In',
+                      'Conectare',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20.0,
