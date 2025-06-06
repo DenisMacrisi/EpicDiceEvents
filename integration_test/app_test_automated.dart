@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:epic_dice_events/HomePage.dart';
+import 'package:epic_dice_events/SignInPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -29,6 +31,7 @@ void main() {
       'error': error ?? ''
     });
   }
+
   Future<void> verifyTextPresenceInPage(WidgetTester tester, String text, String className, String testDescription) async{
     await tester.pumpAndSettle();
     try{
@@ -57,9 +60,24 @@ void main() {
       Future.delayed(Duration(seconds: 5));
     });
 
+
+    testWidgets('Check App is running', (tester) async {
+      //  Precondition
+      await tester.pumpAndSettle(Duration(seconds: 10));
+      //Procedure
+      await Future.delayed(Duration(seconds: 10));
+      try{
+        expect(find.byType(Authenticate), findsOneWidget);
+        addResult("Authenticate", "Check App is running", true);
+      }catch(e){
+        addResult("Authenticate", "Check App is running", false, error: e.toString());
+      }
+      // Post-condition
+    });
+
     testWidgets('Verify title of the page', (tester) async {
       //  Precondition
-      await tester.pumpAndSettle(Duration(seconds: 10)); // Așteaptă finalizarea animațiilor
+      await tester.pumpAndSettle(Duration(seconds: 10));
       //Procedure
       await Future.delayed(Duration(seconds: 10));
       try{
@@ -90,21 +108,20 @@ void main() {
       //Procedure
       try{
         expect(find.text("Sign Up"), findsOneWidget);
-        addResult("Authenticate", "Verify if Log Up Button present on Welcome Page", true);
+        addResult("Authenticate", "Verify if Sign Up Button present on Welcome Page", true);
       }catch(e){
-        addResult("Authenticate", "Verify if Log Up Button present on Welcome Page", false, error: e.toString());
-       }
-       //Post Condition
+        addResult("Authenticate", "Verify if Sign Up Button present on Welcome Page", false, error: e.toString());
+      }
+      //Post Condition
     });
 
     testWidgets('Simulate Log In button press', (tester) async {
       //Precondition
-      await tester.pumpAndSettle(); // Așteaptă finalizarea animațiilor
+      await tester.pumpAndSettle();
       //Procedure
       try {
         await tester.tap(find.text('Log In'));
-        await tester.pumpAndSettle(); // Așteaptă finalizarea navigării
-        //await tester.pumpAndSettle(Duration(seconds: 5));
+        await tester.pumpAndSettle();
         expect(find.byType(LogInPage), findsOneWidget);
         addResult('Authenticate', 'Simulate Log In button press', true);
       } catch (e) {
@@ -113,14 +130,129 @@ void main() {
       //Post Condition
       //print(testResults);
     });
+
+    testWidgets('Simulate Sign Up button press', (tester) async {
+      //Precondition
+      await tester.pumpAndSettle();
+      //Procedure
+      try {
+        await tester.tap(find.text('Sign Up'));
+        await tester.pumpAndSettle();
+        expect(find.byType(SignInPage), findsOneWidget);
+        addResult('Authenticate', 'Simulate Sign Up button press', true);
+      } catch (e) {
+        addResult('Authenticate', 'Simulate Sign Up button press', false, error: e.toString());
+      }
+      //Post Condition
+      //print(testResults);
+    });
+
   });
-  tearDownAll(() {
-    //generarea raportului aici
-    generateReport(testResults);
-    IntegrationTestWidgetsFlutterBinding?.ensureInitialized();
-    exit(0);
+  group('Log In Page Test', () {
+    setUp(() {
+      //print("Inceperea aplicației...");
+      app.main();
+      Future.delayed(Duration(seconds: 5));
+
+    });
+    testWidgets('Log In with wrong credentials - no data entered', (tester) async {
+      //Precondition
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Log In'));
+      await tester.pumpAndSettle();
+      await Future.delayed(Duration(seconds: 5));
+      //Procedure
+      try {
+
+        await tester.tap(find.text('Conectare'));
+        await tester.pumpAndSettle();
+        await Future.delayed(Duration(seconds: 5));
+        expect(find.text("Email sau Parola Incorecte"), findsOneWidget);
+        addResult('Log In', 'Log In with wrong credentials - no data entered', true);
+      } catch (e) {
+        addResult('Log In', 'Log In with wrong credentials - no data entered', false, error: e.toString());
+      }
+      //Post Condition
+
+    });
+
+    testWidgets('Log In with wrong credentials - wrong email', (tester) async {
+      //Precondition
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Log In'));
+      await tester.pumpAndSettle();
+      await Future.delayed(Duration(seconds: 5));
+      //Procedure
+      try {
+
+        await tester.enterText(find.byKey(Key('EmailField')), 'denis.macrisi47@yahoo.com');
+        await tester.enterText(find.byKey(Key('ParolaField')), 'denis2001');
+        await Future.delayed(Duration(seconds: 2));
+        await tester.tap(find.text('Conectare'));
+        await tester.pumpAndSettle();
+        await Future.delayed(Duration(seconds: 2));
+        expect(find.text("Email sau Parola Incorecte"), findsOneWidget);
+        addResult('Log In', 'Log In with wrong credentials - wrong email', true);
+      } catch (e) {
+        addResult('Log In', 'Log In with wrong credentials - wrong email', false, error: e.toString());
+      }
+      //Post Condition
+
+    });
+
+    testWidgets('Log In with wrong credentials - wrong password', (tester) async {
+      //Precondition
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Log In'));
+      await tester.pumpAndSettle();
+      await Future.delayed(Duration(seconds: 5));
+      //Procedure
+      try {
+
+        await tester.enterText(find.byKey(Key('EmailField')), 'denis.macrisi46@yahoo.com');
+        await tester.enterText(find.byKey(Key('ParolaField')), 'denis2000');
+        await Future.delayed(Duration(seconds: 2));
+        await tester.tap(find.text('Conectare'));
+        await tester.pumpAndSettle();
+        await Future.delayed(Duration(seconds: 2));
+        expect(find.text("Email sau Parola Incorecte"), findsOneWidget);
+        addResult('Log In', 'Log In with wrong credentials - wrong password', true);
+      } catch (e) {
+        addResult('Log In', 'Log In with wrong credentials - wrong password', false, error: e.toString());
+      }
+      //Post Condition
+
+    });
+    testWidgets('Log In with correct credentials', (tester) async {
+      //Precondition
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Log In'));
+      await tester.pumpAndSettle();
+      await Future.delayed(Duration(seconds: 5));
+      //Procedure
+      try {
+
+        await tester.enterText(find.byKey(Key('EmailField')), 'denis.macrisi46@yahoo.com');
+        await tester.enterText(find.byKey(Key('ParolaField')), 'denis2001');
+        await Future.delayed(Duration(seconds: 2));
+        await tester.tap(find.text('Conectare'));
+        await tester.pumpAndSettle();
+        await Future.delayed(Duration(seconds: 2));
+        expect(find.byType(HomePage), findsOneWidget);
+        addResult('Log In', 'Log In with correct credentials', true);
+      } catch (e) {
+        addResult('Log In', 'Log In with correct credentials', false, error: e.toString());
+      }
+      //Post Condition
+
+    });
   });
 
+  tearDownAll(() async {
+    await generateReport(testResults);
+    print('Test raport generat!');
+    exit(0);
+  });
 }
 
 Future<void> generateReport(List<Map<String, dynamic>> results) async {
@@ -169,13 +301,13 @@ Future<void> generateReport(List<Map<String, dynamic>> results) async {
 
   htmlBuffer.writeln('</table></body></html>');
 
-  final directory = await getExternalStorageDirectory();
-  final path = '${directory!.path}/test_report.html';
-  final file = File(path);
+  final directory = Directory('/storage/emulated/0/Download');
+  final file = File('${directory.path}/test_report.html');
+  await file.writeAsString(htmlBuffer.toString());
 
   try {
     await file.writeAsString(htmlBuffer.toString());
-    print("Raport salvat la: $path");
+    print("Raport salvat la: $file");
   } catch (e) {
     print("Eroare la salvarea raportului: $e");
   }
