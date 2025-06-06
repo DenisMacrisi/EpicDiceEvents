@@ -1,6 +1,7 @@
 import 'package:epic_dice_events/MyApp.dart';
 import 'package:epic_dice_events/ProfilePage.dart';
 import 'package:flutter/material.dart';
+import 'AboutPage.dart';
 import 'Authentication.dart';
 import 'CustomWidgets.dart';
 import 'RecommendationPage.dart';
@@ -53,7 +54,7 @@ class MyDrawer extends StatelessWidget {
               padding: const EdgeInsets.only(right: 8.0),
               child: InkWell(
                 onTap: () async {
-                 // print('Text or icon pressed');
+                 // print('Text or icon pressed');f
                   // Redirectionare catre Profil
                   Navigator.push(
                     context,
@@ -65,7 +66,7 @@ class MyDrawer extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'Profil          ',
+                      'Profil            ',
                       style: customBasicTextStyle(14.0, true),
                     ),
                     IconButton(
@@ -99,7 +100,7 @@ class MyDrawer extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'Logout        ',
+                      'Logout         ',
                       style: customBasicTextStyle(14.0, true),
                     ),
                     IconButton(
@@ -155,25 +156,25 @@ class MyDrawer extends StatelessWidget {
               padding: const EdgeInsets.only(right: 8.0),
               child: InkWell(
                 onTap: () async {
-
-                  await _auth.signOut();
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => MyApp()),
+                    MaterialPageRoute(builder: (context) => AboutPage()),
                   );
                 },
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      ' About         ',
+                      'Despre         ',
                       style: customBasicTextStyle(14.0, true),
                     ),
                     IconButton(
                       icon: Icon(Icons.question_mark),
                       onPressed: () {
-                        // Acțiuni pentru butonul de utilizator
-                        //print('User icon pressed');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => AboutPage()),
+                        );
                       },
                     ),
                   ],
