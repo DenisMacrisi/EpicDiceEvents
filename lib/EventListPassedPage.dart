@@ -1,6 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:epic_dice_events/CustomWidgets.dart';
-import 'package:epic_dice_events/EventListPassed.dart';
+import 'package:epic_dice_events/EventSummaryGenericList.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -83,7 +83,7 @@ class EventListPassedPage extends StatelessWidget {
                     ),
                   );
                 } else {
-                  return EventListPassed();
+                  return EventSummaryGenericList(filter: (eventDate, isActive) => eventDate.isBefore(DateTime.now()) || !isActive);
                 }
               },
             ),

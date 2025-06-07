@@ -26,7 +26,7 @@ class EventListFuture extends StatelessWidget {
       DateTime eventDate = doc['date'].toDate();
 
       // Verificăm dacă evenimentul este în viitor
-      if (eventDate.isAfter(now)) {
+      if (eventDate.isAfter(now) && doc['isEventActive'] == true) {
         // Debug: Afișăm ID-ul evenimentului și data acestuia
         print('Eveniment: ${doc.id}, Data evenimentului: $eventDate');
 
@@ -57,6 +57,8 @@ class EventListFuture extends StatelessWidget {
               ? doc['totalStars'] / doc['noReviewers']
               : 0;
 
+          bool isEventActive = doc['isEventActive'];
+
           result.add(EventWidgetSummary(
             eventName: eventName,
             location: LatLng(location.latitude, location.longitude),
@@ -64,6 +66,7 @@ class EventListFuture extends StatelessWidget {
             eventDay: eventDay,
             eventTime: eventTime,
             eventRating: eventRating,
+            isEventActive: isEventActive,
           ));
         } else {
           // Do Nothing . Used for Debug

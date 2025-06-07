@@ -2,7 +2,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:epic_dice_events/CustomWidgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'EventListFuture.dart';
+import 'EventSummaryGenericList.dart';
 
 class EventListFuturePage extends StatelessWidget {
 
@@ -82,7 +82,7 @@ class EventListFuturePage extends StatelessWidget {
                     ),
                   );
                 } else {
-                  return EventListFuture();
+                  return EventSummaryGenericList(filter: (eventDate, isActive) => eventDate.isAfter(DateTime.now()) && isActive);
                 }
               },
             ),

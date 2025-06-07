@@ -133,6 +133,15 @@ TextStyle customSnackBoxTextStyle(double fontSize, Color color){
     color: color,
   );
 }
+BoxDecoration CustomBoxDecoration(){
+  return BoxDecoration(
+    image: DecorationImage(
+      image: AssetImage('images/Color.jpg'),
+      fit: BoxFit.cover,
+    ),
+  );
+}
+
 ButtonStyle SimpleButtonStyle(double borderRadius, double elevation, Color color, double width){
   return ElevatedButton.styleFrom(
     shape: RoundedRectangleBorder(

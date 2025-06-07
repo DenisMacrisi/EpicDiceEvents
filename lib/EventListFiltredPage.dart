@@ -106,6 +106,7 @@ class EventListFiltredPage extends StatelessWidget {
                 String eventTime = eventDate.hour.toString() + ':' +
                     eventDate.minute.toString();
                 String eventCategory = event['category'];
+                bool isEventActive = event['isEventActive'];
 
                 if (eventDate.isAfter(selectedStartDate) &&
                     eventDate.isBefore(selectedEndDate) &&
@@ -130,6 +131,7 @@ class EventListFiltredPage extends StatelessWidget {
                           eventDay: eventDay,
                           eventTime: eventTime,
                           eventCategory: eventCategory,
+                          isEventActive: isEventActive,
                         ),
                       ),
                     ),

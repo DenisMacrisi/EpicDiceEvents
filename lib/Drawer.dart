@@ -54,8 +54,6 @@ class MyDrawer extends StatelessWidget {
               padding: const EdgeInsets.only(right: 8.0),
               child: InkWell(
                 onTap: () async {
-                 // print('Text or icon pressed');f
-                  // Redirectionare catre Profil
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => ProfilePage()),
