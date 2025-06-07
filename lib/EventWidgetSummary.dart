@@ -15,6 +15,7 @@ class EventWidgetSummary extends StatelessWidget {
   final String eventDay;
   final String eventTime;
   final double eventRating;
+  final bool isEventActive;
 
   const EventWidgetSummary({
     Key? key,
@@ -24,6 +25,7 @@ class EventWidgetSummary extends StatelessWidget {
     required this.eventDay,
     required this.eventTime,
     required this.eventRating,
+    required this.isEventActive,
   }) : super(key: key);
 
 
@@ -40,7 +42,6 @@ class EventWidgetSummary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isFuture = _isEventInFuture();
-    print("isFuture:  $isFuture");
 
     return FutureBuilder<String>(
       future: getAddressFromCoordinates(location.latitude, location.longitude),
@@ -54,7 +55,8 @@ class EventWidgetSummary extends StatelessWidget {
           addressText = snapshot.data!;
         }
 
-        if (isFuture) {
+        if (isFuture && isEventActive == true ) {
+          // Eveniment viitor
           return Card(
             color: Colors.lightBlue[50],
             elevation: 4,
@@ -106,48 +108,84 @@ class EventWidgetSummary extends StatelessWidget {
             ),
           );
         } else {
-          // Evenimentul trecut, UI rămâne neschimbat
-          return Card(
-            color: Colors.grey[200],
-            elevation: 2,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16)),
-            margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    eventName,
-                    style: customBasicTextStyle(30, true, color: Colors.black)
-                  ),
-                  SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Icon(Icons.star, color: Colors.orangeAccent, size: 40.0),
-                      SizedBox(width: 4),
-                      Text(
-                        eventRating.toStringAsFixed(1),
-                        style: customBasicTextStyle(30, true),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () {
-                      openEvaluateEventWindow(context, eventId);
-                    },
-                    style: SimpleButtonStyle(12.0, 10.0, Colors.orangeAccent, 5.0),
-                    child: Text(
-                      "Evalueaza",
-                      style: customBasicTextStyle(20.0, true),
+          // Evenimentul trecut
+          if(isEventActive == true) {
+            return Card(
+              color: Colors.grey[200],
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16)),
+              margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        eventName,
+                        style: customBasicTextStyle(
+                            30, true, color: Colors.black)
                     ),
-                  ),
-                ],
+                    SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Icon(
+                            Icons.star, color: Colors.orangeAccent, size: 40.0),
+                        SizedBox(width: 4),
+                        Text(
+                          eventRating.toStringAsFixed(1),
+                          style: customBasicTextStyle(30, true),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        openEvaluateEventWindow(context, eventId);
+                      },
+                      style: SimpleButtonStyle(
+                          12.0, 10.0, Colors.orangeAccent, 5.0),
+                      child: Text(
+                        "Evalueaza",
+                        style: customBasicTextStyle(20.0, true),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          );
+            );
+          }
+          else{
+            //Eveniment anulat
+            return Card(
+              color: Colors.grey[200],
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16)),
+              margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      eventName,
+                      style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 30),
+                    Text(
+                        "Anulat",
+                      style: TextStyle(
+                        fontSize: 40,
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
         }
       },
     );

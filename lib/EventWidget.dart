@@ -10,6 +10,7 @@ import 'package:add_2_calendar/add_2_calendar.dart';
 
 import 'CustomWidgets.dart';
 import 'Errors.dart';
+import 'HomePage.dart';
 
 class EventWidget extends StatefulWidget {
   final String eventName;
@@ -22,6 +23,7 @@ class EventWidget extends StatefulWidget {
   final String eventDay;
   final String eventTime;
   final String eventCategory;
+  final bool isEventActive;
 
   EventWidget({
     Key? key,
@@ -35,6 +37,7 @@ class EventWidget extends StatefulWidget {
     required this.eventDay,
     required this.eventTime,
     required this.eventCategory,
+    required this.isEventActive,
   }) : super(key: key);
 
   @override
@@ -45,12 +48,14 @@ class _EventWidgetState extends State<EventWidget> {
 
   late String _address = 'Loading...';
   late bool _isUserRegistered = false;
+  late bool _isCurrentUserHost = false;
 
   @override
   void initState() {
     super.initState();
     _loadAddress();
     _checkRegistrationForEvent();
+    _checkIfUserIsHost();
   }
 
   Future<void> _loadAddress() async {
@@ -66,6 +71,17 @@ class _EventWidgetState extends State<EventWidget> {
       print('Error loading address: $e');
     }
   }
+  Future<void> _checkIfUserIsHost() async {
+    try {
+      bool hostStatus = await isCurrentUserTheHost();
+      setState(() {
+        _isCurrentUserHost = hostStatus;
+      });
+    } catch (e) {
+      print('Eroare la verificarea hostului: $e');
+    }
+  }
+
   Future<void> _checkRegistrationForEvent() async{
     try {
       bool i = await isUserRegisteredForEvent();
@@ -164,7 +180,7 @@ class _EventWidgetState extends State<EventWidget> {
                     Icons.check,
                   color: _isUserRegistered? Colors.green: Colors.transparent,
                   size: 40,
-                )
+                ),
               ]
             ),
             SizedBox(
@@ -400,6 +416,25 @@ class _EventWidgetState extends State<EventWidget> {
     }
     return false;
   }
+  Future<bool> isCurrentUserTheHost() async {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    if(currentUser == null) {
+      return false;
+    }
+
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    final DocumentReference eventRef = firestore.collection('events').doc(widget.eventId);
+
+    final snapshotEventData = await eventRef.get();
+    String? host = snapshotEventData.get('host');
+
+    if(host == currentUser.uid) {
+      return true;
+    } else {
+      return false;
+    }
+
+  }
 
 
   /// Function used to register user to an Event
@@ -541,7 +576,7 @@ class _EventWidgetState extends State<EventWidget> {
           hostName,
           style: TextStyle(
               color: Color(hostColor),
-              fontSize: 18.0,
+              fontSize: 16.0,
               fontWeight: FontWeight.w800
           ),
         ),
@@ -549,7 +584,7 @@ class _EventWidgetState extends State<EventWidget> {
         Text(
          hostStars > 0.01?(hostStars/hostReviews).toStringAsFixed(2):'-',
           style: TextStyle(
-              fontSize: 18.0,
+              fontSize: 16.0,
               fontWeight: FontWeight.w800
           ),
         ),
@@ -596,7 +631,7 @@ class _EventWidgetState extends State<EventWidget> {
               participantName,
               style: TextStyle(
                 color: Color(colorCodeForUsername),
-                fontSize: 18.0,
+                fontSize: 16.0,
                 fontWeight: FontWeight.w800
               ),
             ),
@@ -621,7 +656,7 @@ class _EventWidgetState extends State<EventWidget> {
         return AlertDialog(
           title: Text(
             'Participanți',
-            style: TextStyle(
+              style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 24.0,
               color: Colors.white,
@@ -640,13 +675,35 @@ class _EventWidgetState extends State<EventWidget> {
             children: participantWidgets,
           ),
           actions: [
+
+            if(_isCurrentUserHost)
+              TextButton(
+                  onPressed: (){
+                    ShowDeleteEventDialog(context, widget.eventId);
+                  },
+                  child: Text(
+                    "Șterge",
+                      style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
+                      color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          blurRadius: 20.0,
+                          color: Colors.red,
+                          offset: Offset(0, 0),
+                        ),
+                      ],
+                    ),
+                  ),
+              ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
               child: Text(
                 'Închide',
-                style: TextStyle(
+                  style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16.0,
                   color: Colors.white,
@@ -665,6 +722,82 @@ class _EventWidgetState extends State<EventWidget> {
         );
       },
     );
+  }
+  Future<void> ShowDeleteEventDialog(BuildContext context, String eventId) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+              'Șterge eveniment',
+              style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 24.0,
+              color: Colors.white,
+              shadows: [
+                Shadow(
+                  blurRadius: 20.0,
+                  color: Colors.orangeAccent,
+                  offset: Offset(0, 0),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                  'Anulează',
+                  style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0,
+                  color: Colors.white,
+                  shadows: [
+                    Shadow(
+                      blurRadius: 20.0,
+                      color: Colors.orangeAccent,
+                      offset: Offset(0, 0),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                setEventAsInvalid(eventId);
+                SetEventAsInactive(eventId);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
+              },
+              child: const Text(
+                  'Șterge',
+                  style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0,
+                  color: Colors.white,
+                  shadows: [
+                    Shadow(
+                      blurRadius: 20.0,
+                      color: Colors.red,
+                      offset: Offset(0, 0),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+          backgroundColor: Color.fromRGBO(3, 220, 252,100),
+        );
+      },
+    );
+  }
+
+  Future<void> SetEventAsInactive(String eventId)async {
+    print("Event Set as Inactive");
   }
 
   ///Function used to remove the current event from an User list
@@ -705,6 +838,19 @@ class _EventWidgetState extends State<EventWidget> {
       print('Eroare la incrementarea participanților: $e');
     }
   }
+  Future<void> setEventAsInvalid(String eventId) async {
+    try {
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+      final DocumentReference eventRef = firestore.collection('events').doc(
+          eventId);
+      await eventRef.update({
+        'isEventActive': false
+      });
+    }
+    catch(e){
+      throw("Eroare: $e");
+    }
+  }
 
   Future<void> decreaseNumberOfParticipants() async {
     try {
@@ -723,6 +869,8 @@ class _EventWidgetState extends State<EventWidget> {
     }
   }
 }
+
+
 
 // Funcție care convertește coordonatele în adresă
 Future<String> getAddressFromCoordinates(double latitude, double longitude) async {

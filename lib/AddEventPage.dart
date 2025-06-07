@@ -439,7 +439,9 @@ class _AddEventPageState extends State<AddEventPage> {
       'category': category,
       'host': currentUser?.uid,
       'totalStars': 0,
-      'noReviewers': 0
+      'noReviewers': 0,
+      'isEventActive': true,
+      'isParticipantNotified':false
     });
 
   return 1;

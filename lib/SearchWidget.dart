@@ -114,6 +114,7 @@ class CustomSearchDelegate extends SearchDelegate<String> {
             String eventDay = eventDate.day.toString() + '/' + eventDate.month.toString() + '/' + eventDate.year.toString();
             String eventTime = eventDate.hour.toString() + ':' + eventDate.minute.toString();
             String eventCategory = event['category'];
+            bool isEventActive = event['isEventActive'];
 
             if (eventDate.isAfter(DateTime.now())) {
               return EventWidget(
@@ -127,6 +128,7 @@ class CustomSearchDelegate extends SearchDelegate<String> {
                 eventDay: eventDay,
                 eventTime: eventTime,
                 eventCategory: eventCategory,
+                isEventActive: isEventActive,
               );
             } else {
               return null;

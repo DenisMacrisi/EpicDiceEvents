@@ -1,7 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:epic_dice_events/AddEventPage.dart';
 import 'package:epic_dice_events/CustomWidgets.dart';
-import 'package:epic_dice_events/Drawler.dart';
+import 'package:epic_dice_events/Drawer.dart';
 import 'package:epic_dice_events/MyApp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

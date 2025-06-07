@@ -1,37 +1,37 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 
 import 'EventWidgetSummary.dart';
 
-class EventListPassed extends StatelessWidget {
-  final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
+typedef EventFilter = bool Function(DateTime eventDate, bool isEventActive);
 
-  /// Function used to load Passed Events
+class EventSummaryGenericList extends StatelessWidget {
+  final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
+  final EventFilter filter;
+  EventSummaryGenericList({super.key, required this.filter});
+
   Future<List<EventWidgetSummary>> _loadEvents() async {
     QuerySnapshot<Map<String, dynamic>> snapshot =
     await FirebaseFirestore.instance.collection('events').get();
 
-    DateTime now = DateTime.now();
     DateFormat dateFormat = DateFormat('dd/MM/yyyy HH:mm');
 
     List<EventWidgetSummary> result = [];
 
     for (var doc in snapshot.docs) {
       DateTime eventDate = doc['date'].toDate();
+      bool isEventActive = doc['isEventActive'];
 
-      if (eventDate.isBefore(now) || doc['isEventActive'] == false) {
-
-        var participantsDoc = await doc.reference
+      if (filter(eventDate, isEventActive)) {
+        var participantDoc = await doc.reference
             .collection('participantsList')
             .doc(currentUserId)
             .get();
 
-        if (participantsDoc.exists) {
-
+        if (participantDoc.exists) {
           GeoPoint location = doc['location'];
           String eventName = doc['Nume'];
           String eventId = doc.id;
@@ -45,8 +45,6 @@ class EventListPassed extends StatelessWidget {
               ? doc['totalStars'] / doc['noReviewers']
               : 0;
 
-          bool isEventActive = doc['isEventActive'];
-
           result.add(EventWidgetSummary(
             eventName: eventName,
             location: LatLng(location.latitude, location.longitude),
@@ -56,8 +54,6 @@ class EventListPassed extends StatelessWidget {
             eventRating: eventRating,
             isEventActive: isEventActive,
           ));
-        } else {
-            //Do Nothing
         }
       }
     }
@@ -65,7 +61,7 @@ class EventListPassed extends StatelessWidget {
     result.sort((a, b) {
       DateTime aDate = dateFormat.parse('${a.eventDay} ${a.eventTime}');
       DateTime bDate = dateFormat.parse('${b.eventDay} ${b.eventTime}');
-      return bDate.compareTo(aDate); // DESC
+      return bDate.compareTo(aDate);
     });
 
     return result;
@@ -81,11 +77,12 @@ class EventListPassed extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Center(child: Text('Eroare la încărcare evenimente.'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(child: Text('Nu ai participat la niciun eveniment'));
+          return Center(child: Text('Nu există evenimente de afișat'));
         } else {
           return ListView(children: snapshot.data!);
         }
       },
     );
   }
+
 }
