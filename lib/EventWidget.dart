@@ -552,7 +552,6 @@ class _EventWidgetState extends State<EventWidget> {
     String hostName = hostSnapshot['username'];
     String? hostImageUrl = hostSnapshot['profileImageUrl'];
     int hostColor = hostSnapshot['color'];
-    double hostRating = hostSnapshot['rating'].toDouble();
     int hostStars = hostSnapshot['stars'];
     int hostReviews = hostSnapshot['reviews'];
 

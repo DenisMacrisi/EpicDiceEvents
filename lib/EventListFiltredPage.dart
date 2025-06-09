@@ -93,11 +93,11 @@ class EventListFiltredPage extends StatelessWidget {
               for (int index = 0; index < snapshot.data!.docs.length; index++) {
                 final event = snapshot.data!.docs[index];
                 GeoPoint location = event['location'];
-                String eventName = event['Nume'];
+                String eventName = event['name'];
                 int participansNumber = event['noOfparticipants'];
                 int eventCapacity = event['capacity'];
                 String eventImage = event['imageURL'];
-                String eventDetails = event['Descriere'];
+                String eventDetails = event['description'];
                 String eventId = event.id;
                 DateTime eventDate = event['date'].toDate();
                 String eventDay = eventDate.day.toString() + '/' +
