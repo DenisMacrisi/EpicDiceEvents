@@ -31,7 +31,7 @@ class UserEventList extends StatelessWidget {
           );
         } else {
           List<UserEventWidget> eventWidgets = snapshot.data!.docs.map((event) {
-            String eventName = event['Nume'];
+            String eventName = event['name'];
             DateTime eventDate = event['date'].toDate();
             String eventDay = eventDate.day.toString() + '/' + eventDate.month.toString() + '/' + eventDate.year.toString();
             String eventTime = eventDate.hour.toString() + ':' + eventDate.minute.toString();

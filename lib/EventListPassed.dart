@@ -33,7 +33,7 @@ class EventListPassed extends StatelessWidget {
         if (participantsDoc.exists) {
 
           GeoPoint location = doc['location'];
-          String eventName = doc['Nume'];
+          String eventName = doc['name'];
           String eventId = doc.id;
 
           String eventDay =
