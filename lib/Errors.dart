@@ -159,13 +159,13 @@ void showNetworkError(BuildContext context, String title, String contet){
 }
 
 void showIncorectLenghtError(BuildContext context){
-  showSimpleError(context,'Format Incorect', 'Numele si Parola trebuie sa aiba minim 5 caractere');
+  showSimpleError(context,'Format Incorect', 'Numele si Parola trebuie sa aibă minim 5 caractere');
 }
 void showIncorectPasswordRetyped(BuildContext context){
   showSimpleError(context, 'Parola nu se potriveste', 'Parolele introduse sunt diferite');
 }
 void showIncorectEmailError(BuildContext context){
-  showSimpleError(context, 'Email invalid', 'Adresa de email introdusa nu este valida');
+  showSimpleError(context, 'Email invalid', 'Adresa de email introdusă nu este validă');
 }
 void showAlreadyRegistatedforEvent(BuildContext context){
   showSimpleError(context,'Participant', 'Deja te-ai inscris pentru acest Eveniment');

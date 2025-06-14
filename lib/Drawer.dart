@@ -13,7 +13,7 @@ class MyDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      width: 150.00,
+      width: 160.00,
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
@@ -98,7 +98,7 @@ class MyDrawer extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'Logout         ',
+                      'Deconectare',
                       style: customBasicTextStyle(14.0, true),
                     ),
                     IconButton(

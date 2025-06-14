@@ -44,7 +44,6 @@ class CustomSearchDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildSearchField(BuildContext context) {
-    print('buildSearchField called');
     return TextField(
       autofocus: true,
       decoration: InputDecoration(
@@ -102,13 +101,13 @@ class CustomSearchDelegate extends SearchDelegate<String> {
             child: Text('Error loading events'),
           );
         } else {
-          final List<EventWidget> searchResults = snapshot.data!.docs.where((event) => event['Nume'].toLowerCase().contains(query.toLowerCase()) || event['Descriere'].toLowerCase().contains(query.toLowerCase())).map((event) {
+          final List<EventWidget> searchResults = snapshot.data!.docs.where((event) => event['name'].toLowerCase().contains(query.toLowerCase()) || event['description'].toLowerCase().contains(query.toLowerCase())).map((event) {
             GeoPoint location = event['location'];
-            String eventName = event['Nume'];
+            String eventName = event['name'];
             int participansNumber = event['noOfparticipants'];
             int eventCapacity = event['capacity'];
             String eventImage = event['imageURL'];
-            String eventDetails = event['Descriere'];
+            String eventDetails = event['description'];
             String eventId = event.id;
             DateTime eventDate = event['date'].toDate();
             String eventDay = eventDate.day.toString() + '/' + eventDate.month.toString() + '/' + eventDate.year.toString();
@@ -135,13 +134,13 @@ class CustomSearchDelegate extends SearchDelegate<String> {
             }
           }).whereType<EventWidget>().toList()..sort((a, b) {
             DateFormat dateFormat = DateFormat('dd/MM/yyyy');
-            DateTime aDate = dateFormat.parse(a.eventDay);  // Aici presupunem că ai data în formatul 'dd/MM/yyyy'
-            DateTime bDate = dateFormat.parse(b.eventDay);  // Aceeași logică pentru b
+            DateTime aDate = dateFormat.parse(a.eventDay);
+            DateTime bDate = dateFormat.parse(b.eventDay);
 
             if (aDate.compareTo(bDate) != 0 )
               return aDate.compareTo(bDate);
             else
-              return a.eventTime.compareTo(b.eventTime);  // Compară datele
+              return a.eventTime.compareTo(b.eventTime);
           });
           return Container(
             decoration: BoxDecoration(

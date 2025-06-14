@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:epic_dice_events/HomePage.dart';
-import 'package:epic_dice_events/SignInPage.dart';
+import 'package:epic_dice_events/SignUpPage.dart';
+import 'package:epic_dice_events/Validation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -52,7 +53,7 @@ void main() {
     }
   }
 
-  group('Authenticate Page Tests', () {
+  group('Start App Procedure', () {
 
     setUp(() {
       //print("Inceperea aplicației...");
@@ -138,7 +139,7 @@ void main() {
       try {
         await tester.tap(find.text('Sign Up'));
         await tester.pumpAndSettle();
-        expect(find.byType(SignInPage), findsOneWidget);
+        expect(find.byType(SignUpPage), findsOneWidget);
         addResult('Authenticate', 'Simulate Sign Up button press', true);
       } catch (e) {
         addResult('Authenticate', 'Simulate Sign Up button press', false, error: e.toString());
@@ -148,6 +149,180 @@ void main() {
     });
 
   });
+
+  group('Sign Up Page Test', () {
+    setUp(() {
+      app.main();
+      Future.delayed(Duration(seconds: 5));
+    });
+
+    testWidgets('Sign Up with invalid name', (tester) async {
+      //Precondition
+      try {
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Sign Up'));
+        await tester.pumpAndSettle();
+        await Future.delayed(Duration(seconds: 5));
+        //Procedure
+        await tester.enterText(find.byKey(Key('nume utilizator')), "Nume");
+        await tester.pumpAndSettle();
+        await tester.enterText(find.byKey(Key('email')), generateEmail(7));
+        await tester.pumpAndSettle();
+        String pass = generatePassword(7);
+        await tester.enterText(find.byKey(Key('parola')), pass);
+        await tester.pumpAndSettle();
+        await tester.enterText(find.byKey(Key('parola repetata')), pass);
+        await tester.pumpAndSettle();
+        await tester.enterText(find.byKey(Key('localitate')), "Localitate");
+        await tester.pumpAndSettle();
+        await tester.drag(find.byType(SingleChildScrollView), const Offset(0, -300));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(Key("SignUpButton")));
+        await tester.pumpAndSettle();
+        await Future.delayed(Duration(seconds: 5));
+        expect(find.text("Numele si Parola trebuie sa aibă minim 5 caractere"), findsOneWidget);
+        addResult('Sign Up', 'Sign Up with invalid name', true);
+      } catch (e) {
+        addResult('Sign Up', 'Sign Up with invalid name', false, error: e.toString());
+      }
+      //Post Condition
+    });
+
+    testWidgets('Sign Up with invalid email', (tester) async {
+      //Precondition
+      try {
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Sign Up'));
+        await tester.pumpAndSettle();
+        await Future.delayed(Duration(seconds: 5));
+        //Procedure
+        await tester.enterText(find.byKey(Key('nume utilizator')), "Nume Nume");
+        await tester.pumpAndSettle();
+        await tester.enterText(find.byKey(Key('email')), generateInvalidEmail(7));
+        await tester.pumpAndSettle();
+        String pass = generatePassword(7);
+        await tester.enterText(find.byKey(Key('parola')), pass);
+        await tester.pumpAndSettle();
+        await tester.enterText(find.byKey(Key('parola repetata')), pass);
+        await tester.pumpAndSettle();
+        await tester.enterText(find.byKey(Key('localitate')), "Localitate");
+        await tester.pumpAndSettle();
+        await tester.drag(find.byType(SingleChildScrollView), const Offset(0, -300));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(Key("SignUpButton")));
+        await tester.pumpAndSettle();
+        await Future.delayed(Duration(seconds: 5));
+        expect(find.text("Adresa de email introdusă nu este validă"), findsOneWidget);
+        addResult('Sign Up', 'Sign Up with too short email', true);
+      } catch (e) {
+        addResult('Sign Up', 'Sign Up with too short email', false, error: e.toString());
+      }
+      //Post Condition
+    });
+
+    testWidgets('Sign Up with to short password', (tester) async {
+      //Precondition
+      try {
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Sign Up'));
+        await tester.pumpAndSettle();
+        await Future.delayed(Duration(seconds: 5));
+        //Procedure
+        await tester.enterText(find.byKey(Key('nume utilizator')), "Nume Nume");
+        await tester.pumpAndSettle();
+        await tester.enterText(find.byKey(Key('email')), generateEmail(7));
+        await tester.pumpAndSettle();
+        String pass = generatePassword(4);
+        await tester.enterText(find.byKey(Key('parola')), pass);
+        await tester.pumpAndSettle();
+        await tester.enterText(find.byKey(Key('parola repetata')), pass);
+        await tester.pumpAndSettle();
+        await tester.enterText(find.byKey(Key('localitate')), "Localitate");
+        await tester.pumpAndSettle();
+        await tester.drag(find.byType(SingleChildScrollView), const Offset(0, -300));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(Key("SignUpButton")));
+        await tester.pumpAndSettle();
+        await Future.delayed(Duration(seconds: 5));
+        expect(find.text("Numele si Parola trebuie sa aibă minim 5 caractere"), findsOneWidget);
+        addResult('Sign Up', 'Sign Up with to short password', true);
+      } catch (e) {
+        addResult('Sign Up', 'Sign Up with to short password', false, error: e.toString());
+      }
+      //Post Condition
+
+    });
+
+    testWidgets('Sign Up with different passwords', (tester) async {
+      //Precondition
+      try {
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Sign Up'));
+        await tester.pumpAndSettle();
+        await Future.delayed(Duration(seconds: 5));
+        //Procedure
+        await tester.enterText(find.byKey(Key('nume utilizator')), "Nume Nume");
+        await tester.pumpAndSettle();
+        await tester.enterText(find.byKey(Key('email')), generateEmail(7));
+        await tester.pumpAndSettle();
+        String pass_1 = generatePassword(7);
+        String pass_2 = generatePassword(7);
+        await tester.enterText(find.byKey(Key('parola')), pass_1);
+        await tester.pumpAndSettle();
+        await tester.enterText(find.byKey(Key('parola repetata')), pass_2);
+        await tester.pumpAndSettle();
+        await tester.enterText(find.byKey(Key('localitate')), "Localitate");
+        await tester.pumpAndSettle();
+        await tester.drag(find.byType(SingleChildScrollView), const Offset(0, -300));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(Key("SignUpButton")));
+        await tester.pumpAndSettle();
+        await Future.delayed(Duration(seconds: 5));
+        expect(find.text("Parolele introduse sunt diferite"), findsOneWidget);
+        addResult('Sign Up', 'Sign Up with different passwords', true);
+      } catch (e) {
+        addResult('Sign Up', 'Sign Up with different passwords', false, error: e.toString());
+      }
+      //Post Condition
+
+    });
+
+    testWidgets('Sign Up with correct data', (tester) async {
+      //Precondition
+      try {
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Sign Up'));
+        await tester.pumpAndSettle();
+        await Future.delayed(Duration(seconds: 5));
+        //Procedure
+        await tester.enterText(find.byKey(Key('nume utilizator')), "Nume Nume");
+        await tester.pumpAndSettle();
+        await tester.enterText(find.byKey(Key('email')), generateEmail(7));
+        await tester.pumpAndSettle();
+        String pass = generatePassword(7);
+        await tester.enterText(find.byKey(Key('parola')), pass);
+        await tester.pumpAndSettle();
+        await tester.enterText(find.byKey(Key('parola repetata')), pass);
+        await tester.pumpAndSettle();
+        await tester.enterText(find.byKey(Key('localitate')), "Localitate");
+        await tester.pumpAndSettle();
+        await tester.drag(find.byType(SingleChildScrollView), const Offset(0, -300));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(Key("SignUpButton")));
+        await tester.pumpAndSettle();
+        await Future.delayed(Duration(seconds: 5));
+        expect(find.text("Un email de confirmare al adresei a fost trimis"), findsOneWidget);
+        addResult('Sign Up', 'Sign Up with correct data', true);
+      } catch (e) {
+        addResult('Sign Up', 'Sign Up with correct data', false, error: e.toString());
+      }
+      //Post Condition
+
+    });
+
+
+  });
+
   group('Log In Page Test', () {
     setUp(() {
       //print("Inceperea aplicației...");
@@ -155,6 +330,51 @@ void main() {
       Future.delayed(Duration(seconds: 5));
 
     });
+
+    testWidgets("Reset Password invalid email", (tester) async {
+      //Precondition
+      await tester.pumpAndSettle();
+      //Procedure
+      try {
+        await tester.tap(find.text('Log In'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(Key("ResetPasswordButton")));
+        await tester.pumpAndSettle();
+        await tester.enterText(find.byKey(Key('EmailForPasswordReset')), 'email');
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Trimite'));
+        await tester.pumpAndSettle();
+        expect(find.byType(Authenticate), findsOneWidget);
+        expect(find.text("Email-ul introdus nu este valid"), findsOneWidget);
+        addResult('ResetPassword', 'Reset Password invalid email', true);
+      } catch (e) {
+        addResult('ResetPassword', 'Reset Password invalid email', false, error: e.toString());
+      }
+      //Post Condition
+    });
+
+    testWidgets("Reset Password", (tester) async {
+      //Precondition
+      await tester.pumpAndSettle();
+      //Procedure
+      try {
+        await tester.tap(find.text('Log In'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(Key("ResetPasswordButton")));
+        await tester.pumpAndSettle();
+        await tester.enterText(find.byKey(Key('EmailForPasswordReset')), 'email@yahoo.com');
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Trimite'));
+        await tester.pumpAndSettle();
+        expect(find.byType(Authenticate), findsOneWidget);
+        expect(find.text("Un email a fost trimis la adresa introdusa"), findsOneWidget);
+        addResult('ResetPassword', 'Reset Password', true);
+      } catch (e) {
+        addResult('ResetPassword', 'Reset Password', false, error: e.toString());
+      }
+      //Post Condition
+    });
+
     testWidgets('Log In with wrong credentials - no data entered', (tester) async {
       //Precondition
       await tester.pumpAndSettle();
@@ -246,6 +466,28 @@ void main() {
       //Post Condition
 
     });
+
+    testWidgets('Log Out from App Test', (tester) async {
+      await tester.pumpAndSettle();
+
+      try {
+        if (find.byType(Authenticate).evaluate().isNotEmpty) {
+          await tester.tap(find.text('Sign In'));
+        }
+        // Dacă ești deja logat, deconectează-te
+        if (find.byType(HomePage).evaluate().isNotEmpty) {
+          await tester.tap(find.byTooltip('Open navigation menu'));
+          await tester.pumpAndSettle();
+          await tester.tap(find.text('Deconectare'));
+          await tester.pumpAndSettle();
+        }
+        expect(find.byType(Authenticate), findsOneWidget);
+        addResult('Log Out', 'Log Out from App Test', true);
+      }catch(e){
+        addResult('Log Out', 'Log Out from App Test', false, error: e.toString());
+      }
+    });
+
   });
 
   tearDownAll(() async {
@@ -295,20 +537,19 @@ Future<void> generateReport(List<Map<String, dynamic>> results) async {
             <td>${result['testCase']}</td>
             <td class="$statusClass">${result['status']}</td>
             <td>${result['error']}</td>
-        </tr>
-      ''');
+        </tr>''');
   }
 
   htmlBuffer.writeln('</table></body></html>');
 
-  final directory = Directory('/storage/emulated/0/Download');
-  final file = File('${directory.path}/test_report.html');
-  await file.writeAsString(htmlBuffer.toString());
-
   try {
+    final dir = await getExternalStorageDirectory(); // Android safe location
+    final file = File('${dir!.path}/test_report.html');
+
     await file.writeAsString(htmlBuffer.toString());
-    print("Raport salvat la: $file");
+    print("✅ Raport salvat cu succes la:\n$file");
   } catch (e) {
-    print("Eroare la salvarea raportului: $e");
+    print("❌ Eroare la salvarea raportului: $e");
   }
 }
+
