@@ -415,7 +415,9 @@ class _AddEventPageState extends State<AddEventPage> {
 
 /// Functie folosita pentru a adauga evenimentul in baza de date
   Future <int> addNewEventToDatabase(String Details, String Name, int Capacity, String ImageURL, LatLng Location, DateTime dateTime, String category )async {
+
     User? currentUser = FirebaseAuth.instance.currentUser;
+    eventId = await generateUniqueEventId();
 
     if(Details.isEmpty || Name.isEmpty || Capacity == 0 || Location == null || ImageURL.isEmpty){
       
@@ -424,13 +426,11 @@ class _AddEventPageState extends State<AddEventPage> {
     }
     
     CollectionReference events = FirebaseFirestore.instance.collection('events');
-    eventId = await generateUniqueEventId();
-
     DocumentReference userDocRef = events.doc(eventId);
 
     await userDocRef.set({
-      'Descriere': Details,
-      'Nume': Name,
+      'description': Details,
+      'name': Name,
       'noOfparticipants' : 0,
       'capacity': Capacity,
       'imageURL' : ImageURL,

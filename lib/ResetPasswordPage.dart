@@ -1,4 +1,5 @@
 import 'package:epic_dice_events/Authenticate.dart';
+import 'package:epic_dice_events/Validation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'CustomWidgets.dart';
@@ -38,6 +39,7 @@ class _ResetPasswordPage extends State<ResetPasswordPage> {
                   height: 20,
                 ),
                 TextField(
+                  key: Key("EmailForPasswordReset"),
                   controller: emailController,
                   decoration: InputDecoration(
                     hintText: "Introduceti email"
@@ -48,28 +50,7 @@ class _ResetPasswordPage extends State<ResetPasswordPage> {
                 ),
                 ElevatedButton(
                     onPressed: (){
-
                       sendEmailForResetPassword(emailController.text);
-
-
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => Authenticate()),
-                            (Route<dynamic> route) => false,
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'Un email a fost trimis la adresa introdusa',
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.white
-                              ),
-                            ),
-                            backgroundColor: Colors.orangeAccent,
-                          )
-                      );
-
                     },
                     child: Text(
                       "Trimite",
@@ -99,11 +80,41 @@ class _ResetPasswordPage extends State<ResetPasswordPage> {
   }
   Future<void> sendEmailForResetPassword(String emailAddress) async{
     try{
-      if(!emailAddress.isEmpty){
+      if(validateEmail(emailAddress)){
         await _auth.sendPasswordResetEmail(email: emailAddress);
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => Authenticate()),
+              (Route<dynamic> route) => false,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Un email a fost trimis la adresa introdusa',
+                style: customSnackBoxTextStyle(20, Colors.white),
+              ),
+              backgroundColor: Colors.orangeAccent,
+            )
+        );
+      }
+      else{
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => Authenticate()),
+              (Route<dynamic> route) => false,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Email-ul introdus nu este valid',
+                style: customSnackBoxTextStyle(20, Colors.white),
+              ),
+              backgroundColor: Colors.orangeAccent,
+            )
+        );
       }
     }catch(e){
-      print("Eroare la resetarea parolei $e");
+      throw("Eroare la trimitere email: $e");
     }
   }
 }

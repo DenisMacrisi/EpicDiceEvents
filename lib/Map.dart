@@ -72,8 +72,8 @@ class _MapPageState extends State<MapPage> {
             markerId: MarkerId(doc.id),
             position: LatLng(location.latitude, location.longitude),
             infoWindow: InfoWindow(
-              title: doc['Nume'],
-              snippet: doc['Descriere'],
+              title: doc['name'],
+              snippet: doc['description'],
             ),
             onTap: () {
               //_showEventDetails(doc);
@@ -102,7 +102,7 @@ class _MapPageState extends State<MapPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                doc['Nume'],
+                doc['name'],
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18.0,
@@ -110,7 +110,7 @@ class _MapPageState extends State<MapPage> {
               ),
               SizedBox(height: 5.0),
               Text(
-                doc['Descriere'],
+                doc['description'],
                 style: TextStyle(
                   fontSize: 16.0,
                 ),

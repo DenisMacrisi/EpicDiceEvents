@@ -5,13 +5,13 @@ import 'Authentication.dart';
 import 'package:flutter/material.dart';
 import 'Errors.dart';
 
-class SignInPage extends StatefulWidget {
+class SignUpPage extends StatefulWidget {
 
   @override
-  _SignInPageState createState() => _SignInPageState();
+  _SignUpPageState createState() => _SignUpPageState();
 }
 
-class _SignInPageState extends State<SignInPage> {
+class _SignUpPageState extends State<SignUpPage> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
@@ -66,6 +66,7 @@ class _SignInPageState extends State<SignInPage> {
                 children: [
                   SizedBox(height: 80,),
                   TextField(
+                    key: Key('nume utilizator'),
                     controller: _usernameController,
                     decoration: InputDecoration(
                       hintText: ' Nume Utilizator',
@@ -84,6 +85,7 @@ class _SignInPageState extends State<SignInPage> {
                   ),
                   SizedBox(height: 20,),
                   TextField(
+                    key: Key('email'),
                     controller: _emailController,
                     decoration: InputDecoration(
                       hintText: ' Email',
@@ -102,6 +104,7 @@ class _SignInPageState extends State<SignInPage> {
                   ),
                   SizedBox(height: 20,),
                   TextField(
+                    key: Key('parola'),
                     controller: _passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
@@ -121,6 +124,7 @@ class _SignInPageState extends State<SignInPage> {
                   ),
                   SizedBox(height: 20,),
                   TextField(
+                    key: Key('parola repetata'),
                     controller: _repeatPasswordController,
                     obscureText: true,
                     decoration: InputDecoration(
@@ -140,6 +144,7 @@ class _SignInPageState extends State<SignInPage> {
                   ),
                   SizedBox(height: 20,),
                   TextField(
+                    key: Key('localitate'),
                     controller: _cityController,
                     decoration: InputDecoration(
                       hintText: ' Localitate',
@@ -158,6 +163,7 @@ class _SignInPageState extends State<SignInPage> {
                   ),
                   SizedBox(height: 40),
                   ElevatedButton(
+                    key: Key("SignUpButton"),
                     onPressed: () async {
                       String username = _usernameController.text;
                       String email = _emailController.text;

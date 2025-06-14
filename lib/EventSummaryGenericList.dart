@@ -33,7 +33,7 @@ class EventSummaryGenericList extends StatelessWidget {
 
         if (participantDoc.exists) {
           GeoPoint location = doc['location'];
-          String eventName = doc['Nume'];
+          String eventName = doc['name'];
           String eventId = doc.id;
 
           String eventDay =

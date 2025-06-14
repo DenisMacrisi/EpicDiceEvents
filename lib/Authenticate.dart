@@ -1,7 +1,7 @@
 import 'package:epic_dice_events/CustomWidgets.dart';
 import 'package:flutter/material.dart';
 import 'LogInPage.dart';
-import 'SignInPage.dart';
+import 'SignUpPage.dart';
 
 class Authenticate extends StatelessWidget {
   @override
@@ -28,7 +28,7 @@ class Authenticate extends StatelessWidget {
                 SizedBox(height: 125),
                 CustomGoToElevatedButton(title: 'Log In', widthSize: 110.0, heightSize: 60.0, fontSize: 28.0, targetPage: LogInPage()),
                 SizedBox(height: 50),
-                CustomGoToElevatedButton(title: 'Sign Up', widthSize: 110.0, heightSize: 60.0, fontSize: 28.0, targetPage: SignInPage()),
+                CustomGoToElevatedButton(title: 'Sign Up', widthSize: 110.0, heightSize: 60.0, fontSize: 28.0, targetPage: SignUpPage()),
               ],
             ),
           ),

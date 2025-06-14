@@ -42,7 +42,7 @@ class AuthenticationService {
         'reviews': 0,
       });
     } else {
-      print('Utilizatorul nu este autentificat.');
+      print('Utilizatorul curent nu poate fi înregistrat');
     }
   }
 /* Just for debugg

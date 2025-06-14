@@ -170,7 +170,7 @@ class _LogInPageState extends State<LogInPage> {
                     )
                 ),
                 SizedBox(height: 50),
-                CustomGoToElevatedButton(title: 'Resetare Parola', widthSize: 180, heightSize: 40, fontSize: 18.0, targetPage: ResetPasswordPage()),
+                CustomGoToElevatedButton(key:Key("ResetPasswordButton"),title: 'Resetare Parola', widthSize: 180, heightSize: 40, fontSize: 18.0, targetPage: ResetPasswordPage()),
               ],
             ),
           ),
