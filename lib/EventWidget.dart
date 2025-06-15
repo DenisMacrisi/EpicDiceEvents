@@ -236,7 +236,6 @@ class _EventWidgetState extends State<EventWidget> {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    print("S-a apasat Participa \n");
                     participateAction();
                   },
                   child: Text(
@@ -259,7 +258,6 @@ class _EventWidgetState extends State<EventWidget> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    print("S-a apasat Retrage \n");
                     resignAction();
                   },
                   child: Text(
@@ -294,14 +292,19 @@ class _EventWidgetState extends State<EventWidget> {
       showAlreadyRegistatedforEvent(context);
     }
     else {
-      await registerUserToEvent();
-      await addEventToUser();
-      await increaseNumberOfParticipants();
-      setState(() {
-        widget.participansNumber++;
-        _isUserRegistered = true;
-      });
-      askToAddEventToCalendar();
+      if(await checkForCapacity()) {
+        await registerUserToEvent();
+        await addEventToUser();
+        await increaseNumberOfParticipants();
+        setState(() {
+          widget.participansNumber++;
+          _isUserRegistered = true;
+        });
+        askToAddEventToCalendar();
+      }
+      else{
+        showSimpleError(context, "Eveniment Indisponibil", "Capacitatea maxima a fost atinsă pentru acest eveniment");
+      }
     }
   }
   /// Function used to add the current event to the Calendar App
@@ -450,7 +453,6 @@ class _EventWidgetState extends State<EventWidget> {
       String username = userSnapshot['username'];
       String email = userSnapshot['email'];
 
-      print('Utilizator curent: $username, $email');
 
       bool subcollectionExists = await FirebaseFirestore.instance
           .collection('events')
@@ -865,6 +867,23 @@ class _EventWidgetState extends State<EventWidget> {
       });
     } catch (e) {
       print('Eroare la incrementarea participanților: $e');
+    }
+  }
+  /// Function used to check if an event is still available for register
+  /// If the capacity is full this function will throw false
+  /// If the capacity is NOT full this function will throw true
+  Future<bool>checkForCapacity() async{
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    final DocumentReference eventRef = firestore.collection('events').doc(widget.eventId);
+    final snapshotEventData = await eventRef.get();
+
+    int noOfparticipants = snapshotEventData['noOfparticipants'];
+    int capacity = snapshotEventData['capacity'];
+
+    if(noOfparticipants == capacity) {
+      return false;
+    } else {
+      return true;
     }
   }
 }
