@@ -1,5 +1,6 @@
 
 import 'package:epic_dice_events/Authenticate.dart';
+import 'package:epic_dice_events/CustomWidgets.dart';
 import 'package:epic_dice_events/Validation.dart';
 import 'Authentication.dart';
 import 'package:flutter/material.dart';
@@ -26,29 +27,7 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        title: Text('Sign Up',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 25.0,
-            color: Colors.white,
-            shadows: [
-              Shadow(
-                blurRadius: 10.0,
-                color: Colors.orangeAccent,
-                offset: Offset(0, 0),
-              ),
-              Shadow(
-                blurRadius: 10.0,
-                color: Colors.orangeAccent,
-                offset: Offset(0, 0),
-              ),
-            ],
-          ),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 100,
-      ),
+      appBar: CustomAppBar(title: "Sign Up"),
       body: Stack(
         children: [
           Container(
@@ -228,11 +207,11 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ),
                     child: Container(
-                      width: 90.0,
+                      width: 110.0,
                       height: 50.0,
                       alignment: Alignment.center,
                       child: Text(
-                        'Sign Up',
+                        'Înregistrare',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20.0,

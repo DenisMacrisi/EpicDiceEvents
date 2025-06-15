@@ -1,5 +1,4 @@
-
-
+import 'package:epic_dice_events/CustomWidgets.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:epic_dice_events/Authenticate.dart';
 import 'package:epic_dice_events/HomePage.dart';
@@ -19,32 +18,7 @@ class NoInternetApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: Center(
-            child: Text(
-              'Eroare Conexiune',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 30.0,
-                color: Colors.white,
-                shadows: [
-                  Shadow(
-                    blurRadius: 10.0,
-                    color: Colors.orangeAccent,
-                    offset: Offset(0, 0),
-                  ),
-                  Shadow(
-                    blurRadius: 10.0,
-                    color: Colors.orangeAccent,
-                    offset: Offset(0, 0),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          backgroundColor: Color(0xFF5fc2e3),
-          elevation: 100,
-        ),
+        appBar: CustomAppBar(title: "Eroare Conexiune"),
         body: RefreshIndicator(
           onRefresh: (){
             return Future.delayed(Duration(seconds: 1));

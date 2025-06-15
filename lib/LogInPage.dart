@@ -1,6 +1,7 @@
 import 'package:epic_dice_events/CustomWidgets.dart';
 import 'package:epic_dice_events/HomePage.dart';
 import 'package:epic_dice_events/ResetPasswordPage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'Authentication.dart';
 
@@ -23,29 +24,7 @@ class _LogInPageState extends State<LogInPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        title: Text('Log In',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 25.0,
-            color: Colors.white,
-            shadows: [
-              Shadow(
-                blurRadius: 10.0,
-                color: Colors.orangeAccent,
-                offset: Offset(0, 0),
-              ),
-              Shadow(
-                blurRadius: 10.0,
-                color: Colors.orangeAccent,
-                offset: Offset(0, 0),
-              ),
-            ],
-          ),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 100,
-      ),
+      appBar: const CustomAppBar(title: "Log In"),
       body: Stack(
         children: [
           Container(
@@ -100,15 +79,18 @@ class _LogInPageState extends State<LogInPage> {
                     String email = _emailController.text;
                     String password = _passwordController.text;
 
+                    if (!FirebaseAuth.instance.currentUser!.emailVerified) {
+                      await FirebaseAuth.instance.currentUser!.sendEmailVerification();
+                      setState(() => errorMessage = 'Email de vereficare retrimis' );
+                      return;
+                    }
+
                     dynamic result = await _auth.logIn(email,password);
 
                     if(result == null){
                       setState(() => errorMessage = 'Email sau Parola Incorecte' );
-                      print("Eroare la Logare");
                     }
                     else{
-                      // _auth.afisare();
-
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => HomePage()),
