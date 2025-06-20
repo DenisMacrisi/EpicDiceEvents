@@ -40,26 +40,7 @@ class SearchWidget extends StatelessWidget {
 
 class CustomSearchDelegate extends SearchDelegate<String> {
 
-  final List<String> sugestiiFiltrate = [];
-
-  @override
-  Widget buildSearchField(BuildContext context) {
-    return TextField(
-      autofocus: true,
-      decoration: InputDecoration(
-        hintText: "Caută...",
-        hintStyle: TextStyle(color: Colors.grey),
-      ),
-      onChanged: (value) {
-        query = value;
-      },
-      onSubmitted: (value) {
-        print('S-a apasat search');
-        //showResults(context);
-      },
-    );
-  }
-
+  CustomSearchDelegate() : super(searchFieldLabel: 'Caută...');
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -87,7 +68,7 @@ class CustomSearchDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    print('S-a apasat search');
+
     saveSearch(query);
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
       stream: FirebaseFirestore.instance.collection('events').snapshots(),
@@ -98,10 +79,11 @@ class CustomSearchDelegate extends SearchDelegate<String> {
           );
         } else if (snapshot.hasError) {
           return Center(
-            child: Text('Error loading events'),
+            child: Text('Eroare'),
           );
         } else {
-          final List<EventWidget> searchResults = snapshot.data!.docs.where((event) => event['name'].toLowerCase().contains(query.toLowerCase()) || event['description'].toLowerCase().contains(query.toLowerCase())).map((event) {
+          final addedEvents = <String>{};
+          final List<EventWidget> searchResults = snapshot.data!.docs.where((event) =>(event['name'].toLowerCase().contains(query.toLowerCase()) || event['description'].toLowerCase().contains(query.toLowerCase())) && !addedEvents.contains(event.id) && event['isEventActive'] == true).map((event) {
             GeoPoint location = event['location'];
             String eventName = event['name'];
             int participansNumber = event['noOfparticipants'];
@@ -114,7 +96,8 @@ class CustomSearchDelegate extends SearchDelegate<String> {
             String eventTime = eventDate.hour.toString() + ':' + eventDate.minute.toString();
             String eventCategory = event['category'];
             bool isEventActive = event['isEventActive'];
-
+            addedEvents.add(event.id);
+            print("Lista de evenimente $addedEvents");
             if (eventDate.isAfter(DateTime.now())) {
               return EventWidget(
                 eventName: eventName,
@@ -183,19 +166,18 @@ class CustomSearchDelegate extends SearchDelegate<String> {
         if (snapshot.hasData && snapshot.data!.exists) {
           Map<String, dynamic>? userData = snapshot.data!.data() as Map<String, dynamic>?;
           if (userData != null && userData.containsKey('searches')) {
-            List<String> sugestii = List<String>.from(userData['searches']);
-            List<String> sugestiiFiltrate = sugestii.where((sugestie) =>
-                sugestie.toLowerCase().contains(query.toLowerCase())).toList();
+            List<String> searchHistory = List<String>.from(userData['searches']);
+            List<String> searchResults = searchHistory.where((search) =>
+                search.toLowerCase().contains(query.toLowerCase())).toList();
 
             return ListView.builder(
-              itemCount: sugestiiFiltrate.length,
+              itemCount: searchResults.length,
               itemBuilder: (context, index) {
-                final sugestie = sugestiiFiltrate[index];
+                final search = searchResults[index];
                 return ListTile(
-                  title: Text(sugestie),
+                  title: Text(search),
                   onTap: () {
-                    query = sugestie;
-                    //showResults(context);
+                    query = search;
                   },
                 );
               },
@@ -203,7 +185,7 @@ class CustomSearchDelegate extends SearchDelegate<String> {
           }
         }
         return Center(
-          child: Text('Nu există sugestii disponibile.'),
+          child: Text(''),
         );
       },
     );
