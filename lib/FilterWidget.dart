@@ -28,7 +28,6 @@ class FilterWidget extends StatelessWidget {
               context,
               MaterialPageRoute(builder: (context) => FilterPage()),
             );
-            print('Filter apasat');
           },
         ),
       ),

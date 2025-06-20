@@ -768,7 +768,6 @@ class _EventWidgetState extends State<EventWidget> {
             TextButton(
               onPressed: () {
                 setEventAsInvalid(eventId);
-                SetEventAsInactive(eventId);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => HomePage()),
@@ -795,10 +794,6 @@ class _EventWidgetState extends State<EventWidget> {
         );
       },
     );
-  }
-
-  Future<void> SetEventAsInactive(String eventId)async {
-    print("Event Set as Inactive");
   }
 
   ///Function used to remove the current event from an User list
@@ -839,11 +834,11 @@ class _EventWidgetState extends State<EventWidget> {
       print('Eroare la incrementarea participanților: $e');
     }
   }
+  ///Function used to set an event as Invalid
   Future<void> setEventAsInvalid(String eventId) async {
     try {
       final FirebaseFirestore firestore = FirebaseFirestore.instance;
-      final DocumentReference eventRef = firestore.collection('events').doc(
-          eventId);
+      final DocumentReference eventRef = firestore.collection('events').doc(eventId);
       await eventRef.update({
         'isEventActive': false
       });

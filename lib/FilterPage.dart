@@ -231,7 +231,7 @@ class _FilterPageState extends State<FilterPage> {
                             fontWeight: FontWeight.bold,
                           ),
                           dropdownColor: Colors.white,
-                          items: <String>['Niciuna','Strategie', 'Zaruri', 'Gateway', 'Diverse','Toate Varstele','Party','Carti'
+                          items: <String>['Niciuna','Strategie', 'Zaruri', 'Gateway', 'Diverse','Toate Varstele','Party','Carti, Campionat'
                             ].map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
@@ -344,6 +344,23 @@ class _FilterPageState extends State<FilterPage> {
       initialDate: _selectedDate,
       firstDate: DateTime.now(),
       lastDate: DateTime(2101),
+        builder: (context, child) {
+          return Theme(data: ThemeData.light().copyWith(
+            primaryColor: Colors.orangeAccent,
+            colorScheme: ColorScheme.light(
+              primary: Colors.orangeAccent,
+              onPrimary: Colors.white,
+              onSurface: Colors.black,
+              surface: Color.fromRGBO(3, 220, 255, 50),
+            ),
+            textTheme: TextTheme(
+              labelLarge: TextStyle(
+                fontSize: 24,
+              ),
+            ),
+          ), child: child!,
+          );
+        }
     ))!;
 
     if (picked != null) {
@@ -360,10 +377,7 @@ class _FilterPageState extends State<FilterPage> {
   }
   void _navigateToEventListPage() {
     if (_selectedStartDate != null &&
-        _selectedEndDate != null &&
-        (underTenParticipansCondition ||
-            betweenTenTwentyParticipansCondition ||
-            overTwentyParticipansCondition)) {
+        _selectedEndDate != null) {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -379,7 +393,7 @@ class _FilterPageState extends State<FilterPage> {
         ),
       );
     } else {
-        print("Eroare");
+        //Do nothing
     }
   }
 }

@@ -112,7 +112,7 @@ class EventListFiltredPage extends StatelessWidget {
                     eventDate.isBefore(selectedEndDate) &&
                     noOfparticipantsFilterCondition(eventCapacity) &&
                     locationFilterCondition(location, selectedCounty) && 
-                    categoryFilterCondition(eventCategory)) {
+                    categoryFilterCondition(eventCategory) && isEventActive == true) {
                   thereAreNoEvents = false;
                   eventWidgets.add(
                     Padding(
@@ -164,6 +164,9 @@ class EventListFiltredPage extends StatelessWidget {
     if (overTwentyParticipansCondition)
       if (eventCapacity > 20)
         return true;
+
+    if (!underTenParticipansCondition && !betweenTenTwentyParticipansCondition && !overTwentyParticipansCondition)
+      return true;
 
     return false;
   }
@@ -228,10 +231,6 @@ class EventListFiltredPage extends StatelessWidget {
       countyInfo['longitude'],
     );
 
-    print('distance: $distance');
-    print('radius $countyInfo[radius]');
-    print('location: $location');
-    print('selectedCounty: $county');
     return distance <= countyInfo['radius'];
   }
   double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
@@ -240,6 +239,7 @@ class EventListFiltredPage extends StatelessWidget {
     double dLat = _degreesToRadians(lat2 - lat1);
     double dLon = _degreesToRadians(lon2 - lon1);
 
+    //Haversine Formula
     double a = pow(sin(dLat / 2), 2) +
         pow(sin(dLon / 2), 2) * cos(_degreesToRadians(lat1)) * cos(_degreesToRadians(lat2));
     double c = 2 * asin(sqrt(a));
