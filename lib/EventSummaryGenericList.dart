@@ -61,7 +61,7 @@ class EventSummaryGenericList extends StatelessWidget {
     result.sort((a, b) {
       DateTime aDate = dateFormat.parse('${a.eventDay} ${a.eventTime}');
       DateTime bDate = dateFormat.parse('${b.eventDay} ${b.eventTime}');
-      return bDate.compareTo(aDate);
+      return aDate.compareTo(bDate);
     });
 
     return result;

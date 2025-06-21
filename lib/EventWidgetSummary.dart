@@ -146,7 +146,7 @@ class EventWidgetSummary extends StatelessWidget {
                       style: SimpleButtonStyle(
                           12.0, 10.0, Colors.orangeAccent, 5.0),
                       child: Text(
-                        "Evalueaza",
+                        "Evaluează",
                         style: customBasicTextStyle(20.0, true),
                       ),
                     ),
@@ -215,7 +215,7 @@ Future<void> openEvaluateEventWindow(BuildContext context, String eventId) async
                   icon: Icon(
                     index < selectedRating ? Icons.star : Icons.star_border,
                     color: Colors.orangeAccent,
-                    size: 40,
+                    size: 30,
                   ),
                   onPressed: () {
                     setState(() {
