@@ -15,7 +15,7 @@ class _RecommendationPage extends State<RecommendationPage> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: const CustomAppBar(
-        title: 'Sugestia Saptamanii',
+        title: '  Sugestia Săptămânii',
       ),
       body: FutureBuilder(
           future: getSuggestionData(),
@@ -57,7 +57,7 @@ class _RecommendationPage extends State<RecommendationPage> {
                       '${suggestion.data!['name']}',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 40.0,
+                        fontSize: 30.0,
                         color: Colors.white,
                         shadows: [
                           Shadow(
@@ -116,7 +116,7 @@ class _RecommendationPage extends State<RecommendationPage> {
                       showFeedbackForm(context);
                     },
                     child: Text(
-                      'Feedback',
+                      'Evaluare',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20.0,
@@ -127,13 +127,17 @@ class _RecommendationPage extends State<RecommendationPage> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.5),
                         ),
-                        elevation: 10.0,
-                        side: BorderSide(
-                          color: Colors.orangeAccent,
-                          width: 3.0,
-                        )),
-                  )
-                ]))
+                          elevation: 10.0,
+                          side: BorderSide(
+                            color: Colors.orangeAccent,
+                            width: 3.0,
+                            )
+                          ),
+                        ),
+                      SizedBox(height: 50),
+                      ]
+                    )
+                )
               ],
             );
           }),

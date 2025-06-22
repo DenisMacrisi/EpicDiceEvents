@@ -83,7 +83,7 @@ class EventWidgetSummary extends StatelessWidget {
                       SizedBox(width: 4),
                       Flexible(
                         child: Text(
-                          "Location: $addressText",
+                          "Locație: $addressText",
                           style: customBasicTextStyle(18, true, color: Colors.black),
                         ),
                       ),
@@ -97,9 +97,13 @@ class EventWidgetSummary extends StatelessWidget {
                         color: Colors.orangeAccent,
                         size: 40,
                       ),
-                      Text(
-                        " Date: $eventDay at $eventTime",
-                        style: customBasicTextStyle(20, true, color: Colors.black),
+                      Flexible(
+                        child: Text(
+                          " Dată: $eventDay la $eventTime",
+                          softWrap: true,
+                          overflow: TextOverflow.fade,
+                          style: customBasicTextStyle(20, true, color: Colors.black),
+                        ),
                       ),
                     ],
                   ),
