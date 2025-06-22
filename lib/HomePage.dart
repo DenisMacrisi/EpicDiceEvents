@@ -2,7 +2,6 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:epic_dice_events/AddEventPage.dart';
 import 'package:epic_dice_events/CustomWidgets.dart';
 import 'package:epic_dice_events/Drawer.dart';
-import 'package:epic_dice_events/MyApp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -110,106 +109,114 @@ class HomePage extends StatelessWidget {
 
       bottomNavigationBar: BottomAppBar(
         color: Color.fromRGBO(0, 222, 250, 60),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 20.0),
-              child: InkWell(
-                onTap: () async {
-
-                },
-                child: Ink(
-                  padding: const EdgeInsets.all(10.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12.5),
-                    boxShadow: [BoxShadow(
-                      color: Colors.orangeAccent,
-                      spreadRadius: 2,
-                    ),
-                    ],
-                    border: Border.all(
-                      color: Colors.orangeAccent,
-                      width: 2.5,
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Map',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20.0,
-                          color: Colors.black,
+        child: Center(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 20.0),
+                  child: InkWell(
+                    onTap: () async {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => MapPage()),
+                      );
+                    },
+                    child: Ink(
+                      padding: const EdgeInsets.all(10.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12.5),
+                        boxShadow: [BoxShadow(
+                          color: Colors.orangeAccent,
+                          spreadRadius: 2,
+                        ),
+                        ],
+                        border: Border.all(
+                          color: Colors.orangeAccent,
+                          width: 2.5,
                         ),
                       ),
-                      IconButton(
-                        icon: Icon(Icons.map),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => MapPage()),
-                          );
-                        },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            '  Harta  ',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.0,
+                              color: Colors.black,
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.map),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => MapPage()),
+                              );
+                            },
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 20.0),
-              child: InkWell(
-                onTap: () async {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AddEventPage()),
-                  );
-                },
-                child: Ink(
-                  padding: EdgeInsets.all(10.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12.5),
-                    color: Colors.white,
-                    boxShadow: [BoxShadow(
-                      color: Colors.orangeAccent,
-                      spreadRadius: 2,
-                    ),
-                    ],
-                    border: Border.all(
-                      color: Colors.orangeAccent,
-                      width: 2.5,
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Add ',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20.0,
-                          color: Colors.black,
+                Padding(
+                  padding: const EdgeInsets.only(left: 20.0),
+                  child: InkWell(
+                    onTap: () async {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AddEventPage()),
+                      );
+                    },
+                    child: Ink(
+                      padding: EdgeInsets.all(10.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12.5),
+                        color: Colors.white,
+                        boxShadow: [BoxShadow(
+                          color: Colors.orangeAccent,
+                          spreadRadius: 2,
+                        ),
+                        ],
+                        border: Border.all(
+                          color: Colors.orangeAccent,
+                          width: 2.5,
                         ),
                       ),
-                      IconButton(
-                        icon: Icon(Icons.add),
-                        onPressed: () {
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Adaugă',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.0,
+                              color: Colors.black,
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.add),
+                            onPressed: () {
 
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => AddEventPage()),
-                          );
-                        },
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => AddEventPage()),
+                              );
+                            },
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
       drawer: MyDrawer(),

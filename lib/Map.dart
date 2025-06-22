@@ -61,10 +61,10 @@ class _MapPageState extends State<MapPage> {
       DateTime now = DateTime.now();
       DateTime eventTime = (doc['date'] as Timestamp).toDate();
       DateTime today = DateTime(now.year, now.month, now.day);
-
+      bool isEventActive = doc['isEventActive'];
       double distance = calculateDistanceBetweenEventLocationAndUserLocation(_currentLocation.latitude, _currentLocation.longitude, location.latitude, location.longitude);
       int days = 1;
-      if(distance <= selectedDistance) {
+      if(distance <= selectedDistance && isEventActive) {
         if (eventTime.isAfter(today) &&
             eventTime.isBefore(today.add(Duration(days: selectedDays)))) {
           print("Eveniment data: $eventTime");
