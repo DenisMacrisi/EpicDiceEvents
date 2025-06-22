@@ -145,43 +145,49 @@ class _EventWidgetState extends State<EventWidget> {
             SizedBox(
               height: 5.0,
             ),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Participare: ${widget.participansNumber} / ${widget.eventCapacity} ',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.orangeAccent,
-                    borderRadius: BorderRadius.circular(12.5),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.orangeAccent.withOpacity(0.5),
-                        blurRadius: 10.0,
-                        offset: Offset(4, 4),
+            Center(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      Text(
+                        'Participare: ${widget.participansNumber} / ${widget.eventCapacity} ',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ],
-                  ),
-                 padding: EdgeInsets.symmetric(horizontal: 10.0),
-                 child: Text(
-                    '${widget.eventCategory}',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                      SizedBox(width: 10),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.orangeAccent,
+                          borderRadius: BorderRadius.circular(12.5),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.orangeAccent.withOpacity(0.5),
+                              blurRadius: 10.0,
+                              offset: Offset(4, 4),
+                            ),
+                          ],
+                        ),
+                       padding: EdgeInsets.symmetric(horizontal: 10.0),
+                       child: Text(
+                          '${widget.eventCategory}',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 20),
+                      Icon(
+                          Icons.check,
+                        color: _isUserRegistered? Colors.green: Colors.transparent,
+                        size: 40,
+                      ),
+                    ]
                   ),
                 ),
-                Icon(
-                    Icons.check,
-                  color: _isUserRegistered? Colors.green: Colors.transparent,
-                  size: 40,
-                ),
-              ]
             ),
             SizedBox(
               height: 10.0,
@@ -198,26 +204,32 @@ class _EventWidgetState extends State<EventWidget> {
             SizedBox(
               height: 5.0,
             ),
-            Row(
-              children: [
-                Text(
-                  'Data: ${widget.eventDay}',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                  ),
+            Center(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    Text(
+                      'Data: ${widget.eventDay}',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      "               ",
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      'Ora: ${formatTime(widget.eventTime)}',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ]
                 ),
-                Text(
-                  "               ",
-                ),
-                Text(
-                  'Ora: ${formatTime(widget.eventTime)}',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ]
+              ),
             ),
             SizedBox(
               height: 5.0,
@@ -670,13 +682,15 @@ class _EventWidgetState extends State<EventWidget> {
               ],
             ),
           ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: participantWidgets,
+          content: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: participantWidgets,
+            ),
           ),
           actions: [
-
             if(_isCurrentUserHost)
               TextButton(
                   onPressed: (){
