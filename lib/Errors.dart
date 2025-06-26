@@ -168,7 +168,7 @@ void showIncorectEmailError(BuildContext context){
   showSimpleError(context, 'Email invalid', 'Adresa de email introdusă nu este validă');
 }
 void showAlreadyRegistatedforEvent(BuildContext context){
-  showSimpleError(context,'Participant', 'Deja te-ai inscris pentru acest Eveniment');
+  showSimpleError(context,'Participant', 'Deja te-ai înscris pentru acest Eveniment');
 }
 void showAlreadyUnRegistatedforEvent(BuildContext context){
   showSimpleError(context,'Retras', 'Deja te-ai retras din acest Eveniment');
@@ -177,8 +177,8 @@ void showIncompleteDataError(BuildContext context){
   showSimpleError(context, 'Date Incomplete', 'Nu ai completat toate câmpurile necesare');
 }
 void showSelectedDateError(BuildContext context){
-  showSimpleError(context,'Nepotrivire Date' ,'Data de inceput nu poate fi mai mare decat data de final');
+  showSimpleError(context,'Nepotrivire Date' ,'Data de început nu poate fi mai mare decât data de final');
 }
 void showNoConexionError(BuildContext context){
-  showNetworkError(context, "Eroare Conexiune", "Nu exista conexiune la internet");
+  showNetworkError(context, "Eroare Conexiune", "Nu există conexiune la internet");
 }

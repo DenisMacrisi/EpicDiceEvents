@@ -53,6 +53,7 @@ class MyDrawer extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(right: 8.0),
               child: InkWell(
+                key: Key('ProfileButton'),
                 onTap: () async {
                   Navigator.push(
                     context,
@@ -86,8 +87,8 @@ class MyDrawer extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(right: 8.0),
               child: InkWell(
+                key: Key('LogOutButton'),
                 onTap: () async {
-
                   await _auth.signOut();
                   Navigator.push(
                     context,
@@ -121,6 +122,7 @@ class MyDrawer extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(right: 8.0),
               child: InkWell(
+                key: Key('SuggestionButton'),
                 onTap: () async {
                   Navigator.push(
                     context,
@@ -153,6 +155,7 @@ class MyDrawer extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(right: 8.0),
               child: InkWell(
+                key: Key('AboutButton'),
                 onTap: () async {
                   Navigator.push(
                     context,

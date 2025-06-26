@@ -84,9 +84,9 @@ class _EventWidgetState extends State<EventWidget> {
 
   Future<void> _checkRegistrationForEvent() async{
     try {
-      bool i = await isUserRegisteredForEvent();
+      bool resp = await isUserRegisteredForEvent();
       setState(() {
-        _isUserRegistered = i;
+        _isUserRegistered = resp;
       });
     }catch(e){
       print('Eroare');
@@ -251,7 +251,7 @@ class _EventWidgetState extends State<EventWidget> {
                     participateAction();
                   },
                   child: Text(
-                    "Participa",
+                    "Participă",
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 16,
@@ -344,7 +344,7 @@ class _EventWidgetState extends State<EventWidget> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text(
-                "Adauga in calendar",
+                "Adaugă în calendar",
               style: customOrangeShadowTextStyle(26),
             ),
             content: Column(
@@ -355,6 +355,7 @@ class _EventWidgetState extends State<EventWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     ElevatedButton(
+                      key: Key('DoNotAdd2CalendarButton'),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },

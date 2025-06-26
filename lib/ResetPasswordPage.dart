@@ -90,7 +90,7 @@ class _ResetPasswordPage extends State<ResetPasswordPage> {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                'Un email a fost trimis la adresa introdusa',
+                'Un email a fost trimis la adresa introdusă',
                 style: customSnackBoxTextStyle(20, Colors.white),
               ),
               backgroundColor: Colors.orangeAccent,

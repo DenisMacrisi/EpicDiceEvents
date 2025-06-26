@@ -35,7 +35,7 @@ class AuthenticationService {
         'email': email,
         'location': location,
         'profileImageUrl': 'https://firebasestorage.googleapis.com/v0/b/epicdiceevents-b7754.appspot.com/o/profile.jpg?alt=media&token=0c7357c6-35e4-436e-8bb7-2d9a7e8f1e1a',
-        'searches':[null,null,null],
+        'searches':["","",""],
         'color': 4278190080,
         'rating': 0,
         'stars': 0,
@@ -86,11 +86,7 @@ class AuthenticationService {
       UserCredential result = await _auth.signInWithEmailAndPassword(email: email, password: password);
       User? user = result.user;
 
-      if(!user!.emailVerified){
-        return null;
-      }
-
-      return _customUserFromFirebase(user);
+      return user;
     }catch(e){
       print(e.toString());
       return null;
@@ -98,7 +94,7 @@ class AuthenticationService {
   }
 
 // register email & pass
-  Future<UserCredential?> registerNewUser(String email, String password) async {
+  Future<User?> registerNewUser(String email, String password) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       User? user = result.user;
@@ -106,7 +102,7 @@ class AuthenticationService {
         await user.sendEmailVerification();
       }
 
-      return result;
+      return user;
     } catch (e) {
       print(e.toString());
       return null;
@@ -126,7 +122,7 @@ class AuthenticationService {
   /// Function used to delete user account
   /// Delete user and all data associated
   Future<bool> deleteCurrentUserAccount(String password) async{
-    bool succes =false;
+    bool success =false;
     try{
       User? user = _auth.currentUser;
       if(user != null){
@@ -136,23 +132,20 @@ class AuthenticationService {
         );
 
         await user.reauthenticateWithCredential(credentials);
-        print("Reautentificare");
         await deleteCurrentUserFromEveryEvent();
         await deleteEventsCreatedByCurrentUser();
         await deleteCurrentUserFromCollectionUsers();
         await deleteUser();
-        print("User sters");
         await _auth.signOut();
-        print("User deconectat");
-        succes = true;
+        success = true;
       }
-      return succes;
+      return success;
     }
     catch(e){
       print("Eroare la stergerea utilizatorului");
-      succes = false;
+      success = false;
     }
-    return succes;
+    return success;
   }
   Future<void> sendEmailVerification() async {
     User? user = _auth.currentUser;
