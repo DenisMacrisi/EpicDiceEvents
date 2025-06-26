@@ -2,6 +2,7 @@
 import 'package:epic_dice_events/Authenticate.dart';
 import 'package:epic_dice_events/CustomWidgets.dart';
 import 'package:epic_dice_events/Validation.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'Authentication.dart';
 import 'package:flutter/material.dart';
 import 'Errors.dart';
@@ -27,7 +28,7 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: CustomAppBar(title: "Sign Up"),
+      appBar: CustomAppBar(title: "EpicDiceEvents"),
       body: Stack(
         children: [
           Container(
@@ -164,7 +165,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       }
                       else
                       {
-                        dynamic result = await _auth.registerNewUser(email,password);
+                        User? result = await _auth.registerNewUser(email,password);
 
                         if(result == null){
 
@@ -182,7 +183,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
-                                  'Un email de confirmare al adresei a fost trimis',
+                                  'Un email de confirmare a fost trimis la adresa introdusă',
                                   style: TextStyle(
                                       fontSize: 20,
                                       color: Colors.white
@@ -207,7 +208,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ),
                     child: Container(
-                      width: 110.0,
+                      width: 130.0,
                       height: 50.0,
                       alignment: Alignment.center,
                       child: Text(

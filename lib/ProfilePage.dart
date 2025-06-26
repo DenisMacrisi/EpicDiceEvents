@@ -227,7 +227,7 @@ class _ProfilePageState extends State<ProfilePage>{
                       );
                     },
                     child: Text(
-                        "Evenimente viitoare",
+                      "Evenimente viitoare",
                       style: customBasicTextStyle(13.5, true),
                     ),
                     style: ElevatedButton.styleFrom(
@@ -260,7 +260,7 @@ class _ProfilePageState extends State<ProfilePage>{
                       );
                     },
                     child: Text(
-                        "Evenimente trecute",
+                      "Evenimente trecute",
                       style:customBasicTextStyle(13.5,true) ,
                     ),
                     style: ElevatedButton.styleFrom(

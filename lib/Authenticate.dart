@@ -26,9 +26,9 @@ class Authenticate extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(height: 125),
-                CustomGoToElevatedButton(title: 'Conectare', widthSize: 150.0, heightSize: 60.0, fontSize: 28.0, targetPage: LogInPage()),
-                SizedBox(height: 50),
-                CustomGoToElevatedButton(title: 'Înregistrare', widthSize: 150.0, heightSize: 60.0, fontSize: 28.0, targetPage: SignUpPage()),
+                CustomGoToElevatedButton(title: 'Conectare', widthSize: 175.0, heightSize: 60.0, fontSize: 28.0, targetPage: LogInPage()),
+                SizedBox(height:70),
+                CustomGoToElevatedButton(title: 'Înregistrare', widthSize: 175.0, heightSize: 60.0, fontSize: 28.0, targetPage: SignUpPage()),
               ],
             ),
           ),

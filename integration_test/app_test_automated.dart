@@ -1,7 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:epic_dice_events/AboutPage.dart';
 import 'package:epic_dice_events/HomePage.dart';
+import 'package:epic_dice_events/ProfilePage.dart';
+import 'package:epic_dice_events/RecommendationPage.dart';
 import 'package:epic_dice_events/SignUpPage.dart';
 import 'package:epic_dice_events/Validation.dart';
 import 'package:flutter/material.dart';
@@ -95,7 +98,7 @@ void main() {
       await tester.pumpAndSettle();
       //Procedure
       try{
-        expect(find.text("Log In"), findsOneWidget);
+        expect(find.text("Conectare"), findsOneWidget);
         addResult("Authenticate", "Verify if Log In Button present on Welcome Page", true);
       }catch(e){
         addResult("Authenticate", "Verify if Log In Button present on Welcome Page", false, error: e.toString());
@@ -108,7 +111,7 @@ void main() {
       await tester.pumpAndSettle();
       //Procedure
       try{
-        expect(find.text("Sign Up"), findsOneWidget);
+        expect(find.text("Înregistrare"), findsOneWidget);
         addResult("Authenticate", "Verify if Sign Up Button present on Welcome Page", true);
       }catch(e){
         addResult("Authenticate", "Verify if Sign Up Button present on Welcome Page", false, error: e.toString());
@@ -121,7 +124,7 @@ void main() {
       await tester.pumpAndSettle();
       //Procedure
       try {
-        await tester.tap(find.text('Log In'));
+        await tester.tap(find.text('Conectare'));
         await tester.pumpAndSettle();
         expect(find.byType(LogInPage), findsOneWidget);
         addResult('Authenticate', 'Simulate Log In button press', true);
@@ -137,7 +140,7 @@ void main() {
       await tester.pumpAndSettle();
       //Procedure
       try {
-        await tester.tap(find.text('Sign Up'));
+        await tester.tap(find.text('Înregistrare'));
         await tester.pumpAndSettle();
         expect(find.byType(SignUpPage), findsOneWidget);
         addResult('Authenticate', 'Simulate Sign Up button press', true);
@@ -160,7 +163,7 @@ void main() {
       //Precondition
       try {
         await tester.pumpAndSettle();
-        await tester.tap(find.text('Sign Up'));
+        await tester.tap(find.text('Înregistrare'));
         await tester.pumpAndSettle();
         await Future.delayed(Duration(seconds: 5));
         //Procedure
@@ -192,7 +195,7 @@ void main() {
       //Precondition
       try {
         await tester.pumpAndSettle();
-        await tester.tap(find.text('Sign Up'));
+        await tester.tap(find.text('Înregistrare'));
         await tester.pumpAndSettle();
         await Future.delayed(Duration(seconds: 5));
         //Procedure
@@ -220,11 +223,11 @@ void main() {
       //Post Condition
     });
 
-    testWidgets('Sign Up with to short password', (tester) async {
+    testWidgets('Sign Up with too short password', (tester) async {
       //Precondition
       try {
         await tester.pumpAndSettle();
-        await tester.tap(find.text('Sign Up'));
+        await tester.tap(find.text('Înregistrare'));
         await tester.pumpAndSettle();
         await Future.delayed(Duration(seconds: 5));
         //Procedure
@@ -245,9 +248,9 @@ void main() {
         await tester.pumpAndSettle();
         await Future.delayed(Duration(seconds: 5));
         expect(find.text("Numele si Parola trebuie sa aibă minim 5 caractere"), findsOneWidget);
-        addResult('Sign Up', 'Sign Up with to short password', true);
+        addResult('Sign Up', 'Sign Up with too short password', true);
       } catch (e) {
-        addResult('Sign Up', 'Sign Up with to short password', false, error: e.toString());
+        addResult('Sign Up', 'Sign Up with too short password', false, error: e.toString());
       }
       //Post Condition
 
@@ -257,7 +260,7 @@ void main() {
       //Precondition
       try {
         await tester.pumpAndSettle();
-        await tester.tap(find.text('Sign Up'));
+        await tester.tap(find.text('Înregistrare'));
         await tester.pumpAndSettle();
         await Future.delayed(Duration(seconds: 5));
         //Procedure
@@ -291,7 +294,7 @@ void main() {
       //Precondition
       try {
         await tester.pumpAndSettle();
-        await tester.tap(find.text('Sign Up'));
+        await tester.tap(find.text('Înregistrare'));
         await tester.pumpAndSettle();
         await Future.delayed(Duration(seconds: 5));
         //Procedure
@@ -309,9 +312,11 @@ void main() {
         await tester.drag(find.byType(SingleChildScrollView), const Offset(0, -300));
         await tester.pumpAndSettle();
         await tester.tap(find.byKey(Key("SignUpButton")));
+        await Future.delayed(Duration(seconds: 2));
+        await tester.tap(find.byKey(Key("SignUpButton")));
         await tester.pumpAndSettle();
         await Future.delayed(Duration(seconds: 5));
-        expect(find.text("Un email de confirmare al adresei a fost trimis"), findsOneWidget);
+        expect(find.byType(Authenticate), findsOneWidget);
         addResult('Sign Up', 'Sign Up with correct data', true);
       } catch (e) {
         addResult('Sign Up', 'Sign Up with correct data', false, error: e.toString());
@@ -336,7 +341,7 @@ void main() {
       await tester.pumpAndSettle();
       //Procedure
       try {
-        await tester.tap(find.text('Log In'));
+        await tester.tap(find.text('Conectare'));
         await tester.pumpAndSettle();
         await tester.tap(find.byKey(Key("ResetPasswordButton")));
         await tester.pumpAndSettle();
@@ -358,7 +363,7 @@ void main() {
       await tester.pumpAndSettle();
       //Procedure
       try {
-        await tester.tap(find.text('Log In'));
+        await tester.tap(find.text('Conectare'));
         await tester.pumpAndSettle();
         await tester.tap(find.byKey(Key("ResetPasswordButton")));
         await tester.pumpAndSettle();
@@ -367,7 +372,7 @@ void main() {
         await tester.tap(find.text('Trimite'));
         await tester.pumpAndSettle();
         expect(find.byType(Authenticate), findsOneWidget);
-        expect(find.text("Un email a fost trimis la adresa introdusa"), findsOneWidget);
+        expect(find.text("Un email a fost trimis la adresa introdusă"), findsOneWidget);
         addResult('ResetPassword', 'Reset Password', true);
       } catch (e) {
         addResult('ResetPassword', 'Reset Password', false, error: e.toString());
@@ -378,7 +383,7 @@ void main() {
     testWidgets('Log In with wrong credentials - no data entered', (tester) async {
       //Precondition
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Log In'));
+      await tester.tap(find.text('Conectare'));
       await tester.pumpAndSettle();
       await Future.delayed(Duration(seconds: 5));
       //Procedure
@@ -399,7 +404,7 @@ void main() {
     testWidgets('Log In with wrong credentials - wrong email', (tester) async {
       //Precondition
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Log In'));
+      await tester.tap(find.text('Conectare'));
       await tester.pumpAndSettle();
       await Future.delayed(Duration(seconds: 5));
       //Procedure
@@ -423,7 +428,7 @@ void main() {
     testWidgets('Log In with wrong credentials - wrong password', (tester) async {
       //Precondition
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Log In'));
+      await tester.tap(find.text('Conectare'));
       await tester.pumpAndSettle();
       await Future.delayed(Duration(seconds: 5));
       //Procedure
@@ -443,10 +448,11 @@ void main() {
       //Post Condition
 
     });
+
     testWidgets('Log In with correct credentials', (tester) async {
       //Precondition
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Log In'));
+      await tester.tap(find.text('Conectare'));
       await tester.pumpAndSettle();
       await Future.delayed(Duration(seconds: 5));
       //Procedure
@@ -467,25 +473,141 @@ void main() {
 
     });
 
-    testWidgets('Log Out from App Test', (tester) async {
+  });
+
+  group("My Drawer", () {
+    setUp(() {
+      app.main();
+      Future.delayed(Duration(seconds: 5));
+
+    });
+
+    testWidgets('Check Suggestion Feature', (tester) async {
+      //Preconditions
       await tester.pumpAndSettle();
 
+      //Procedure
       try {
         if (find.byType(Authenticate).evaluate().isNotEmpty) {
-          await tester.tap(find.text('Sign In'));
+          await tester.tap(find.text('Conectare'));
         }
-        // Dacă ești deja logat, deconectează-te
+
         if (find.byType(HomePage).evaluate().isNotEmpty) {
           await tester.tap(find.byTooltip('Open navigation menu'));
           await tester.pumpAndSettle();
-          await tester.tap(find.text('Deconectare'));
+          await tester.tap(find.byKey(Key('SuggestionButton')));
+          await tester.pumpAndSettle();
+        }
+        expect(find.byType(RecommendationPage), findsOneWidget);
+        addResult('Drawer', 'Check Suggestion Feature', true);
+      }
+      catch(e){
+        addResult('Drawer', 'Check Suggestion Feature', false, error: e.toString());
+      }
+      //Post Condition
+    });
+
+    testWidgets('Check Profile Feature', (tester) async {
+      //Preconditions
+      await tester.pumpAndSettle();
+
+      //Procedure
+      try {
+        if (find.byType(Authenticate).evaluate().isNotEmpty) {
+          await tester.tap(find.text('Conectare'));
+        }
+
+        if (find.byType(HomePage).evaluate().isNotEmpty) {
+          await tester.tap(find.byTooltip('Open navigation menu'));
+          await tester.pumpAndSettle();
+          await tester.tap(find.byKey(Key('ProfileButton')));
+          await tester.pumpAndSettle();
+        }
+        expect(find.byType(ProfilePage), findsOneWidget);
+        addResult('Drawer', 'Check Profile Feature', true);
+      }
+      catch(e){
+        addResult('Drawer', 'Check Profile Feature', false, error: e.toString());
+      }
+      //Post Condition
+    });
+
+    testWidgets('Check About Feature', (tester) async {
+      //Preconditions
+      await tester.pumpAndSettle();
+
+      //Procedure
+      try {
+        if (find.byType(Authenticate).evaluate().isNotEmpty) {
+          await tester.tap(find.text('Conectare'));
+        }
+
+        if (find.byType(HomePage).evaluate().isNotEmpty) {
+          await tester.tap(find.byTooltip('Open navigation menu'));
+          await tester.pumpAndSettle();
+          await tester.tap(find.byKey(Key('AboutButton')));
+          await tester.pumpAndSettle();
+        }
+        expect(find.byType(AboutPage), findsOneWidget);
+        addResult('Drawer', 'Check About Feature', true);
+      }
+      catch(e){
+        addResult('Drawer', 'Check About Feature', false, error: e.toString());
+      }
+      //Post Condition
+    });
+
+    testWidgets('Register for Event', (tester) async {
+      //Precondition
+      await tester.pumpAndSettle();
+      if (find.byType(Authenticate).evaluate().isNotEmpty) {
+        await tester.tap(find.text('Conectare'));
+      }
+      if (find.byType(HomePage).evaluate().isEmpty){
+        addResult('EventWidget', 'Register for Event', false, error: "Home Page not reached");
+        return;
+      }
+      await Future.delayed(Duration(seconds: 5));
+      //Procedure
+      await tester.tap(find.text('Participă').first);
+      await Future.delayed(Duration(seconds: 5));
+      if(find.text("Adaugă în calendar").evaluate().isEmpty){
+        await tester.tap(find.text('Participă').first);
+        await Future.delayed(Duration(seconds: 10));
+        if(find.text("Adaugă în calendar").evaluate().isEmpty) {
+          addResult('EventWidget', 'Register for Event', false, error: "Register not ok");
+          return;
+        }
+      }
+      else{
+        addResult('EventWidget', 'Register for Event', true);
+      }
+      //Post Condition
+    });
+
+    testWidgets('Log Out from App Test', (tester) async {
+      //Preconditions
+      await tester.pumpAndSettle();
+
+      //Procedure
+      try {
+        if (find.byType(Authenticate).evaluate().isNotEmpty) {
+          await tester.tap(find.text('Conectare'));
+        }
+
+        if (find.byType(HomePage).evaluate().isNotEmpty) {
+          await tester.tap(find.byTooltip('Open navigation menu'));
+          await tester.pumpAndSettle();
+          await tester.tap(find.byKey(Key('LogOutButton')));
           await tester.pumpAndSettle();
         }
         expect(find.byType(Authenticate), findsOneWidget);
         addResult('Log Out', 'Log Out from App Test', true);
-      }catch(e){
+      }
+      catch(e){
         addResult('Log Out', 'Log Out from App Test', false, error: e.toString());
       }
+      //Post Condition
     });
 
   });
@@ -501,6 +623,7 @@ Future<void> generateReport(List<Map<String, dynamic>> results) async {
   final StringBuffer htmlBuffer = StringBuffer();
   int totalTests = results.length;
   int totalPassedTests = results.where((result) => result['status'] == 'Passed').length;
+  DateTime runDate = DateTime.now();
 
   htmlBuffer.writeln('''<html>
   <head>
@@ -516,6 +639,7 @@ Future<void> generateReport(List<Map<String, dynamic>> results) async {
   <body>
       <h1>Test Report</h1>
       <h2>Overall Summary</h2>
+      <p>Run Time: $runDate</p>
       <p>Total Tests: $totalTests</p>
       <p>Passed Tests: $totalPassedTests</p>
       <p>Failed Tests: ${totalTests - totalPassedTests}</p>
@@ -547,9 +671,9 @@ Future<void> generateReport(List<Map<String, dynamic>> results) async {
     final file = File('${dir!.path}/test_report.html');
 
     await file.writeAsString(htmlBuffer.toString());
-    print("✅ Raport salvat cu succes la:\n$file");
+    print("Raport salvat cu succes la:\n$file");
   } catch (e) {
-    print("❌ Eroare la salvarea raportului: $e");
+    print("Eroare la salvarea raportului: $e");
   }
 }
 
