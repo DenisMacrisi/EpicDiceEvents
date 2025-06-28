@@ -5,6 +5,60 @@ import 'AboutPage.dart';
 import 'Authentication.dart';
 import 'CustomWidgets.dart';
 import 'RecommendationPage.dart';
+
+class DrawerButton extends StatelessWidget{
+  final String buttonName;
+  final Future<void> Function()? action;
+  final Widget pageNavigator;
+  final Icon iconButton;
+
+  const DrawerButton({
+    Key? key,
+    required this.buttonName,
+    this.action,
+    required this.pageNavigator,
+    required this.iconButton,
+  }): super(key: key);
+
+  Widget build(BuildContext context){
+    return Align(
+      alignment: Alignment.centerRight,
+      child: Padding(
+        padding: const EdgeInsets.only(right: 8.0),
+        child: InkWell(
+          onTap: () async {
+            await action?.call();
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => pageNavigator),
+            );
+
+          },
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                buttonName,
+                style: customBasicTextStyle(14.0, true),
+              ),
+              IconButton(
+                icon: iconButton,
+                onPressed: () async{
+                  await action?.call();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => pageNavigator),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class MyDrawer extends StatelessWidget {
 
   final AuthenticationService _auth = new AuthenticationService();
@@ -48,141 +102,10 @@ class MyDrawer extends StatelessWidget {
               ),
             ),
           ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: InkWell(
-                key: Key('ProfileButton'),
-                onTap: () async {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ProfilePage()),
-                  );
-
-                },
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Profil            ',
-                      style: customBasicTextStyle(14.0, true),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.person),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => ProfilePage()),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: InkWell(
-                key: Key('LogOutButton'),
-                onTap: () async {
-                  await _auth.signOut();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MyApp()),
-                  );
-                },
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Deconectare',
-                      style: customBasicTextStyle(14.0, true),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.logout),
-                      onPressed: () async {
-                        await _auth.signOut();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => MyApp()),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: InkWell(
-                key: Key('SuggestionButton'),
-                onTap: () async {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => RecommendationPage()),
-                  );
-                },
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                        "Sugestie      ",
-                      style: customBasicTextStyle(14.0, true),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.recommend),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => RecommendationPage()),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: InkWell(
-                key: Key('AboutButton'),
-                onTap: () async {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AboutPage()),
-                  );
-                },
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Despre         ',
-                      style: customBasicTextStyle(14.0, true),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.question_mark),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => AboutPage()),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+          DrawerButton(key: Key('ProfileButton'), buttonName: 'Profil            ', iconButton: Icon(Icons.person), pageNavigator: ProfilePage()),
+          DrawerButton(key: Key('SuggestionButton'), buttonName: "Sugestie      ", iconButton: Icon(Icons.recommend), pageNavigator: RecommendationPage()),
+          DrawerButton(key: Key('AboutButton'), buttonName: 'Despre         ', iconButton: Icon(Icons.question_mark), pageNavigator: AboutPage()),
+          DrawerButton(key: Key('LogOutButton'), buttonName: 'Deconectare', action: () async{await _auth.signOut();}, iconButton: Icon(Icons.logout), pageNavigator: MyApp()),
         ],
       ),
     );
