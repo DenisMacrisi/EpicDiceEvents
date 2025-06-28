@@ -365,7 +365,6 @@ class _AddEventPageState extends State<AddEventPage> {
     setState(() {
       _selectedLocation = location;
       _markers.clear();
-      // Adăuga marker
       _markers.add(Marker(
         markerId: MarkerId(_selectedLocation.toString()),
         position: _selectedLocation!,

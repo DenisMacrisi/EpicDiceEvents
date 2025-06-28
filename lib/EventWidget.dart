@@ -783,6 +783,7 @@ class _EventWidgetState extends State<EventWidget> {
             TextButton(
               onPressed: () {
                 setEventAsInvalid(eventId);
+                deletEventFromCurrentUserCreateList(eventId);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => HomePage()),
@@ -825,9 +826,9 @@ class _EventWidgetState extends State<EventWidget> {
             .doc(widget.eventId)
             .delete();
 
-        print('Evenimentul a fost eliminat cu succes din lista utilizatorului.');
+        print('Evenimentul a fost eliminat din lista de evenimente create a utilizatorului.');
       } catch (error) {
-        print('Eroare în timpul eliminării evenimentului din lista utilizatorului: $error');
+        print('Eroare în timpul eliminării din lista de evenimente create a utilizatorului: $error');
       }
     }
   }
@@ -861,6 +862,24 @@ class _EventWidgetState extends State<EventWidget> {
     catch(e){
       throw("Eroare: $e");
     }
+  }
+  Future<void>deletEventFromCurrentUserCreateList(String eventId) async{
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    CollectionReference usersReference = FirebaseFirestore.instance.collection('users');
+    if (currentUser != null) {
+      String userId = currentUser.uid;
+      DocumentReference eventRef = usersReference
+          .doc(userId)
+          .collection('eventsCreatedList')
+          .doc(eventId);
+      try {
+        await eventRef.delete();
+        print("Evenimentul $eventId a fost eliminat din lista utilizatorului.");
+      } catch (e) {
+        print("Eroare la ștergerea evenimentului $eventId din lista utilizatorului: $e");
+      }
+    }
+
   }
 
   Future<void> decreaseNumberOfParticipants() async {

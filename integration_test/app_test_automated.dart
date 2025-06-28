@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'dart:io';
-
 import 'package:epic_dice_events/AboutPage.dart';
 import 'package:epic_dice_events/HomePage.dart';
 import 'package:epic_dice_events/ProfilePage.dart';
@@ -475,6 +473,121 @@ void main() {
 
   });
 
+  group('Event Widget', () {
+
+    setUp(() {
+      app.main();
+      Future.delayed(Duration(seconds: 5));
+
+    });
+
+    testWidgets('Register for Event', (tester) async {
+      //Precondition
+      await tester.pumpAndSettle();
+      if (find.byType(Authenticate).evaluate().isNotEmpty) {
+        await tester.tap(find.text('Conectare'));
+      }
+      if (find.byType(HomePage).evaluate().isEmpty){
+        addResult('EventWidget', 'Register for Event', false, error: "Home Page not reached");
+        return;
+      }
+      await Future.delayed(Duration(seconds: 5));
+      //Procedure
+      await tester.tap(find.text('Participă').first);
+      await Future.delayed(Duration(seconds: 5));
+      if(find.text("Adaugă în calendar").evaluate().isEmpty){
+        await tester.tap(find.text('Participă').first);
+        await Future.delayed(Duration(seconds: 10));
+        if(find.text("Adaugă în calendar").evaluate().isEmpty) {
+          addResult('EventWidget', 'Register for Event', false, error: "Register not ok");
+          return;
+        }
+      }
+      addResult('EventWidget', 'Register for Event', true);
+      //Post Condition
+    });
+
+    testWidgets('Multiple register for Event', (tester) async {
+      //Precondition
+      await tester.pumpAndSettle();
+      if (find.byType(Authenticate).evaluate().isNotEmpty) {
+        await tester.tap(find.text('Conectare'));
+      }
+      if (find.byType(HomePage).evaluate().isEmpty){
+        addResult('EventWidget', 'Multiple register for Event', false, error: "Home Page not reached");
+        return;
+      }
+      await Future.delayed(Duration(seconds: 5));
+      //Procedure
+      await tester.tap(find.text('Participă').first);
+      await Future.delayed(Duration(seconds: 5));
+      if(find.text("Deja te-ai înscris pentru acest Eveniment").evaluate().isEmpty){
+        await tester.tap(find.text('Participă').first);
+        await Future.delayed(Duration(seconds: 10));
+        if(find.text("Deja te-ai înscris pentru acest Eveniment").evaluate().isEmpty) {
+          addResult('EventWidget', 'Multiple register for Event', false, error: "Multiple register for Event is not ok");
+          return;
+        }
+      }
+      addResult('EventWidget', 'Multiple register for Event', true);
+      //Post Condition
+    });
+
+    testWidgets('Resign from Event', (tester) async {
+      //Precondition
+      await tester.pumpAndSettle();
+      if (find.byType(Authenticate).evaluate().isNotEmpty) {
+        await tester.tap(find.text('Conectare'));
+      }
+      if (find.byType(HomePage).evaluate().isEmpty){
+        addResult('EventWidget', 'Resign from Event', false, error: "Home Page not reached");
+        return;
+      }
+      await Future.delayed(Duration(seconds: 5));
+      //Procedure
+      try {
+        await tester.tap(find.text('Retrage').first);
+        await Future.delayed(Duration(seconds: 5));
+        addResult('EventWidget', 'Resign from Event', true);
+      }
+      catch(e){
+        addResult('EventWidget', 'Resign from Event', true, error: e.toString());
+      }
+      //Post Condition
+    });
+
+    testWidgets('Multple Resign from Event', (tester) async {
+      //Precondition
+      await tester.pumpAndSettle();
+      if (find.byType(Authenticate).evaluate().isNotEmpty) {
+        await tester.tap(find.text('Conectare'));
+      }
+      if (find.byType(HomePage).evaluate().isEmpty){
+        addResult('EventWidget', 'Multiple resign from Event', false, error: "Home Page not reached");
+        return;
+      }
+      await Future.delayed(Duration(seconds: 5));
+      //Procedure
+      try {
+        await tester.tap(find.text('Retrage').first);
+        await Future.delayed(Duration(seconds: 5));
+        if(find.text("Deja te-ai înscris pentru acest Eveniment").evaluate().isEmpty){
+          await tester.tap(find.text('Retrage').first);
+          await Future.delayed(Duration(seconds: 10));
+          if(find.text("Deja te-ai retras din acest Eveniment").evaluate().isEmpty) {
+            addResult('EventWidget', 'Multiple resign from Event', false, error: "Multiple regsign from Event is not ok");
+            return;
+          }
+        }
+      }
+      catch(e){
+        addResult('EventWidget', 'Multiple resign from Event', true, error: e.toString());
+      }
+      //Post Condition
+    });
+
+  });
+
   group("My Drawer", () {
     setUp(() {
       app.main();
@@ -554,32 +667,6 @@ void main() {
       catch(e){
         addResult('Drawer', 'Check About Feature', false, error: e.toString());
       }
-      //Post Condition
-    });
-
-    testWidgets('Register for Event', (tester) async {
-      //Precondition
-      await tester.pumpAndSettle();
-      if (find.byType(Authenticate).evaluate().isNotEmpty) {
-        await tester.tap(find.text('Conectare'));
-      }
-      if (find.byType(HomePage).evaluate().isEmpty){
-        addResult('EventWidget', 'Register for Event', false, error: "Home Page not reached");
-        return;
-      }
-      await Future.delayed(Duration(seconds: 5));
-      //Procedure
-      await tester.tap(find.text('Participă').first);
-      await Future.delayed(Duration(seconds: 5));
-      if(find.text("Adaugă în calendar").evaluate().isEmpty){
-        await tester.tap(find.text('Participă').first);
-        await Future.delayed(Duration(seconds: 10));
-        if(find.text("Adaugă în calendar").evaluate().isEmpty) {
-          addResult('EventWidget', 'Register for Event', false, error: "Register not ok");
-          return;
-        }
-      }
-      addResult('EventWidget', 'Register for Event', true);
       //Post Condition
     });
 
