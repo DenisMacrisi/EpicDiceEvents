@@ -33,7 +33,7 @@ class EventListFuture extends StatelessWidget {
         // Verificăm dacă utilizatorul este în subcolecția participantsList
         var participantsDoc = await doc.reference
             .collection('participantsList')
-            .doc(currentUserId) // Verificăm dacă documentul cu ID-ul utilizatorului există
+            .doc(currentUserId)
             .get();
 
         // Debug: Afișăm subcolectia participantsList si documentul curent
