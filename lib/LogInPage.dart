@@ -43,61 +43,13 @@ class _LogInPageState extends State<LogInPage> {
                   SizedBox(
                     height: 80,
                   ),
-                  TextField(
-                    key: Key('EmailField'),
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      hintText: ' Email',
-                      hintStyle: TextStyle(color: Colors.black,fontWeight: FontWeight.w500,fontStyle: FontStyle.italic),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide:  BorderSide(color: Colors.orange.shade300,width: 1.5),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.orange.shade200,width: 3.0),
-                      ),
-                    ),
-                  ),
+                  basicTextField(Key('EmailField'), _emailController, ' Email'),
                   SizedBox(height: 20,),
-                  TextField(
-                    key: Key('ParolaField'),
-                    controller: _passwordController,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      hintText: ' Parola',
-                      hintStyle: TextStyle(color: Colors.black,fontWeight: FontWeight.w500,fontStyle: FontStyle.italic),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide:  BorderSide(color: Colors.orange.shade300,width: 1.5),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.orange.shade200,width: 3.0),
-                      ),
-                    ),
-                  ),
+                  basicTextField(Key('ParolaField'), _passwordController, ' Parola'),
                   SizedBox(height: 50),
                   ElevatedButton(
                     onPressed: () async {
-                      String email = _emailController.text;
-                      String password = _passwordController.text;
-
-                      User? result = await _auth.logIn(email,password);
-
-                      if(result == null){
-                        setState(() => errorMessage = 'Email sau Parola Incorecte' );
-                        _auth.signOut();
-                      }
-                      else{
-                        if (!result.emailVerified) {
-                          setState(() => errorMessage = 'Email de validare retrimis');
-                          await result.sendEmailVerification();
-                          _auth.signOut();
-                        }
-                        else{
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => HomePage()),
-                          );
-                        }
-                      }
+                      await _handleLogInIntoApp(_emailController, _passwordController);
                     },
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
@@ -123,7 +75,7 @@ class _LogInPageState extends State<LogInPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 5.00,),
+                  SizedBox(height: 5,),
                   Visibility(
                       visible: errorMessage.length > 1,
                       child: Container(
@@ -133,23 +85,7 @@ class _LogInPageState extends State<LogInPage> {
                         ),
                         child: Text(
                           errorMessage,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20.00,
-                            shadows: [
-                              Shadow(
-                                blurRadius: 15.0,
-                                color: Colors.orangeAccent,
-                                offset: Offset(0, 0),
-                              ),
-                              Shadow(
-                                blurRadius: 15.0,
-                                color: Colors.orangeAccent,
-                                offset: Offset(0, 0),
-                              ),
-                            ],
-                          ),
+                          style: customShadowTextStyle(),
                         ),
                       )
                   ),
@@ -162,5 +98,30 @@ class _LogInPageState extends State<LogInPage> {
         ],
       ),
     );
+  }
+
+  Future<void> _handleLogInIntoApp(TextEditingController emailController, TextEditingController passwordController) async {
+    String email = emailController.text;
+    String password = passwordController.text;
+
+    User? result = await _auth.logIn(email,password);
+
+    if(result == null){
+      setState(() => errorMessage = 'Email sau Parola Incorecte' );
+      _auth.signOut();
+    }
+    else{
+      if (!result.emailVerified) {
+        setState(() => errorMessage = 'Email de validare retrimis');
+        await result.sendEmailVerification();
+        _auth.signOut();
+      }
+      else{
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      }
+    }
   }
 }

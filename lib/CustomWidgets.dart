@@ -133,6 +133,26 @@ TextStyle customSnackBoxTextStyle(double fontSize, Color color){
     color: color,
   );
 }
+TextStyle customShadowTextStyle(){
+  return const TextStyle(
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
+    fontSize: 20.00,
+    shadows: [
+      Shadow(
+        blurRadius: 15.0,
+        color: Colors.orangeAccent,
+        offset: Offset(0, 0),
+      ),
+      Shadow(
+        blurRadius: 15.0,
+        color: Colors.orangeAccent,
+        offset: Offset(0, 0),
+      ),
+    ],
+  );
+}
+
 BoxDecoration CustomBoxDecoration(){
   return BoxDecoration(
     image: DecorationImage(
@@ -166,6 +186,25 @@ void showCustomSnackBar(BuildContext context, String message, Color backgroundCo
     ),
   );
 }
+
+TextField basicTextField(Key key, TextEditingController textController, String hintText ){
+  return TextField(
+    key: key,
+    controller: textController,
+    decoration: InputDecoration(
+      hintText: hintText,
+      hintStyle: TextStyle(color: Colors.black,fontWeight: FontWeight.w500,fontStyle: FontStyle.italic),
+      enabledBorder: UnderlineInputBorder(
+        borderSide:  BorderSide(color: Colors.orange.shade300,width: 1.5),
+      ),
+      focusedBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: Colors.orange.shade200,width: 3.0),
+      ),
+    ),
+  );
+}
+
+
 
 /*
                 ElevatedButton(
