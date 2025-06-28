@@ -222,8 +222,9 @@ class AuthenticationService {
 
         for(var event in eventsCreatedSnapshot.docs){
           String eventId = event.id;
-          await deleteSubcollectionsFromParentCollection('events', eventId, ["participantsList"]);
-          await eventsReference.doc(eventId).delete();
+          await eventsReference.doc(eventId).update({
+            'isEventActive': false,
+          });
         }
 
         for (var event in eventsCreatedSnapshot.docs) {
@@ -236,7 +237,6 @@ class AuthenticationService {
     }catch(e){
       print('Eroare la stergerea evenimentelor create de utilizatorul curent: $e');
     }
-
   }
 
   /// Function used for deleting current user from every event that is registred for

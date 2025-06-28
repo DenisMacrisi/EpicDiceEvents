@@ -137,7 +137,7 @@ TextStyle customShadowTextStyle(){
   return const TextStyle(
     color: Colors.white,
     fontWeight: FontWeight.bold,
-    fontSize: 20.00,
+    fontSize: 24.00,
     shadows: [
       Shadow(
         blurRadius: 15.0,

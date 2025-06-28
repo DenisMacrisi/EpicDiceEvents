@@ -173,7 +173,10 @@ class EventListFiltredPage extends StatelessWidget {
 
 
   bool locationFilterCondition(GeoPoint location, String county) {
-    // Definire Harta Judete Romania
+    /// Definire Harta Judete Romania
+    /// Aceast tabel prezinta valori aproximative
+    /// latitudinea si longitundinea centrului judetului si raza aproximativa a judetului, care a fost estimata in general mai mare decat in realitare
+    /// Asadar este posibil ca atunci cand se filtreaza dupa un anumit judet, evenimente din judetele adiacente sa apara si ele
     final Map<String, Map<String, dynamic>> countyData = {
       'Alba': {'latitude': 46.07, 'longitude': 23.58, 'radius': 40.0},
       'Arad': {'latitude': 46.17, 'longitude': 21.32, 'radius': 50.0},
