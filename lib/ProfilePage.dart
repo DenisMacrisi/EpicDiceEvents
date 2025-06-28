@@ -23,7 +23,7 @@ class _ProfilePageState extends State<ProfilePage>{
 
   File? _selectedImage;
   Color selectedColor = Colors.black;
-  List<Color> colorOptions = [Colors.black, Colors.red, Colors.green, Colors.yellow, Colors.blue, Colors.pink];
+  List<Color> colorOptions = [Colors.black, Colors.red, Colors.green, Colors.yellow, Colors.blue, Colors.pink.shade300];
   User? currentUser = FirebaseAuth.instance.currentUser;
   Color newColorToUpdate = Color(0);
   final AuthenticationService _authService = AuthenticationService();
@@ -46,7 +46,7 @@ class _ProfilePageState extends State<ProfilePage>{
         future: getUserData(),
         builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
@@ -54,14 +54,12 @@ class _ProfilePageState extends State<ProfilePage>{
           String imageUrl = snapshot.data!.get('profileImageUrl') ?? '';
           String username = snapshot.data!.get('username') ?? 'User';
 
-          /// Used for future calculation
-          double screenHeight = MediaQuery.of(context).size.height;
-          double screenWidth = MediaQuery.of(context).size.width;
-
+          //Only for debug purpose
+          /**
           print('Username: $username');
           print('Selected color: $selectedColor');
           print('Snapshot data: ${snapshot.data}');
-
+          **/
           return Stack(
             children: [
               Container(
@@ -72,293 +70,196 @@ class _ProfilePageState extends State<ProfilePage>{
                   ),
                 ),
               ),
-              Positioned(
-                top: screenHeight * 0.15,
-                left: (screenWidth - 120) / 2,
-                child: GestureDetector(
-                  onTap: () async {
-                    await _pickImageFromGallery();
-                  },
-                  child: Container(
-                    width: 120,
-                    height: 120,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                    ),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        if (_selectedImage != null || imageUrl.isNotEmpty)
-                          ClipOval(
-                            child: _selectedImage != null
-                                ? Image.file(
-                              _selectedImage!,
-                              fit: BoxFit.cover,
-                              width: 120,
-                              height: 120,
-                            )
-                                : imageUrl.isNotEmpty
-                                ? Image.network(
-                              imageUrl,
-                              fit: BoxFit.cover,
-                              width: 120,
-                              height: 1200,
-                            )
-                                : Container(),
-                          ),
-                        Icon(
-                          Icons.camera_alt,
-                          size: 30,
-                          color: Colors.black,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Positioned(
-                top: screenHeight * 0.30,
-                left: (screenWidth - 240) / 2,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+              SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    DropdownButtonHideUnderline(
-                      child: DropdownButton<Color>(
-                        icon: Container(
-                          width: 20,
-                          height: 20,
+                    SizedBox(height: 120,),
+                    Center(
+                      child: GestureDetector(
+                          onTap: () async {
+                            await _pickImageFromGallery();
+                          },
+                        child: Container(
+                          width: 120,
+                          height: 120,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: selectedColor,
+                            color: Colors.white,
+                          ),
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              if (_selectedImage != null || imageUrl.isNotEmpty)
+                                ClipOval(
+                                  child: _selectedImage != null
+                                      ? Image.file(
+                                    _selectedImage!,
+                                    fit: BoxFit.cover,
+                                    width: 120,
+                                    height: 120,
+                                  )
+                                      : Image.network(
+                                    imageUrl,
+                                    fit: BoxFit.cover,
+                                    width: 120,
+                                    height: 120,
+                                  ),
+                                ),
+                              Icon(
+                                Icons.camera_alt,
+                                size: 30,
+                                color: Colors.black,
+                              ),
+                            ],
                           ),
                         ),
-                        items: colorOptions.map((Color color) {
-                          return DropdownMenuItem<Color>(
-                            value: color,
-                            child: Container(
-                              width: 20,
-                              height: 20,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: color,
+                      ),
+                    ),
+                    SizedBox(height: 10,),
+                    Center(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          DropdownButtonHideUnderline(
+                            child: DropdownButton<Color>(
+                              icon: Container(
+                                width: 20,
+                                height: 20,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: selectedColor,
+                                ),
                               ),
+                              items: colorOptions.map((Color color) {
+                                return DropdownMenuItem<Color>(
+                                  value: color,
+                                  child: Container(
+                                    width: 20,
+                                    height: 20,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: color,
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (Color? newColor) {
+                                setState(() {
+                                  selectedColor = newColor!;
+                                });
+                                newColorToUpdate = newColor!;
+                              },
                             ),
-                          );
-                        }).toList(),
-                        onChanged: (Color? newColor) {
-                          setState(() {
-                            selectedColor = newColor!;
-                          });
-                          newColorToUpdate = newColor!;
+                          ),
+                          SizedBox(width: 10),
+                          Padding(
+                            /// Padding folosit pentru a regla centralea Textului cauzata de gruparea elementelor pe linie
+                            padding: const EdgeInsets.only(right: 30.0),
+                            child: Text(
+                              username,
+                              style: customBasicTextStyle(24,true, color: selectedColor),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          String? image_name = generateUniqueImageName();
+                          if(_selectedImage != null) {
+                            String? imageUrl = await uploadImageToStorage(
+                                _selectedImage!, image_name);
+                            changeProfilePicture(imageUrl!);
+                          }
+                          updateUserColor(newColorToUpdate);
+                          print("S-a apasat buton");
                         },
-                      ),
-                    ),
-                    SizedBox(width: 20),
-                    Text(
-                      username,
-                      style: TextStyle(
-                        color: selectedColor,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Positioned(
-                top: screenHeight * 0.35,
-                left: (screenWidth - 145) / 2,
-                child: Align(
-                  alignment: Alignment.center,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      String? image_name = generateUniqueImageName();
-                      if(_selectedImage != null) {
-                        String? imageUrl = await uploadImageToStorage(
-                            _selectedImage!, image_name);
-                        changeProfilePicture(imageUrl!);
-                      }
-                      updateUserColor(newColorToUpdate);
-                      print("S-a apasat buton");
-                    },
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.5),
-                      ),
-                      elevation: 10.0,
-                      side: BorderSide(
-                        color: Colors.orangeAccent,
-                        width: 3.0,
-                      ),
-                    ),
-                    child: Text('Modifică',style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25.0,
-                      color: Colors.white,
-                      shadows: [
-                        Shadow(
-                          blurRadius: 10.0,
-                          color: Colors.orangeAccent,
-                          offset: Offset(0, 0),
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.5),
+                          ),
+                          elevation: 10.0,
+                          side: BorderSide(
+                            color: Colors.orangeAccent,
+                            width: 3.0,
+                          ),
                         ),
-                        Shadow(
-                          blurRadius: 10.0,
-                          color: Colors.orangeAccent,
-                          offset: Offset(0, 0),
+                        child: Text('Modifică',
+                          style: customShadowTextStyle(),
                         ),
-                      ],
-                    ),
-                    ),
-                  ),
-                ),
-              ),
-              Positioned(
-                top: screenHeight * 0.50,
-                left: (screenWidth - 270) / 2,
-
-                child: Align(
-                  alignment: Alignment.center,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) =>EventListFuturePage()),
-                      );
-                    },
-                    child: Text(
-                      "Evenimente viitoare",
-                      style: customBasicTextStyle(13.5, true),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 30, horizontal: 75),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.5),
-                      ),
-                      elevation: 10.0,
-                      side: BorderSide(
-                        color: Colors.orangeAccent,
-                        width: 3.0,
                       ),
                     ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 100,
-              ),
-              Positioned(
-                top: screenHeight * 0.65,
-                left: (screenWidth - 270) / 2,
-                child: Align(
-                  alignment: Alignment.center,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) =>EventListPassedPage()),
-                      );
-                    },
-                    child: Text(
-                      "Evenimente trecute",
-                      style:customBasicTextStyle(13.5,true) ,
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 30, horizontal: 75),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.5),
-                      ),
-                      elevation: 10.0,
-                      side: BorderSide(
-                        color: Colors.orangeAccent,
-                        width: 3.0,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 100,
-              ),
-              Positioned(
-                top: MediaQuery.of(context).size.height * 0.90,
-                left: MediaQuery.of(context).size.width * 0.36,
-                child: Align(
-                  alignment: Alignment.center,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text("Esti sigur ?",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 25.0,
-                                color: Colors.white,
-                                shadows: [
-                                  Shadow(
-                                    blurRadius: 10.0,
-                                    color: Colors.orangeAccent,
-                                    offset: Offset(0, 0),
-                                  ),
-                                  Shadow(
-                                    blurRadius: 10.0,
-                                    color: Colors.orangeAccent,
-                                    offset: Offset(0, 0),
-                                  ),
-                                ],
-                              ),
+                    SizedBox(height: 50,),
+                    Center(
+                      child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) =>EventListFuturePage()),
+                            );
+                          },
+                          child: Text(
+                            "Evenimente viitoare",
+                            style: customShadowTextStyle(),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(vertical: 30, horizontal: 50),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.5),
                             ),
-                            actions: [
-                              TextButton(
-                                onPressed: () async {
-                                  bool isDeletionSuccessfully = await askUserForPasswordandDelete();
-                                  if(isDeletionSuccessfully == true) {
-                                    Navigator.pushAndRemoveUntil(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => Authenticate()),
-                                          (Route<dynamic> route) => false,
-                                    );
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                            'Contul a fost sters',
-                                            style: TextStyle(
-                                                fontSize: 20,
-                                                color: Colors.white
-                                            ),
-                                          ),
-                                          backgroundColor: Colors.orangeAccent,
-                                        )
-                                    );
-                                  }
-                                  if(isDeletionSuccessfully == false){
-                                    Navigator.of(context).pop();
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          'Parola incorecta',
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              color: Colors.white
-                                          ),
-                                        ),
-                                        backgroundColor: Colors.orangeAccent,
-                                      ),
-                                    );
-                                  }
-                                },
-                                child: Text('Sterge',
+                            elevation: 10.0,
+                            side: BorderSide(
+                              color: Colors.orangeAccent,
+                              width: 3.0,
+                            ),
+                          ),
+                      ),
+                    ),
+                    SizedBox(height: 20,),
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) =>EventListPassedPage()),
+                          );
+                        },
+                        child: Text(
+                          "Evenimente trecute",
+                          style:customShadowTextStyle()
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(vertical: 30, horizontal: 50),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.5),
+                          ),
+                          elevation: 10.0,
+                          side: BorderSide(
+                            color: Colors.orangeAccent,
+                            width: 3.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 100,),
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text("Esti sigur ?",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 28.0,
+                                    fontSize: 25.0,
                                     color: Colors.white,
                                     shadows: [
                                       Shadow(
                                         blurRadius: 10.0,
-                                        color: Colors.redAccent,
+                                        color: Colors.orangeAccent,
                                         offset: Offset(0, 0),
                                       ),
                                       Shadow(
@@ -369,31 +270,90 @@ class _ProfilePageState extends State<ProfilePage>{
                                     ],
                                   ),
                                 ),
-                              ),
-                            ],
-                            backgroundColor: Color.fromRGBO(3, 220, 252,100),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () async {
+                                      bool isDeletionSuccessfully = await askUserForPasswordandDelete();
+                                      if(isDeletionSuccessfully == true) {
+                                        Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Authenticate()),
+                                              (Route<dynamic> route) => false,
+                                        );
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                'Contul a fost sters',
+                                                style: TextStyle(
+                                                    fontSize: 20,
+                                                    color: Colors.white
+                                                ),
+                                              ),
+                                              backgroundColor: Colors.orangeAccent,
+                                            )
+                                        );
+                                      }
+                                      if(isDeletionSuccessfully == false){
+                                        Navigator.of(context).pop();
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              'Parola incorecta',
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  color: Colors.white
+                                              ),
+                                            ),
+                                            backgroundColor: Colors.orangeAccent,
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    child: Text('Șterge',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 28.0,
+                                        color: Colors.white,
+                                        shadows: [
+                                          Shadow(
+                                            blurRadius: 10.0,
+                                            color: Colors.redAccent,
+                                            offset: Offset(0, 0),
+                                          ),
+                                          Shadow(
+                                            blurRadius: 10.0,
+                                            color: Colors.orangeAccent,
+                                            offset: Offset(0, 0),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                                backgroundColor: Color.fromRGBO(3, 220, 252,100),
+                              );
+                            },
                           );
                         },
-                      );
-                    },
-                    child: Text(
-                      "Stergere Cont",
-                      style: TextStyle(
-                          color: Colors.red
+                        child: Text(
+                          "Ștergere Cont",
+                          style: customBasicTextStyle(20, true, color: Colors.red),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.5),
+                          ),
+                          elevation: 10.0,
+                          side: BorderSide(
+                            color: Colors.orangeAccent,
+                            width: 3.0,
+                          ),
+                        ),
                       ),
                     ),
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.5),
-                      ),
-                      elevation: 10.0,
-                      side: BorderSide(
-                        color: Colors.orangeAccent,
-                        width: 3.0,
-                      ),
-                    ),
-                  ),
+                  ],
                 ),
               ),
             ],
@@ -495,11 +455,8 @@ class _ProfilePageState extends State<ProfilePage>{
                       }
                     },
                     child: Text(
-                      "Sterge",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                      ),
+                      "Șterge",
+                      style: customBasicTextStyle(24, true, color: Colors.red),
                     ),
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
