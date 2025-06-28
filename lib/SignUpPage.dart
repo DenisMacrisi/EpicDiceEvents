@@ -1,4 +1,3 @@
-
 import 'package:epic_dice_events/Authenticate.dart';
 import 'package:epic_dice_events/CustomWidgets.dart';
 import 'package:epic_dice_events/Validation.dart';
@@ -45,157 +44,20 @@ class _SignUpPageState extends State<SignUpPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(height: 80,),
-                  TextField(
-                    key: Key('nume utilizator'),
-                    controller: _usernameController,
-                    decoration: InputDecoration(
-                      hintText: ' Nume Utilizator',
-                      hintStyle: TextStyle(color: Colors.black,
-                          fontWeight: FontWeight.w500,
-                          fontStyle: FontStyle.italic),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Colors.orange.shade300, width: 1.5),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Colors.orange.shade200, width: 3.0),
-                      ),
-                    ),
-                  ),
+                  basicTextField(Key('nume utilizator'), _usernameController, ' Nume Utilizator'),
                   SizedBox(height: 20,),
-                  TextField(
-                    key: Key('email'),
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      hintText: ' Email',
-                      hintStyle: TextStyle(color: Colors.black,
-                          fontWeight: FontWeight.w500,
-                          fontStyle: FontStyle.italic),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Colors.orange.shade300, width: 1.5),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Colors.orange.shade200, width: 3.0),
-                      ),
-                    ),
-                  ),
+                  basicTextField(Key('email'), _emailController, ' Email'),
                   SizedBox(height: 20,),
-                  TextField(
-                    key: Key('parola'),
-                    controller: _passwordController,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      hintText: ' Parola',
-                      hintStyle: TextStyle(color: Colors.black,
-                          fontWeight: FontWeight.w500,
-                          fontStyle: FontStyle.italic),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Colors.orange.shade300, width: 1.5),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Colors.orange.shade200, width: 3.0),
-                      ),
-                    ),
-                  ),
+                  basicTextField(Key('parola'), _passwordController, ' Parola'),
                   SizedBox(height: 20,),
-                  TextField(
-                    key: Key('parola repetata'),
-                    controller: _repeatPasswordController,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      hintText: ' Repeta Parola',
-                      hintStyle: TextStyle(color: Colors.black,
-                          fontWeight: FontWeight.w500,
-                          fontStyle: FontStyle.italic),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Colors.orange.shade300, width: 1.5),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Colors.orange.shade200, width: 3.0),
-                      ),
-                    ),
-                  ),
+                  basicTextField(Key('parola repetata'), _repeatPasswordController, ' Repeta Parola'),
                   SizedBox(height: 20,),
-                  TextField(
-                    key: Key('localitate'),
-                    controller: _cityController,
-                    decoration: InputDecoration(
-                      hintText: ' Localitate',
-                      hintStyle: TextStyle(color: Colors.black,
-                          fontWeight: FontWeight.w500,
-                          fontStyle: FontStyle.italic),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Colors.orange.shade300, width: 1.5),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Colors.orange.shade200, width: 3.0),
-                      ),
-                    ),
-                  ),
+                  basicTextField( Key('localitate'), _cityController, ' Localitate'),
                   SizedBox(height: 40),
                   ElevatedButton(
                     key: Key("SignUpButton"),
                     onPressed: () async {
-                      String username = _usernameController.text;
-                      String email = _emailController.text;
-                      String password = _passwordController.text;
-                      String repeat_password = _repeatPasswordController.text;
-                      String city = _cityController.text;
-
-                      if(!validateUsername(username) || !validatePassword(password)){
-                        showIncorectLenghtError(context);
-                        return;
-                      }
-                      else if(!validateEmail(email)){
-                        showIncorectEmailError(context);
-                      }
-                      else if (validatePasswordRetype(password,repeat_password))
-                      {
-                        showIncorectPasswordRetyped(context);
-                        return;
-                      }
-                      else
-                      {
-                        User? result = await _auth.registerNewUser(email,password);
-
-                        if(result == null){
-
-                          setState(() => errorMessage = 'Date invalide sau Utilizator deja existent' );
-                        }
-                        else{
-
-                          _auth.addNewUserToDatabase(username, email, city);
-                          _auth.signOut();
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(builder: (context) => Authenticate()),
-                                (Route<dynamic> route) => false, // Elimină toate paginile anterioare
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Un email de confirmare a fost trimis la adresa introdusă',
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.white
-                                  ),
-                                ),
-                                backgroundColor: Colors.orangeAccent,
-                              )
-                          );
-                        }
-
-                      }
-
+                      _handleSingUpIntoApp();
                     },
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
@@ -231,23 +93,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                         child: Text(
                           errorMessage,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20.00,
-                            shadows: [
-                              Shadow(
-                                blurRadius: 15.0,
-                                color: Colors.orangeAccent,
-                                offset: Offset(0, 0),
-                              ),
-                              Shadow(
-                                blurRadius: 15.0,
-                                color: Colors.orangeAccent,
-                                offset: Offset(0, 0),
-                              ),
-                            ],
-                          ),
+                          style: customShadowTextStyle(),
                         ),
                       )
                   )
@@ -258,6 +104,52 @@ class _SignUpPageState extends State<SignUpPage> {
         ],
       ),
     );
+  }
+  Future<void> _handleSingUpIntoApp() async {
+    String username = _usernameController.text;
+    String email = _emailController.text;
+    String password = _passwordController.text;
+    String repeat_password = _repeatPasswordController.text;
+    String city = _cityController.text;
+
+    if (!validateUsername(username) || !validatePassword(password)) {
+      showIncorectLenghtError(context);
+      return;
+    }
+    else if (!validateEmail(email)) {
+      showIncorectEmailError(context);
+    }
+    else if (validatePasswordRetype(password, repeat_password)) {
+      showIncorectPasswordRetyped(context);
+      return;
+    }
+    else {
+      User? result = await _auth.registerNewUser(email, password);
+
+      if (result == null) {
+        setState(() =>
+        errorMessage = 'Date invalide sau Utilizator deja existent');
+      }
+      else {
+        _auth.addNewUserToDatabase(username, email, city);
+        _auth.signOut();
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => Authenticate()),
+              (Route<
+              dynamic> route) => false, // Elimină toate paginile anterioare
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Un email de confirmare a fost trimis la adresa introdusă',
+                style: customSnackBoxTextStyle(20, Colors.white),
+              ),
+              backgroundColor: Colors.orangeAccent,
+            )
+        );
+      }
+    }
   }
 }
 

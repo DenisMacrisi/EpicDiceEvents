@@ -579,9 +579,7 @@ void main() {
           return;
         }
       }
-      else{
-        addResult('EventWidget', 'Register for Event', true);
-      }
+      addResult('EventWidget', 'Register for Event', true);
       //Post Condition
     });
 
