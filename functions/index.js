@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
 let flagNotification = false;
 // Function used to send scheduled emails to participants
 // Every hour checks and sends emails to participans
-exports.sendScheduledEmail = functions.pubsub.schedule("every 5 minutes").onRun(async (context) => {
+exports.sendScheduledEmail = functions.pubsub.schedule("every hour").onRun(async (context) => {
   const db = admin.firestore();
 
   try {
@@ -49,10 +49,6 @@ exports.sendScheduledEmail = functions.pubsub.schedule("every 5 minutes").onRun(
 
         if (hours >= 23 && hours <= 24 && isEventActive == true) {
           console.log(`extractedDate: ${extractedDate}`);
-          console.log(`currentDate: ${currentDate}`);
-          console.log(`diff: ${diffence}`);
-          console.log(`stringData: ${stringData}`);
-          console.log(`displayDate: ${displayDate}`);
           const userData = userDoc.data();
           console.log(`User ${participantId}`);
           console.log(`Email ${userData.email}`);
@@ -119,7 +115,7 @@ const openai = new OpenAI({
 
 exports.getGameSuggestion = functions.pubsub.schedule("every 1200 minutes").onRun(async (context) => {
   try {
-    // Obținem titlul jocului
+    // Se face request pentru titlul jocului
     const titleResponse = await openai.chat.completions.create({
       model: "gpt-4",
       messages: [
@@ -133,7 +129,7 @@ exports.getGameSuggestion = functions.pubsub.schedule("every 1200 minutes").onRu
     const title = titleResponse.choices[0].message.content.trim();
     console.log("Titlu obținut:", title);
 
-    // Dacă titlul este valid, obținem descrierea
+    // Dacă titlul este a fost generat, solicităm si descriere pentru el 
     if (title) {
       const descriptionResponse = await openai.chat.completions.create({
         model: "gpt-4",
@@ -147,7 +143,7 @@ exports.getGameSuggestion = functions.pubsub.schedule("every 1200 minutes").onRu
       let description = descriptionResponse.choices[0].message.content.trim();
       console.log("Descriere obținută:", description);
 
-      // Dacă descrierea este goală, încercăm din nou să o generăm
+      // Mecanism de retry pentru descriere
       if (!description) {
         console.log("Descrierea este goală, încercăm din nou...");
         const retryDescriptionResponse = await openai.chat.completions.create({
@@ -162,9 +158,9 @@ exports.getGameSuggestion = functions.pubsub.schedule("every 1200 minutes").onRu
         description = retryDescriptionResponse.choices[0].message.content.trim();
       }
 
-      // Verificăm dacă titlul și descrierea sunt valide
+      // Dacă am reușit să obținem un titlu și o descriere continuăm
       if (title && description) {
-        // Actualizăm documentul în Firestore
+
         const docRef = admin.firestore().collection("suggestion").doc("q4MLFWfMXNAj1E1LmFgb");
 
         await docRef.update({
@@ -172,12 +168,12 @@ exports.getGameSuggestion = functions.pubsub.schedule("every 1200 minutes").onRu
           description: description,
         });
 
-        console.log("Sugestie generată și documentul actualizat în Firestore!");
+        console.log("Sugestie generată cu success");
       } else {
-        console.error("Titlul sau descrierea sunt invalide.");
+        console.error("Titlul sau descrierea sunt goale");
       }
     } else {
-      console.error("Nu am obținut un titlu valid.");
+      console.error("Titlul este gol");
     }
   } catch (error) {
     console.error("Eroare la generarea sugestiei:", error);
